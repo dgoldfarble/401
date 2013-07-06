@@ -1,0 +1,12 @@
+#export VERILATOR_ROOT=  #ADD VERILATOR PATH HERE
+
+cd sim_src_orig
+
+#$VERILATOR_ROOT/bin/
+verilator -O4 --cc MIPS.v --exe sim_main.cpp
+
+cd obj_dir
+
+make -j -f VMIPS.mk VMIPS
+
+cp VMIPS ../../VMIPS_bkp
