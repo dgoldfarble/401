@@ -646,7 +646,7 @@ int main(int argc, char **argv)
 			|				       DISPLAYS		  				          |
 			------------------------------------------------------------------------------------------------*/ 
 			if(CLOCK_COUNTER>=duration) {
-				printf("#####################################################\nsp = 0x%x\n",top->v->Reg_ID[29]);
+				printf("##################################################### sp = 0x%x\n",top->v->Reg_ID[29]);
 				cout << "-------------------------------------" << endl;
 				/*for (int i=top->v->Reg_ID[29]+32768; i>=(top->v->Reg_ID[29]); i-=4) {
 	 				int temp = (MAIN_MEMORY[i+0]<<0) + (MAIN_MEMORY[i+1]<<8) + (MAIN_MEMORY[i+2]<<16) + (MAIN_MEMORY[i+3]<<24);
@@ -658,7 +658,7 @@ int main(int argc, char **argv)
 				cout << HEX_MAIN_MEMORY[4127448456]<<HEX_MAIN_MEMORY[4127448456+1]<<HEX_MAIN_MEMORY[4127448456+2]<<HEX_MAIN_MEMORY[4127448456+3] << endl;
 				printf("MemoryAddress:%x MemoryElement:%x",top->v->Instr_address_2IM,(MAIN_MEMORY[top->v->Instr_address_2IM+0]<<24) + (MAIN_MEMORY[top->v->Instr_address_2IM+1]<<16) + (MAIN_MEMORY[top->v->Instr_address_2IM+2]<<8) + (MAIN_MEMORY[top->v->Instr_address_2IM+3]));
 				for (int j=START_REG; j < NUMBER_OF_REGS; j++) {
-					cout<<endl;
+					if (j%2 == 0) cout<<endl;
 					if ( ( top->v->Reg_ID[j] ) == 3735928559 ) printf("REG[%*d]:%*x   |   ",2,j,8,top->v->Reg_ID[j]);
 					else if ( ( RF_FPRF_BOTH == 0 ) | ( RF_FPRF_BOTH == 2 ) ) printf("REG[%*d]:%*u %*x   |   ",2,j,10,top->v->Reg_ID[j],8,top->v->Reg_ID[j]);
 				}

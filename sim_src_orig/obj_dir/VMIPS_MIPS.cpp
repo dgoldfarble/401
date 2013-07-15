@@ -261,7 +261,6 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
 	= vlSymsp->TOP__v.__PVT__iCache1__DOT__waitCount;
     vlSymsp->TOP__v.__Vdly__dCache1__DOT__waitCount 
 	= vlSymsp->TOP__v.__PVT__dCache1__DOT__waitCount;
-    // ALWAYS at IF.v:79
     // ALWAYS at instr_cache_core.v:191
     if ((1 & ((~ (IData)(vlTOPp->RESET)) | (IData)(vlSymsp->TOP__v.SYS)))) {
 	vlSymsp->TOP__v.__PVT__iCache1__DOT__cc0__DOT__valid[0] = 0;
@@ -448,6 +447,12 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
 	vlSymsp->TOP__v.Reg_ID[(IData)(vlSymsp->TOP__v.writeRegister1_WBID)] 
 	    = vlSymsp->TOP__v.writeData1_WBID;
     }
+    // ALWAYS at IF.v:79
+    VL_WRITEF("==IF===========================================================\n");
+    VL_WRITEF("[IF]:\tPCA:%x\n",32,vlSymsp->TOP__v.__PVT__IF1__DOT__PC);
+    VL_WRITEF("[IF]:\tCIA:%x\tInstruction OUT: %x\n",
+	      32,vlSymsp->TOP__v.__PVT__IF1__DOT__FPC,
+	      32,vlSymsp->TOP__v.Instr1_IFID);
     // ALWAYS at cache_core.v:125
     if ((1 & ((~ (IData)(vlTOPp->RESET)) | (IData)(vlSymsp->TOP__v.SYS)))) {
 	vlSymsp->TOP__v.__PVT__dCache1__DOT__cc1__DOT__valid[0] = 0;

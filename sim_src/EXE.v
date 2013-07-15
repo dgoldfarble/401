@@ -1,154 +1,234 @@
 //-----------------------------------------
 //           Execute Stage
 //-----------------------------------------
-module EXE(	CLK, 
-		RESET,
-		FREEZE,
-		ALUSrc1_PR,
-		ALUSrc1,
-		Instr1,
-		Instr1_PR,
-		Dest_Value1,
-		Dst1_PR,
-		readDataB1,
-		readDataB1_PR,
-		aluResult1_OUT,
-                do_writeback1_WB,
-	        writeRegister1_WB,
-		Data1_WB,
-		ALU_control1_PR,
-		ALU_control1,		
-		Data1_MEM,
-                writeRegister1_MEM,
-                do_writeback1_MEM, 
-		do_writeback1_PR,
-		do_writeback1_ID,
-		readRegisterA1,
-		readRegisterB1,
-		writeRegister1, 
-		writeRegister1_PR, 
-		Instr1_10_6, 
-		MemRead1, 
-		MemWrite1, 
-		MemRead1_PR, 
-		MemWrite1_PR, 
-		Operand_A1, 
-		Operand_B1, 
-		MemtoReg1, 
-		MemtoReg1_PR, 
-		aluResult1_PR
-		);
+module EXE(	// outputs
+				ROBPointer_OUT,
+				PCA_OUT,
+				target_PC_OUT,
+				Instr1_OUT,
+				writeRegister1_OUT,
+				ALU_control1_OUT,
+				Dest_Value1_OUT,
+				aluresult_OUT,
+				address_OUT,
+				RegDest_OUT,
+				Branch_flag_OUT,
+				Mem_Instruction_OUT,
 
-   output reg     [31: 0] aluResult1_PR;
-   output reg     [31: 0] Dst1_PR;
-   output reg     [31: 0] aluResult1_OUT;
-   output reg     [31: 0] readDataB1_PR;
+				MemRead1_OUT,
+				MemWrite1_OUT,
+				Mem_Hazard_PR_OUT,
 
-   output reg     [31: 0] Instr1_PR;
-   output reg     [ 5: 0] ALU_control1_PR;
-   output reg     [ 4: 0] writeRegister1_PR;
-   output reg             MemtoReg1_PR;
-   output reg             ALUSrc1_PR;
-   output reg        	  MemRead1_PR;
-   output reg        	  MemWrite1_PR;
-   output reg        	  do_writeback1_PR;
+				// COMMON SIGNALS
+				ROBPointer_IN,
+				PCA_IN,
+				Instr1_IN,
+				writeRegister1_IN,
+				readRegisterA1_IN,
+				Operand_A1_IN,
+				Immediate_IN,
+				ALU_control1_IN,
+				Dest_Value1_IN,
+				Mem_Instruction_IN,
 
-   input          [31: 0] Operand_A1;
-   input          [31: 0] Operand_B1;
-   input          [31: 0] Dest_Value1;
-   input          [31: 0] Data1_MEM;
-   input          [31: 0] Data1_WB;
-   input          [31: 0] readDataB1;
-   input          [31: 0] Instr1;
-   input          [ 5: 0] ALU_control1;
-   input          [ 4: 0] writeRegister1_MEM;
-   input          [ 4: 0] readRegisterA1;
-   input          [ 4: 0] readRegisterB1;
-   input          [ 4: 0] writeRegister1;
-   input          [ 4: 0] Instr1_10_6;
-   input          [ 4: 0] writeRegister1_WB;
-   input                  ALUSrc1;
-   input         	  do_writeback1_MEM;
-   input                  do_writeback1_WB;
-   input         	  do_writeback1_ID;
-   input                  MemtoReg1;
-   input                  MemRead1;
-   input                  MemWrite1;
-   input		  FREEZE;
+				readRegisterB1_IN,
+				Operand_B1_IN,
+				Instr1_10_6_IN,
+				ALUSrc1_IN,
+				RegDest_IN,
+				Branch_flag_IN,
+				jump_flag_IN,
+				jump_register_IN,
+
+				MemRead1_IN,
+				MemWrite1_IN,
+				Valid_Instruction_IN,
+				Valid_Instruction_OUT,
+					
+				   // forward data
+				fwd_data_1_COM,
+				fwd_reg_1_COM,
+				fwd_data_1_COM_flag,
+				LS_fwd_data_COM,
+				LS_fwd_reg_COM,
+				LS_fwd_data_COM_flag,
+
+				FREEZE, CLK, RESET
+				);
+				
+	parameter ROBWIDTH = 6;
+
+   	// COMMON SIGNALS
+	output reg		[ROBWIDTH-1:0]	ROBPointer_OUT;
+	output reg		[31: 0] 		PCA_OUT;
+	output reg		[31: 0]			target_PC_OUT;
+    output reg		[31: 0]			Instr1_OUT;
+    output reg		[ 5: 0]			writeRegister1_OUT;
+    output reg		[ 5: 0]			ALU_control1_OUT;
+    output reg		[31: 0]			Dest_Value1_OUT;
+    output reg		[31: 0]			aluresult_OUT;
+    output reg		[31: 0] 		address_OUT;
+    output reg						RegDest_OUT;
+    output reg						Branch_flag_OUT;
+    output reg						Mem_Instruction_OUT;
+	// LS output
+    output reg						MemRead1_OUT;
+    output reg						MemWrite1_OUT;
+	output reg						Mem_Hazard_PR_OUT;
+
+	// COMMON SIGNALS
+	input		[ROBWIDTH-1:0]	ROBPointer_IN;
+	input		[31: 0] 		PCA_IN;
+    input		[31: 0]			Instr1_IN;
+    input		[ 5: 0]			writeRegister1_IN;
+    input		[ 5: 0]			readRegisterA1_IN;
+    input		[31: 0]			Operand_A1_IN;
+    input		[31: 0]			Immediate_IN;
+    input		[ 5: 0]			ALU_control1_IN;
+    input		[31: 0]			Dest_Value1_IN;
+    input						Mem_Instruction_IN;
+		// instruction 1 input
+    input		[ 5: 0] 		readRegisterB1_IN;
+    input		[31: 0]			Operand_B1_IN;
+    input		[ 4: 0]			Instr1_10_6_IN;
+    input						ALUSrc1_IN;
+    input						RegDest_IN;
+    input						Branch_flag_IN;
+    input						jump_flag_IN;
+    input						jump_register_IN;
+	// LS output
+    input						MemRead1_IN;
+    input						MemWrite1_IN;
+    
+   // forward data
+   input          [31: 0] fwd_data_1_COM;
+   input          [ 5: 0] fwd_reg_1_COM;
+   input                  fwd_data_1_COM_flag;
+   input          [31: 0] LS_fwd_data_COM;
+   input          [ 5: 0] LS_fwd_reg_COM;
+   input                  LS_fwd_data_COM_flag;
+   
+   
+   input 					Valid_Instruction_IN;
+   output reg 				Valid_Instruction_OUT;
+   
+   // other
+   input                  FREEZE;
    input                  CLK;
-   input        	  RESET;        
+   input                  RESET;
+        
    wire           [31: 0] aluResult1;
-   wire           [31: 0] OpA1;
-   wire           [31: 0] OpB1;
+   wire           [31: 0] address_out;
+   wire           [31: 0] OpA1, Operand1;
+   wire           [31: 0] OpB1, Operand2;
+   wire           [31: 0] OpLS1;
+   wire           [31: 0] OpLS2;
    wire           [31: 0] Dst1;
-   reg            [31: 0] HI;
-   reg            [31: 0] LO;
+   wire						Hazard_flag;
+   wire						taken_branch1;
+   reg            [31: 0] HI1, HI2;
+   reg            [31: 0] LO1, LO2;
    reg                    comment;
+   
 
 
    	initial comment = 0;  //show EXE displays
 
-	// Forwarding for Slot 1
+
 	always begin
-		// Operand A
-		if(do_writeback1_PR && (writeRegister1_PR == readRegisterA1))
-         		OpA1 = aluResult1_PR;
-		else if(do_writeback1_MEM && (writeRegister1_MEM == readRegisterA1))
-			OpA1 = Data1_MEM;
-		else if(do_writeback1_WB && (writeRegister1_WB == readRegisterA1))
-			OpA1 = Data1_WB;
-		else OpA1 = Operand_A1;
-		// Operand B
-		if(do_writeback1_PR && (writeRegister1_PR == readRegisterB1)/* && (ALUSrc1!=1)/**/)
-			OpB1 = aluResult1_PR;
-		else if(do_writeback1_MEM && (writeRegister1_MEM == readRegisterB1)/* && (ALUSrc1!=1)/**/)
-			OpB1 = Data1_MEM;
-		else if(do_writeback1_WB && (writeRegister1_WB == readRegisterB1)/* && (ALUSrc1!=1)/**/)
-			OpB1 = Data1_WB;
-		else OpB1 = Operand_B1;
-		// Destination
-		if(do_writeback1_PR && (writeRegister1_PR == writeRegister1))
-			Dst1 = aluResult1_PR;
-		else if(do_writeback1_MEM && (writeRegister1_MEM == writeRegister1))
-			Dst1 = Data1_MEM;
-		else if(do_writeback1_WB && (writeRegister1_WB == writeRegister1))
-			Dst1 = Data1_WB;
-		else Dst1 = Dest_Value1;
+		Hazard_flag = 0;
+	// Forwarding for Instr 1	
+		// Operand A1
+		if(RegDest_OUT && (writeRegister1_OUT == readRegisterA1_IN)) // if the last instruction is an execute and writing back
+			OpA1 = aluresult_OUT;
+		else if(MemRead1_OUT && (writeRegister1_OUT == readRegisterA1_IN)) // if the last instruction is a load and writing back
+			Hazard_flag = 1;
+		else if(fwd_data_1_COM_flag && (fwd_reg_1_COM == readRegisterA1_IN)) // if the two instructions past is an execute and writing back
+			OpA1 = fwd_data_1_COM;
+		else if(LS_fwd_data_COM_flag && (LS_fwd_reg_COM == readRegisterA1_IN)) // if two instructions past is a load and writing back
+			OpA1 = LS_fwd_data_COM;
+		else OpA1 = Operand_A1_IN;
+		
+		
+		// Operand B1
+		if(!ALUSrc1_IN) begin
+			if(RegDest_OUT && (writeRegister1_OUT == readRegisterB1_IN))
+				OpB1 = aluresult_OUT;
+			else if(MemRead1_OUT && (writeRegister1_OUT == readRegisterB1_IN))
+				Hazard_flag = 1;
+			else if(fwd_data_1_COM_flag && (fwd_reg_1_COM == readRegisterB1_IN))
+				OpB1 = fwd_data_1_COM;
+			else if(LS_fwd_data_COM_flag && (LS_fwd_reg_COM == readRegisterB1_IN))
+				OpB1 = LS_fwd_data_COM;
+			else OpB1 = Operand_B1_IN;
+		end
+		
+		
+		// LSQ register operand
+		/*if(RegDest_OUT && (writeRegister1_OUT == readRegisterA1_IN))
+			OpB1 = aluresult_OUT;
+		else if(MemRead1_OUT && (writeRegister1_OUT == readRegisterA1_IN))
+			Hazard_flag = 1;
+		else if(fwd_data_1_COM_flag && (fwd_reg_1_COM == readRegisterA1_IN))
+			OpB1 = fwd_data_1_COM;
+		else if(LS_fwd_data_COM_flag && (LS_fwd_reg_COM == readRegisterA1_IN))
+			OpB1 = LS_fwd_data_COM;
+		else OpB1 = ;*/
+		
+		if(Branch_flag_IN) begin
+			Operand1 = PCA_IN;
+			Operand2 = (Immediate_IN<<2);
+		end
+		else begin
+			Operand1 = OpA1;
+			Operand2 = OpB1;
+		end
 	end
 
-   	assign aluResult1_OUT = aluResult1;
 
-	ALU ALU1(HI, LO, aluResult1, OpA1, OpB1, ALU_control1, Instr1_10_6, CLK);
+
+	ALU ALU1(HI1, LO1, aluResult1, Operand1, Operand2, ALU_control1_IN, Instr1_10_6_IN, CLK);
+	ALU AGU(HI2, LO2, address_out, OpLS1, OpLS2, ALU_control1_IN, 0, CLK);
+	compare compare1(0,OpA1,OpB1,Instr1_IN,taken_branch1);
+		
 
 	//Pipeline Stage 1
 	always @ (posedge CLK or negedge RESET) begin
 		if(!RESET)
 		begin
-			MemtoReg1_PR <= 1'b0;
-			MemRead1_PR <= 1'b0;
-			MemWrite1_PR <= 1'b0;
-			aluResult1_PR <= 32'b0;
-			writeRegister1_PR <= 5'b0;
-			do_writeback1_PR <= 1'b0;
-			ALU_control1_PR <= 6'b0;
-			readDataB1_PR <= 32'b0;
-			Dst1_PR <= 32'b0;
-			Instr1_PR <= 32'b0;
-			ALUSrc1_PR <= 1'b0;
+			ROBPointer_OUT <= 0;
+			Instr1_OUT<= 0;
+			writeRegister1_OUT <= 0;
+			ALU_control1_OUT <= 0;
+			// instruction 1 input
+			RegDest_OUT <= 0;
+			Branch_flag_OUT <= 0;
+			// LS output
+			Dest_Value1_OUT <= 0;
+			MemRead1_OUT <= 0;
+			MemWrite1_OUT <= 0;
+			Mem_Instruction_OUT <= 0;
+			Valid_Instruction_OUT <= 1'b0;
 		end
 		else if(!FREEZE)
 		begin
-		     	MemtoReg1_PR <= MemtoReg1;
-		     	readDataB1_PR <= ((do_writeback1_MEM)&&(writeRegister1_MEM==writeRegister1))?Data1_MEM:(((do_writeback1_WB)&&(writeRegister1_WB==writeRegister1))?Data1_WB:readDataB1);
-        	     	aluResult1_PR <= aluResult1;
-		     	MemRead1_PR <= MemRead1;
-		     	MemWrite1_PR <= MemWrite1;
-		     	writeRegister1_PR <= writeRegister1;
-		     	do_writeback1_PR <= do_writeback1_ID;
-        	     	ALU_control1_PR <= ALU_control1;
-		     	Dst1_PR <= Dst1;
-		     	Instr1_PR <= Instr1;
-		     	ALUSrc1_PR <= ALUSrc1;
+			ROBPointer_OUT <= ROBPointer_IN;
+			Instr1_OUT<= Instr1_IN;
+			PCA_OUT <= PCA_IN;
+			target_PC_OUT <= jump_flag_IN? {PCA_IN[31:28],Instr1_IN[25:0],2'b0} : Branch_flag_IN? aluResult1 : 0;// this could cause problems
+			writeRegister1_OUT <= writeRegister1_IN;
+			ALU_control1_OUT <= ALU_control1_IN;
+			Dest_Value1_OUT <= Dest_Value1_IN;
+			aluresult_OUT <= aluResult1; // this is dubious...
+			address_OUT <= address_out;
+			// instruction 1 input
+			RegDest_OUT <= RegDest_IN;
+			Branch_flag_OUT <= Branch_flag_IN? taken_branch1 : jump_flag_IN? 1 : 0 ;
+			// LS output
+			MemRead1_OUT <= MemRead1_IN;
+			MemWrite1_OUT <= MemWrite1_IN;
+			Mem_Instruction_OUT <= Mem_Instruction_IN;
+			Valid_Instruction_OUT <= Valid_Instruction_IN;
 		end
 	end
  
@@ -166,8 +246,8 @@ module EXE(	CLK,
 		$display("[EXE]:readRegisterA1:%x\t\t|readRegisterA2:%x",readRegisterA1,readRegisterA2);
 		$display("[EXE]:readRegisterB1:%x\t\t|readRegisterB2:%x",readRegisterB1,readRegisterB2);
 		$display("[EXE]:writeRegister1:%x\t\t|writeRegister2:%x",writeRegister1,writeRegister2);
-		$display("[EXE]:do_writeback1_PR:%x\t|do_writeback2_PR:%x",do_writeback1_PR,do_writeback2_PR);
-		$display("[EXE]:writeRegister1_PR:%x\t|writeRegister2_PR:%x",writeRegister1_PR,writeRegister2_PR);
+		$display("[EXE]:RegDest_OUT:%x\t|do_writeback2_PR:%x",RegDest_OUT,do_writeback2_PR);
+		$display("[EXE]:writeRegister1_OUT:%x\t|writeRegister2_PR:%x",writeRegister1_OUT,writeRegister2_PR);
 		$display("[EXE]:aluResult1_PR:%x\t|aluResult2_PR:%x",aluResult1_PR,aluResult2_PR);
 		$display("[EXE]:do_writeback1_MEM:%x\t|do_writeback2_MEM:%x",do_writeback1_MEM,do_writeback2_MEM);
  		$display("[EXE]:writeRegister1_MEM:%x\t|writeRegister2_MEM:%x",writeRegister1_MEM,writeRegister2_MEM);

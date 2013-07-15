@@ -132,9 +132,9 @@ module ID ( 	CLK,
  	reg			single_fetch_PR;
 	
 	initial begin
-		comment1 = 0; //show isntruction type for core 1
+		comment1 = 1; //show isntruction type for core 1
 		comment2 = 0; //show isntruction type for core 2
-		comment3 = 0; //show ID displays
+		comment3 = 1; //show ID displays
 	end
 
 	assign fetchNull2_OUT = taken_branch1;
@@ -404,8 +404,10 @@ module ID ( 	CLK,
 		$display("[ID]:writeData1_WB:%x\t|writeData2_WB:%x",writeData1_WB,writeData2_WB);
                 $display("[ID]:writeRegister1_WB:%x\t|writeRegister2_WB:%x",writeRegister1_WB,writeRegister2_WB);	
 		$display("[ID]:readRegisterA1_PR:%x\t|readRegisterA2_PR:%x",readRegisterA1_PR,readRegisterA2_PR);
-		$display("[ID]:readRegisterB1_PR:%x\t|readRegisterB2_PR:%x",readRegisterB1_PR,readRegisterB2_PR);		
+		$display("[ID]:readRegisterB1_PR:%x\t|readRegisterB2_PR:%x",readRegisterB1_PR,readRegisterB2_PR);
+		*/
 		$display("[ID]:Operand_A1:%x\t|Operand_A2:%x",(link1)?PCA:((syscal1)?R2_input:readDataA1), (link2)?PCA:((syscal2)?R2_input:readDataA2));
+		/*
 		$display("[ID]:readDataA1:%x\t|readDataA2:%x",readDataA1,readDataA2);
 		$display("[ID]:Operand_B1:%x\t|Operand_B2:%x",(link1)?32'h00000008:((syscal1)?32'h00000000:Operand_B1),(link2)?32'h00000008:((syscal2)?32'h00000000:Operand_B2));
 		$display("[ID]:readDataB1:%x\t|readDataB2:%x",readDataB1,readDataB2);

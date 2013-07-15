@@ -7,15 +7,17 @@ module IF(	CLK,
 		fetchNull2,
 		PCA_PR,
 		CIA_PR,
-                no_new_fetch,
-		single_fetch,
+        no_new_fetch,
+		// single_fetch,
 		taken_branch1,
 		nextInstruction_address, 
 		PC_init, 
 		Instr1_fIM, 
-		Instr1_PR, 
+		Instr1_PR,  		// to Q_IFID
 		Instr2_PR, 
-		Instr_address_2IM
+		Instr_address_2IM,
+		tQ_IFID_pushReq,		// to Q_IFID
+		tQ_IFID_full			// from Q_IFID
 		);
 
   output reg     [31: 0] Instr_address_2IM;
@@ -23,17 +25,19 @@ module IF(	CLK,
   output reg     [31: 0] Instr2_PR;
   output reg     [31: 0] PCA_PR;
   output reg     [31: 0] CIA_PR;
-
+  output reg			 tQ_IFID_pushReq;
+  
   input          [31: 0] nextInstruction_address;
   input          [31: 0] PC_init;
   input          [31: 0] Instr1_fIM;
-  input                  single_fetch;
+  // input                  single_fetch;
   input                  CLK;
   input                  RESET;
   input                  taken_branch1;
   input                  no_new_fetch;
   input			 fetchNull2;
   input			 FREEZE;
+  input 		 tQ_IFID_full;
 
   wire           [31: 0] Instr1;
   wire           [31: 0] Instr2;
@@ -42,9 +46,8 @@ module IF(	CLK,
 
   reg            [31: 0] PC;
   reg            [31: 0] FPC;
-  reg                    comment;
-
-  initial comment = 0; // shows IF displays
+  
+  parameter comment = 0;
 
   assign Instr_address_2IM   = (taken_branch1)? nextInstruction_address: PC;
   assign PCA                 = PC; 
@@ -52,7 +55,9 @@ module IF(	CLK,
   assign Instr1              = Instr2_PR;
   assign Instr2              = (fetchNull2)? 32'h00000000:Instr1_fIM;
   
-
+  wire wCarryOn;
+  assign wCarryOn = !no_new_fetch && !FREEZE;
+  
   // Pipeline Register (IF/ID)
   always @ (posedge CLK or negedge RESET)
   begin
@@ -60,36 +65,42 @@ module IF(	CLK,
       begin
         Instr1_PR            <= 32'b0;
         Instr2_PR            <= 32'b0;
-	PCA_PR               <= 32'b0;
-	CIA_PR               <= 32'b0;
-	FPC                  <= 32'b0;
-	PC                   <= PC_init;
+		PCA_PR               <= 32'b0;
+		CIA_PR               <= 32'b0;
+		FPC                  <= 32'b0;
+		PC                   <= PC_init;
       end
-    else if(!no_new_fetch && !FREEZE)
+    else if(wCarryOn)
       begin
         Instr1_PR            <= Instr1;
-        Instr2_PR            <= Instr2;
-	PCA_PR               <= PCA;
-	CIA_PR               <= CIA;
-	FPC                  <= Instr_address_2IM;
-	PC                   <= Instr_address_2IM + 32'h00000004;        
+        Instr2_PR            <= Instr2;		
+		PCA_PR               <= PCA;
+		CIA_PR               <= CIA;
+		FPC                  <= Instr_address_2IM;
+		PC                   <= Instr_address_2IM + 32'h00000004;        
       end
   end
 
-  always  @ (posedge CLK) begin
+	// Push request
+	always @(posedge CLK) begin
+		tQ_IFID_pushReq <= wCarryOn && RESET;
+	end
+
+  always  /*@ (posedge CLK)*/ begin
      if (comment) begin
-	$display("=============================================================");
+	$display("==IF=========================================================");
 	/*$display("[IF]:Instr1_fIM:%x\t|Instr2_fIM:%x",Instr1_fIM,Instr2_fIM);
-	/*$display("[IF]:\tsingle_fetch:%x",single_fetch);
+	$display("[IF]:\tsingle_fetch:%x",single_fetch);
 	$display("[IF]:\tPCA:%x",PCA);
-	$display("[IF]:\tCIA:%x",CIA);
+	*/$display("[IF]:\tCIA:%x",CIA);/*
 	$display("[IF]:\tPC:%x",PC);
 	$display("[IF]:\tFPC:%x",FPC);
 	$display("[IF]:\tInstr_address_2IM:%x",Instr_address_2IM);
 	$display("[IF]:\tnextInstruction_address:%x",nextInstruction_address);
 	$display("[IF]:taken_branch1:%x\t\t|taken_branch2:%x",taken_branch1,taken_branch2);
-	$display("[IF]:Instr1:%x\t\t|Instr2:%x",Instr1,Instr2);
-	$display("[IF]:Instr1_PR:%x\t\t|Instr2_PR:%x",Instr1_PR,Instr2_PR);
+	*/$display("[IF]:Instr1:%x\t\t|Instr2:%x",Instr1,Instr2);
+	//$display ("[IF]:FREEZE:%x\tQ_IFID_FULL:%x",FREEZE,tQ_IFID_full);
+	/*$display("[IF]:Instr1_PR:%x\t\t|Instr2_PR:%x",Instr1_PR,Instr2_PR);
 	$display("[IF]:Instr1_fIM:%x\t|Instr2_fIM:%x",Instr1_fIM,Instr2_fIM);
 	/**/
      end

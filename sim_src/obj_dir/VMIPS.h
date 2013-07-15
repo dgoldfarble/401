@@ -94,7 +94,6 @@ VL_MODULE(VMIPS) {
     static void	_sequent__TOP__2(VMIPS__Syms* __restrict vlSymsp);
     static void	_sequent__TOP__4(VMIPS__Syms* __restrict vlSymsp);
     static void	_settle__TOP__1(VMIPS__Syms* __restrict vlSymsp);
-    static void	_settle__TOP__6(VMIPS__Syms* __restrict vlSymsp);
 } VL_ATTR_ALIGNED(64);
 
 #endif  /*guard*/
