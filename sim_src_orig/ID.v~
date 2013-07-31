@@ -126,16 +126,10 @@ module ID ( 	CLK,
 	wire			NOPHazard;
 
         reg             [ 1: 0] syscalBubbleCounter;
-	reg                     comment1;
-	reg                     comment2;  
-	reg                     comment3;
+	parameter               comment1 = 0; //show isntruction type for core 1
+	parameter               comment2 = 0; //show isntruction type for core 2
+	parameter               comment3 = 0; //show ID displays
  	reg			single_fetch_PR;
-	
-	initial begin
-		comment1 = 1; //show isntruction type for core 1
-		comment2 = 0; //show isntruction type for core 2
-		comment3 = 1; //show ID displays
-	end
 
 	assign fetchNull2_OUT = taken_branch1;
 
@@ -381,8 +375,10 @@ module ID ( 	CLK,
 		$display("[ID]:\tsingle_fetch_OUT:%x",single_fetch_OUT);
 		$display("[ID]:\tsingle_fetch_PR:%x",single_fetch_PR);
                 $display("[ID]:\tSYS_OUT:%x",SYS_OUT);
+        */
 		$display("[ID]:\tPCA:%x",PCA);
 		$display("[ID]:\tCIA:%x",CIA);
+		/*
 		$display("[ID]:\tbranch1:%x\n[ID]:\tbranch2:%x",branch1,branch2);/*
 		$display("[ID]:\tInstr1:%x\n[ID]:\tInstr2:%x",Instr1,Instr2);/*
 		$display("[ID]:\tnextInstruction_address:%x",nextInstruction_address);
@@ -405,8 +401,8 @@ module ID ( 	CLK,
                 $display("[ID]:writeRegister1_WB:%x\t|writeRegister2_WB:%x",writeRegister1_WB,writeRegister2_WB);	
 		$display("[ID]:readRegisterA1_PR:%x\t|readRegisterA2_PR:%x",readRegisterA1_PR,readRegisterA2_PR);
 		$display("[ID]:readRegisterB1_PR:%x\t|readRegisterB2_PR:%x",readRegisterB1_PR,readRegisterB2_PR);
-		*/	
-		$display("[ID]:Operand_A1:%x\t|Operand_A2:%x",(link1)?PCA:((syscal1)?R2_input:readDataA1), (link2)?PCA:((syscal2)?R2_input:readDataA2));
+		*/
+		$display("[ID]:Operand_A1:%x"/*\t|Operand_A2:%x"*/,(link1)?PCA:((syscal1)?R2_input:readDataA1) /*, (link2)?PCA:((syscal2)?R2_input:readDataA2)*/);
 		/*
 		$display("[ID]:readDataA1:%x\t|readDataA2:%x",readDataA1,readDataA2);
 		$display("[ID]:Operand_B1:%x\t|Operand_B2:%x",(link1)?32'h00000008:((syscal1)?32'h00000000:Operand_B1),(link2)?32'h00000008:((syscal2)?32'h00000000:Operand_B2));

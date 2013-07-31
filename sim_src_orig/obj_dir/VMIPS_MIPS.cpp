@@ -201,7 +201,6 @@ VL_CTOR_IMP(VMIPS_MIPS) {
     __PVT__ID1__DOT__sign_or_zero_Flag1 = VL_RAND_RESET_I(1);
     __PVT__ID1__DOT__syscal1 = VL_RAND_RESET_I(1);
     __PVT__ID1__DOT__syscalBubbleCounter = VL_RAND_RESET_I(2);
-    __PVT__ID1__DOT__comment1 = VL_RAND_RESET_I(1);
     __PVT__EXE1__DOT__aluResult1 = VL_RAND_RESET_I(32);
     __PVT__EXE1__DOT__OpA1 = VL_RAND_RESET_I(32);
     __PVT__EXE1__DOT__OpB1 = VL_RAND_RESET_I(32);
@@ -235,22 +234,14 @@ VMIPS_MIPS::~VMIPS_MIPS() {
 //--------------------
 // Internal Methods
 
-void VMIPS_MIPS::_initial__TOP__v(VMIPS__Syms* __restrict vlSymsp) {
-    VL_DEBUG_IF(VL_PRINTF("      VMIPS_MIPS::_initial__TOP__v\n"); );
-    VMIPS* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
-    // Body
-    // INITIAL at ID.v:134
-    vlSymsp->TOP__v.__PVT__ID1__DOT__comment1 = 0;
-}
-
 void VMIPS_MIPS::_settle__TOP__v__1(VMIPS__Syms* __restrict vlSymsp) {
     VL_DEBUG_IF(VL_PRINTF("      VMIPS_MIPS::_settle__TOP__v__1\n"); );
     VMIPS* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
-    // ALWAYS at WB.v:65
-    // ALWAYS at EXE.v:156
-    // ALWAYS at dCache.v:93
     // ALWAYS at iCache.v:86
+    // ALWAYS at dCache.v:93
+    // ALWAYS at EXE.v:156
+    // ALWAYS at WB.v:65
 }
 
 void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
@@ -442,7 +433,7 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
 	    }
 	}
     }
-    // ALWAYS at ID.v:325
+    // ALWAYS at ID.v:319
     if (vlSymsp->TOP__v.do_writeback1_WBID) {
 	vlSymsp->TOP__v.Reg_ID[(IData)(vlSymsp->TOP__v.writeRegister1_WBID)] 
 	    = vlSymsp->TOP__v.writeData1_WBID;
@@ -2111,7 +2102,7 @@ void VMIPS_MIPS::_sequent__TOP__v__3(VMIPS__Syms* __restrict vlSymsp) {
     vlSymsp->TOP__v.__Vdly__IF1__DOT__PC = vlSymsp->TOP__v.__PVT__IF1__DOT__PC;
     vlSymsp->TOP__v.__Vdly__ID1__DOT__syscalBubbleCounter 
 	= vlSymsp->TOP__v.__PVT__ID1__DOT__syscalBubbleCounter;
-    // ALWAYS at ID.v:308
+    // ALWAYS at ID.v:302
     if (vlTOPp->RESET) {
 	if ((1 & (~ (IData)(vlSymsp->TOP__v.FREEZE)))) {
 	    vlSymsp->TOP__v.__Vdly__ID1__DOT__syscalBubbleCounter 
@@ -2146,8 +2137,8 @@ void VMIPS_MIPS::_sequent__TOP__v__4(VMIPS__Syms* __restrict vlSymsp) {
     VL_DEBUG_IF(VL_PRINTF("      VMIPS_MIPS::_sequent__TOP__v__4\n"); );
     VMIPS* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
-    vlSymsp->TOP__v.__Vdly__writeRegister1_MEMW = vlSymsp->TOP__v.writeRegister1_MEMW;
     vlSymsp->TOP__v.__Vdly__do_writeback1_MEMW = vlSymsp->TOP__v.do_writeback1_MEMW;
+    vlSymsp->TOP__v.__Vdly__writeRegister1_MEMW = vlSymsp->TOP__v.writeRegister1_MEMW;
     // ALWAYS at MEM.v:153
     if (vlTOPp->RESET) {
 	if ((1 & (~ (IData)(vlSymsp->TOP__v.FREEZE)))) {
@@ -2338,7 +2329,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 	vlSymsp->TOP__v.writeRegister1_WBEXE = 0;
 	vlSymsp->TOP__v.do_writeback1_WBEXE = 0;
     }
-    // ALWAYS at ID.v:332
+    // ALWAYS at ID.v:326
     if ((1 & ((~ (IData)(vlTOPp->RESET)) | (IData)(vlSymsp->TOP__v.no_fetch)))) {
 	vlSymsp->TOP__v.Operand_A1_IDEXE = 0;
 	vlSymsp->TOP__v.Operand_B1_IDEXE = 0;
@@ -2436,7 +2427,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 	[(0x1f & (vlSymsp->TOP__v.Instr1_IFID >> 0x15))];
     vlSymsp->TOP__v.__PVT__ID1__DOT__readDataB1 = vlSymsp->TOP__v.Reg_ID
 	[(0x1f & (vlSymsp->TOP__v.Instr1_IFID >> 0x10))];
-    // ALWAYS at ID.v:191
+    // ALWAYS at ID.v:185
     vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1 = (0x3f 
 						& (vlSymsp->TOP__v.Instr1_IFID 
 						   >> 0x1a));
@@ -2458,9 +2449,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 			VL_WRITEF("Not an Instruction!\n");
 		    } else {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]swc1\n\n");
-			    }
+			    VL_WRITEF("[1]swc1\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2474,9 +2463,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x39;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]swc0\n\n");
-			    }
+			    VL_WRITEF("[1]swc0\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2500,9 +2487,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 			VL_WRITEF("Not an Instruction!\n");
 		    } else {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]lwc1\n\n");
-			    }
+			    VL_WRITEF("[1]lwc1\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2516,9 +2501,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x35;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]lwc0\n\n");
-			    }
+			    VL_WRITEF("[1]lwc0\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2539,12 +2522,10 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 	    if ((8 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 		if ((4 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 		    if (VL_LIKELY((2 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1)))) {
-			if (VL_UNLIKELY((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1)))) {
+			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 			    VL_WRITEF("Not an Instruction!\n");
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]swr\n\n");
-			    }
+			    VL_WRITEF("[1]swr\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2564,9 +2545,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 		} else {
 		    if ((2 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]sw\n\n");
-			    }
+			    VL_WRITEF("[1]sw\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2580,9 +2559,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x31;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]swl\n\n");
-			    }
+			    VL_WRITEF("[1]swl\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2598,9 +2575,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 			}
 		    } else {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]sh\n\n");
-			    }
+			    VL_WRITEF("[1]sh\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2614,9 +2589,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x30;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]sb\n\n");
-			    }
+			    VL_WRITEF("[1]sb\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2635,12 +2608,10 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 	    } else {
 		if ((4 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 		    if ((2 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			if (VL_UNLIKELY((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1)))) {
+			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 			    VL_WRITEF("Not an Instruction!\n");
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]lwr\n\n");
-			    }
+			    VL_WRITEF("[1]lwr\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2656,9 +2627,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 			}
 		    } else {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]lhu\n\n");
-			    }
+			    VL_WRITEF("[1]lhu\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2672,9 +2641,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x2c;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]lbu\n\n");
-			    }
+			    VL_WRITEF("[1]lbu\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2692,9 +2659,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 		} else {
 		    if ((2 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]lw\n\n");
-			    }
+			    VL_WRITEF("[1]lw\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2708,9 +2673,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x3d;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]lwl\n\n");
-			    }
+			    VL_WRITEF("[1]lwl\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2726,9 +2689,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 			}
 		    } else {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]lh\n\n");
-			    }
+			    VL_WRITEF("[1]lh\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2742,9 +2703,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x2b;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]lb\n\n");
-			    }
+			    VL_WRITEF("[1]lb\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2769,12 +2728,10 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 	    } else {
 		if ((4 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 		    if ((2 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			if (VL_UNLIKELY((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1)))) {
+			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 			    VL_WRITEF("Not an Instruction!\n");
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]blezl\n\n");
-			    }
+			    VL_WRITEF("[1]blezl\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2790,9 +2747,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 			}
 		    } else {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]bnel\n\n");
-			    }
+			    VL_WRITEF("[1]bnel\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2806,9 +2761,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x3c;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]beql\n\n");
-			    }
+			    VL_WRITEF("[1]beql\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2843,11 +2796,10 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 							 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1)))) {
 					    VL_WRITEF("Not an Instruction!\n");
 					} else {
-					    if ((1 
-						 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1))) {
-						if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-						    VL_WRITEF("[1]fp cvt.s\n\n");
-						}
+					    if (VL_UNLIKELY(
+							    (1 
+							     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1)))) {
+						VL_WRITEF("[1]fp cvt.s\n\n");
 						vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2861,15 +2813,13 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 8;
 					    } else {
-						if (
-						    (3 
-						     == 
-						     (0xf 
-						      & (vlSymsp->TOP__v.Instr1_IFID 
-							 >> 4)))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]fp c.cond\n\n");
-						    }
+						if (VL_UNLIKELY(
+								(3 
+								 == 
+								 (0xf 
+								  & (vlSymsp->TOP__v.Instr1_IFID 
+								     >> 4))))) {
+						    VL_WRITEF("[1]fp c.cond\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2907,9 +2857,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 									if (
 									    (1 
 									     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-									    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-										VL_WRITEF("[1]fp neg\n\n");
-									    }
+									    VL_WRITEF("[1]fp neg\n\n");
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2923,9 +2871,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x10;
 									} else {
-									    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-										VL_WRITEF("[1]fp mov\n\n");
-									    }
+									    VL_WRITEF("[1]fp mov\n\n");
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2940,12 +2886,10 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 4;
 									}
 								    } else {
-									if (VL_LIKELY(
-										(1 
-										& (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1)))) {
-									    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-										VL_WRITEF("[1]fp abs\n\n");
-									    }
+									if (
+									    (1 
+									     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
+									    VL_WRITEF("[1]fp abs\n\n");
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2969,9 +2913,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 									if (
 									    (1 
 									     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-									    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-										VL_WRITEF("[1]fp div\n\n");
-									    }
+									    VL_WRITEF("[1]fp div\n\n");
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -2985,9 +2927,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 5;
 									} else {
-									    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-										VL_WRITEF("[1]fp mul\n\n");
-									    }
+									    VL_WRITEF("[1]fp mul\n\n");
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3005,9 +2945,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 									if (
 									    (1 
 									     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-									    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-										VL_WRITEF("[1]fp sub\n\n");
-									    }
+									    VL_WRITEF("[1]fp sub\n\n");
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3021,9 +2959,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0;
 									} else {
-									    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-										VL_WRITEF("[1]fp add\n\n");
-									    }
+									    VL_WRITEF("[1]fp add\n\n");
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3064,12 +3000,10 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 							     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1)))) {
 						VL_WRITEF("Not an Instruction!\n");
 					    } else {
-						if (
-						    (0x10000 
-						     & vlSymsp->TOP__v.Instr1_IFID)) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]bc1t\n\n");
-						    }
+						if (VL_UNLIKELY(
+								(0x10000 
+								 & vlSymsp->TOP__v.Instr1_IFID))) {
+						    VL_WRITEF("[1]bc1t\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3083,14 +3017,12 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x1d;
 						} else {
-						    if (
-							(1 
-							 & (~ 
-							    (vlSymsp->TOP__v.Instr1_IFID 
-							     >> 0x10)))) {
-							if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							    VL_WRITEF("[1]bc1f\n\n");
-							}
+						    if (VL_UNLIKELY(
+								    (1 
+								     & (~ 
+									(vlSymsp->TOP__v.Instr1_IFID 
+									 >> 0x10))))) {
+							VL_WRITEF("[1]bc1f\n\n");
 							vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 							vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 							vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3111,14 +3043,11 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 				} else {
 				    if ((4 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1))) {
 					if ((2 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1))) {
-					    if (VL_UNLIKELY(
-							    (1 
-							     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1)))) {
+					    if ((1 
+						 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1))) {
 						VL_WRITEF("Not an Instruction!\n");
 					    } else {
-						if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-						    VL_WRITEF("[1]ctc1\n\n");
-						}
+						VL_WRITEF("[1]ctc1\n\n");
 						vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3133,14 +3062,11 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x34;
 					    }
 					} else {
-					    if (VL_UNLIKELY(
-							    (1 
-							     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1)))) {
+					    if ((1 
+						 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1))) {
 						VL_WRITEF("Not an Instruction!\n");
 					    } else {
-						if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-						    VL_WRITEF("[1]mtc1\n\n");
-						}
+						VL_WRITEF("[1]mtc1\n\n");
 						vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3157,14 +3083,11 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 					}
 				    } else {
 					if ((2 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1))) {
-					    if (VL_UNLIKELY(
-							    (1 
-							     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1)))) {
+					    if ((1 
+						 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1))) {
 						VL_WRITEF("Not an Instruction!\n");
 					    } else {
-						if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-						    VL_WRITEF("[1]cfc1\n\n");
-						}
+						VL_WRITEF("[1]cfc1\n\n");
 						vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3179,14 +3102,11 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x1a;
 					    }
 					} else {
-					    if (VL_UNLIKELY(
-							    (1 
-							     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1)))) {
+					    if ((1 
+						 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1))) {
 						VL_WRITEF("Not an Instruction!\n");
 					    } else {
-						if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-						    VL_WRITEF("[1]mfc1\n\n");
-						}
+						VL_WRITEF("[1]mfc1\n\n");
 						vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3215,9 +3135,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 		if ((4 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 		    if ((2 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]lui\n\n");
-			    }
+			    VL_WRITEF("[1]lui\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3231,9 +3149,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 8;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]xori\n\n");
-			    }
+			    VL_WRITEF("[1]xori\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3249,9 +3165,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 			}
 		    } else {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]ori\n\n");
-			    }
+			    VL_WRITEF("[1]ori\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3265,9 +3179,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x10;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]andi\n\n");
-			    }
+			    VL_WRITEF("[1]andi\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3285,9 +3197,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 		} else {
 		    if ((2 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]sltiu\n\n");
-			    }
+			    VL_WRITEF("[1]sltiu\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3301,9 +3211,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x15;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]slti\n\n");
-			    }
+			    VL_WRITEF("[1]slti\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3319,9 +3227,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 			}
 		    } else {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]addiu\n\n");
-			    }
+			    VL_WRITEF("[1]addiu\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3335,9 +3241,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 2;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]addi\n\n");
-			    }
+			    VL_WRITEF("[1]addi\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3357,9 +3261,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 		if ((4 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 		    if ((2 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]bgtz\n\n");
-			    }
+			    VL_WRITEF("[1]bgtz\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3373,9 +3275,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x25;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]blez\n\n");
-			    }
+			    VL_WRITEF("[1]blez\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3391,9 +3291,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 			}
 		    } else {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]bne\n\n");
-			    }
+			    VL_WRITEF("[1]bne\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3407,9 +3305,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x29;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]beq\n\n");
-			    }
+			    VL_WRITEF("[1]beq\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3427,9 +3323,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 		} else {
 		    if ((2 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]jal\n\n");
-			    }
+			    VL_WRITEF("[1]jal\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 1;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 1;
@@ -3443,9 +3337,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 1;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]jump\n\n");
-			    }
+			    VL_WRITEF("[1]jump\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 1;
@@ -3478,9 +3370,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 					} else {
 					    if ((1 
 						 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__rt1))) {
-						if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-						    VL_WRITEF("[1]bgezal\n\n");
-						}
+						VL_WRITEF("[1]bgezal\n\n");
 						vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 1;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3494,9 +3384,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 1;
 					    } else {
-						if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-						    VL_WRITEF("[1]bltzal\n\n");
-						}
+						VL_WRITEF("[1]bltzal\n\n");
 						vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 1;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3530,9 +3418,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 					} else {
 					    if ((1 
 						 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__rt1))) {
-						if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-						    VL_WRITEF("[1]bgez\n\n");
-						}
+						VL_WRITEF("[1]bgez\n\n");
 						vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3546,9 +3432,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x23;
 					    } else {
-						if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-						    VL_WRITEF("[1]bltz\n\n");
-						}
+						VL_WRITEF("[1]bltz\n\n");
 						vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3584,9 +3468,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]sltu\n\n");
-						    }
+						    VL_WRITEF("[1]sltu\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3600,9 +3482,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x3f;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]slt\n\n");
-						    }
+						    VL_WRITEF("[1]slt\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3627,9 +3507,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]nor\n\n");
-						    }
+						    VL_WRITEF("[1]nor\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3643,9 +3521,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0xf;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]xor\n\n");
-						    }
+						    VL_WRITEF("[1]xor\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3663,9 +3539,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]or\n\n");
-						    }
+						    VL_WRITEF("[1]or\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3679,9 +3553,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x10;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]and\n\n");
-						    }
+						    VL_WRITEF("[1]and\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3702,9 +3574,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]subu\n\n");
-						    }
+						    VL_WRITEF("[1]subu\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3718,9 +3588,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x1e;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]sub\n\n");
-						    }
+						    VL_WRITEF("[1]sub\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3738,9 +3606,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]addu\n\n");
-						    }
+						    VL_WRITEF("[1]addu\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3754,9 +3620,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x37;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]add\n\n");
-						    }
+						    VL_WRITEF("[1]add\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3787,9 +3651,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]divu\n\n");
-						    }
+						    VL_WRITEF("[1]divu\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3803,9 +3665,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 6;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]div\n\n");
-						    }
+						    VL_WRITEF("[1]div\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3823,9 +3683,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]multu\n\n");
-						    }
+						    VL_WRITEF("[1]multu\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3839,9 +3697,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0xd;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]mult\n\n");
-						    }
+						    VL_WRITEF("[1]mult\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3868,9 +3724,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]mtlo\n\n");
-						    }
+						    VL_WRITEF("[1]mtlo\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3884,9 +3738,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0xc;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]mflo\n\n");
-						    }
+						    VL_WRITEF("[1]mflo\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3904,9 +3756,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]mthi\n\n");
-						    }
+						    VL_WRITEF("[1]mthi\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3920,9 +3770,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0xb;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]mfhi\n\n");
-						    }
+						    VL_WRITEF("[1]mfhi\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3950,9 +3798,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]break\n\n");
-						    }
+						    VL_WRITEF("[1]break\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3966,9 +3812,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x13;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]syscal1\n\n");
-						    }
+						    VL_WRITEF("[1]syscal1\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -3992,9 +3836,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]jalr\n\n");
-						    }
+						    VL_WRITEF("[1]jalr\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 1;
@@ -4008,9 +3850,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 1;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]jr\n\n");
-						    }
+						    VL_WRITEF("[1]jr\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 1;
@@ -4033,9 +3873,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]srav\n\n");
-						    }
+						    VL_WRITEF("[1]srav\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4049,9 +3887,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x1a;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]srlv\n\n");
-						    }
+						    VL_WRITEF("[1]srlv\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4066,14 +3902,12 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x1c;
 						}
 					    } else {
-						if (VL_UNLIKELY(
-								(1 
-								 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1)))) {
+						if (
+						    (1 
+						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
 						    VL_WRITEF("Not an Instruction!\n");
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]sllv\n\n");
-						    }
+						    VL_WRITEF("[1]sllv\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4094,9 +3928,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]sra\n\n");
-						    }
+						    VL_WRITEF("[1]sra\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4110,9 +3942,7 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x19;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]srl\n\n");
-						    }
+						    VL_WRITEF("[1]srl\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4127,14 +3957,12 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x1b;
 						}
 					    } else {
-						if (VL_UNLIKELY(
-								(1 
-								 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1)))) {
+						if (
+						    (1 
+						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
 						    VL_WRITEF("Not an Instruction!\n");
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]sll,nop\n\n");
-						    }
+						    VL_WRITEF("[1]sll,nop\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4274,7 +4102,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 	[(0x1f & (vlSymsp->TOP__v.Instr1_IFID >> 0x15))];
     vlSymsp->TOP__v.__PVT__ID1__DOT__readDataB1 = vlSymsp->TOP__v.Reg_ID
 	[(0x1f & (vlSymsp->TOP__v.Instr1_IFID >> 0x10))];
-    // ALWAYS at ID.v:191
+    // ALWAYS at ID.v:185
     vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1 = (0x3f 
 						& (vlSymsp->TOP__v.Instr1_IFID 
 						   >> 0x1a));
@@ -4296,9 +4124,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 			VL_WRITEF("Not an Instruction!\n");
 		    } else {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]swc1\n\n");
-			    }
+			    VL_WRITEF("[1]swc1\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4312,9 +4138,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x39;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]swc0\n\n");
-			    }
+			    VL_WRITEF("[1]swc0\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4338,9 +4162,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 			VL_WRITEF("Not an Instruction!\n");
 		    } else {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]lwc1\n\n");
-			    }
+			    VL_WRITEF("[1]lwc1\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4354,9 +4176,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x35;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]lwc0\n\n");
-			    }
+			    VL_WRITEF("[1]lwc0\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4377,12 +4197,10 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 	    if ((8 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 		if ((4 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 		    if (VL_LIKELY((2 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1)))) {
-			if (VL_UNLIKELY((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1)))) {
+			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 			    VL_WRITEF("Not an Instruction!\n");
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]swr\n\n");
-			    }
+			    VL_WRITEF("[1]swr\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4402,9 +4220,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 		} else {
 		    if ((2 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]sw\n\n");
-			    }
+			    VL_WRITEF("[1]sw\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4418,9 +4234,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x31;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]swl\n\n");
-			    }
+			    VL_WRITEF("[1]swl\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4436,9 +4250,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 			}
 		    } else {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]sh\n\n");
-			    }
+			    VL_WRITEF("[1]sh\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4452,9 +4264,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x30;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]sb\n\n");
-			    }
+			    VL_WRITEF("[1]sb\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4473,12 +4283,10 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 	    } else {
 		if ((4 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 		    if ((2 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			if (VL_UNLIKELY((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1)))) {
+			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 			    VL_WRITEF("Not an Instruction!\n");
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]lwr\n\n");
-			    }
+			    VL_WRITEF("[1]lwr\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4494,9 +4302,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 			}
 		    } else {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]lhu\n\n");
-			    }
+			    VL_WRITEF("[1]lhu\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4510,9 +4316,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x2c;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]lbu\n\n");
-			    }
+			    VL_WRITEF("[1]lbu\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4530,9 +4334,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 		} else {
 		    if ((2 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]lw\n\n");
-			    }
+			    VL_WRITEF("[1]lw\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4546,9 +4348,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x3d;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]lwl\n\n");
-			    }
+			    VL_WRITEF("[1]lwl\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4564,9 +4364,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 			}
 		    } else {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]lh\n\n");
-			    }
+			    VL_WRITEF("[1]lh\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4580,9 +4378,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x2b;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]lb\n\n");
-			    }
+			    VL_WRITEF("[1]lb\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4607,12 +4403,10 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 	    } else {
 		if ((4 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 		    if ((2 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			if (VL_UNLIKELY((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1)))) {
+			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 			    VL_WRITEF("Not an Instruction!\n");
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]blezl\n\n");
-			    }
+			    VL_WRITEF("[1]blezl\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4628,9 +4422,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 			}
 		    } else {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]bnel\n\n");
-			    }
+			    VL_WRITEF("[1]bnel\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4644,9 +4436,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x3c;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]beql\n\n");
-			    }
+			    VL_WRITEF("[1]beql\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4681,11 +4471,10 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 							 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1)))) {
 					    VL_WRITEF("Not an Instruction!\n");
 					} else {
-					    if ((1 
-						 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1))) {
-						if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-						    VL_WRITEF("[1]fp cvt.s\n\n");
-						}
+					    if (VL_UNLIKELY(
+							    (1 
+							     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1)))) {
+						VL_WRITEF("[1]fp cvt.s\n\n");
 						vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4699,15 +4488,13 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 8;
 					    } else {
-						if (
-						    (3 
-						     == 
-						     (0xf 
-						      & (vlSymsp->TOP__v.Instr1_IFID 
-							 >> 4)))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]fp c.cond\n\n");
-						    }
+						if (VL_UNLIKELY(
+								(3 
+								 == 
+								 (0xf 
+								  & (vlSymsp->TOP__v.Instr1_IFID 
+								     >> 4))))) {
+						    VL_WRITEF("[1]fp c.cond\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4745,9 +4532,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 									if (
 									    (1 
 									     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-									    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-										VL_WRITEF("[1]fp neg\n\n");
-									    }
+									    VL_WRITEF("[1]fp neg\n\n");
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4761,9 +4546,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x10;
 									} else {
-									    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-										VL_WRITEF("[1]fp mov\n\n");
-									    }
+									    VL_WRITEF("[1]fp mov\n\n");
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4778,12 +4561,10 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 4;
 									}
 								    } else {
-									if (VL_LIKELY(
-										(1 
-										& (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1)))) {
-									    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-										VL_WRITEF("[1]fp abs\n\n");
-									    }
+									if (
+									    (1 
+									     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
+									    VL_WRITEF("[1]fp abs\n\n");
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4807,9 +4588,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 									if (
 									    (1 
 									     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-									    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-										VL_WRITEF("[1]fp div\n\n");
-									    }
+									    VL_WRITEF("[1]fp div\n\n");
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4823,9 +4602,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 5;
 									} else {
-									    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-										VL_WRITEF("[1]fp mul\n\n");
-									    }
+									    VL_WRITEF("[1]fp mul\n\n");
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4843,9 +4620,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 									if (
 									    (1 
 									     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-									    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-										VL_WRITEF("[1]fp sub\n\n");
-									    }
+									    VL_WRITEF("[1]fp sub\n\n");
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4859,9 +4634,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0;
 									} else {
-									    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-										VL_WRITEF("[1]fp add\n\n");
-									    }
+									    VL_WRITEF("[1]fp add\n\n");
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 									    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4902,12 +4675,10 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 							     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1)))) {
 						VL_WRITEF("Not an Instruction!\n");
 					    } else {
-						if (
-						    (0x10000 
-						     & vlSymsp->TOP__v.Instr1_IFID)) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]bc1t\n\n");
-						    }
+						if (VL_UNLIKELY(
+								(0x10000 
+								 & vlSymsp->TOP__v.Instr1_IFID))) {
+						    VL_WRITEF("[1]bc1t\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4921,14 +4692,12 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x1d;
 						} else {
-						    if (
-							(1 
-							 & (~ 
-							    (vlSymsp->TOP__v.Instr1_IFID 
-							     >> 0x10)))) {
-							if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							    VL_WRITEF("[1]bc1f\n\n");
-							}
+						    if (VL_UNLIKELY(
+								    (1 
+								     & (~ 
+									(vlSymsp->TOP__v.Instr1_IFID 
+									 >> 0x10))))) {
+							VL_WRITEF("[1]bc1f\n\n");
 							vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 							vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 							vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4949,14 +4718,11 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 				} else {
 				    if ((4 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1))) {
 					if ((2 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1))) {
-					    if (VL_UNLIKELY(
-							    (1 
-							     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1)))) {
+					    if ((1 
+						 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1))) {
 						VL_WRITEF("Not an Instruction!\n");
 					    } else {
-						if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-						    VL_WRITEF("[1]ctc1\n\n");
-						}
+						VL_WRITEF("[1]ctc1\n\n");
 						vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4971,14 +4737,11 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x34;
 					    }
 					} else {
-					    if (VL_UNLIKELY(
-							    (1 
-							     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1)))) {
+					    if ((1 
+						 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1))) {
 						VL_WRITEF("Not an Instruction!\n");
 					    } else {
-						if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-						    VL_WRITEF("[1]mtc1\n\n");
-						}
+						VL_WRITEF("[1]mtc1\n\n");
 						vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -4995,14 +4758,11 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 					}
 				    } else {
 					if ((2 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1))) {
-					    if (VL_UNLIKELY(
-							    (1 
-							     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1)))) {
+					    if ((1 
+						 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1))) {
 						VL_WRITEF("Not an Instruction!\n");
 					    } else {
-						if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-						    VL_WRITEF("[1]cfc1\n\n");
-						}
+						VL_WRITEF("[1]cfc1\n\n");
 						vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5017,14 +4777,11 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x1a;
 					    }
 					} else {
-					    if (VL_UNLIKELY(
-							    (1 
-							     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1)))) {
+					    if ((1 
+						 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__format1))) {
 						VL_WRITEF("Not an Instruction!\n");
 					    } else {
-						if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-						    VL_WRITEF("[1]mfc1\n\n");
-						}
+						VL_WRITEF("[1]mfc1\n\n");
 						vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5053,9 +4810,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 		if ((4 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 		    if ((2 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]lui\n\n");
-			    }
+			    VL_WRITEF("[1]lui\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5069,9 +4824,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 8;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]xori\n\n");
-			    }
+			    VL_WRITEF("[1]xori\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5087,9 +4840,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 			}
 		    } else {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]ori\n\n");
-			    }
+			    VL_WRITEF("[1]ori\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5103,9 +4854,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x10;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]andi\n\n");
-			    }
+			    VL_WRITEF("[1]andi\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5123,9 +4872,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 		} else {
 		    if ((2 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]sltiu\n\n");
-			    }
+			    VL_WRITEF("[1]sltiu\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5139,9 +4886,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x15;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]slti\n\n");
-			    }
+			    VL_WRITEF("[1]slti\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5157,9 +4902,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 			}
 		    } else {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]addiu\n\n");
-			    }
+			    VL_WRITEF("[1]addiu\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5173,9 +4916,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 2;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]addi\n\n");
-			    }
+			    VL_WRITEF("[1]addi\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5195,9 +4936,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 		if ((4 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 		    if ((2 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]bgtz\n\n");
-			    }
+			    VL_WRITEF("[1]bgtz\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5211,9 +4950,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x25;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]blez\n\n");
-			    }
+			    VL_WRITEF("[1]blez\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5229,9 +4966,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 			}
 		    } else {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]bne\n\n");
-			    }
+			    VL_WRITEF("[1]bne\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5245,9 +4980,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x29;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]beq\n\n");
-			    }
+			    VL_WRITEF("[1]beq\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5265,9 +4998,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 		} else {
 		    if ((2 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
 			if ((1 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1))) {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]jal\n\n");
-			    }
+			    VL_WRITEF("[1]jal\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 1;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 1;
@@ -5281,9 +5012,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 1;
 			} else {
-			    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-				VL_WRITEF("[1]jump\n\n");
-			    }
+			    VL_WRITEF("[1]jump\n\n");
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 			    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 1;
@@ -5316,9 +5045,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 					} else {
 					    if ((1 
 						 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__rt1))) {
-						if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-						    VL_WRITEF("[1]bgezal\n\n");
-						}
+						VL_WRITEF("[1]bgezal\n\n");
 						vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 1;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5332,9 +5059,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 1;
 					    } else {
-						if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-						    VL_WRITEF("[1]bltzal\n\n");
-						}
+						VL_WRITEF("[1]bltzal\n\n");
 						vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 1;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5368,9 +5093,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 					} else {
 					    if ((1 
 						 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__rt1))) {
-						if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-						    VL_WRITEF("[1]bgez\n\n");
-						}
+						VL_WRITEF("[1]bgez\n\n");
 						vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5384,9 +5107,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x23;
 					    } else {
-						if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-						    VL_WRITEF("[1]bltz\n\n");
-						}
+						VL_WRITEF("[1]bltz\n\n");
 						vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5422,9 +5143,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]sltu\n\n");
-						    }
+						    VL_WRITEF("[1]sltu\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5438,9 +5157,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x3f;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]slt\n\n");
-						    }
+						    VL_WRITEF("[1]slt\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5465,9 +5182,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]nor\n\n");
-						    }
+						    VL_WRITEF("[1]nor\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5481,9 +5196,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0xf;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]xor\n\n");
-						    }
+						    VL_WRITEF("[1]xor\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5501,9 +5214,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]or\n\n");
-						    }
+						    VL_WRITEF("[1]or\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5517,9 +5228,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x10;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]and\n\n");
-						    }
+						    VL_WRITEF("[1]and\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5540,9 +5249,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]subu\n\n");
-						    }
+						    VL_WRITEF("[1]subu\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5556,9 +5263,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x1e;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]sub\n\n");
-						    }
+						    VL_WRITEF("[1]sub\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5576,9 +5281,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]addu\n\n");
-						    }
+						    VL_WRITEF("[1]addu\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5592,9 +5295,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x37;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]add\n\n");
-						    }
+						    VL_WRITEF("[1]add\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5625,9 +5326,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]divu\n\n");
-						    }
+						    VL_WRITEF("[1]divu\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5641,9 +5340,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 6;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]div\n\n");
-						    }
+						    VL_WRITEF("[1]div\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5661,9 +5358,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]multu\n\n");
-						    }
+						    VL_WRITEF("[1]multu\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5677,9 +5372,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0xd;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]mult\n\n");
-						    }
+						    VL_WRITEF("[1]mult\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5706,9 +5399,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]mtlo\n\n");
-						    }
+						    VL_WRITEF("[1]mtlo\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5722,9 +5413,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0xc;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]mflo\n\n");
-						    }
+						    VL_WRITEF("[1]mflo\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5742,9 +5431,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]mthi\n\n");
-						    }
+						    VL_WRITEF("[1]mthi\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5758,9 +5445,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0xb;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]mfhi\n\n");
-						    }
+						    VL_WRITEF("[1]mfhi\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5788,9 +5473,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]break\n\n");
-						    }
+						    VL_WRITEF("[1]break\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5804,9 +5487,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x13;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]syscal1\n\n");
-						    }
+						    VL_WRITEF("[1]syscal1\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5830,9 +5511,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]jalr\n\n");
-						    }
+						    VL_WRITEF("[1]jalr\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 1;
@@ -5846,9 +5525,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 1;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]jr\n\n");
-						    }
+						    VL_WRITEF("[1]jr\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 1;
@@ -5871,9 +5548,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]srav\n\n");
-						    }
+						    VL_WRITEF("[1]srav\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5887,9 +5562,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x1a;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]srlv\n\n");
-						    }
+						    VL_WRITEF("[1]srlv\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5904,14 +5577,12 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x1c;
 						}
 					    } else {
-						if (VL_UNLIKELY(
-								(1 
-								 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1)))) {
+						if (
+						    (1 
+						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
 						    VL_WRITEF("Not an Instruction!\n");
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]sllv\n\n");
-						    }
+						    VL_WRITEF("[1]sllv\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5932,9 +5603,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						if (
 						    (1 
 						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]sra\n\n");
-						    }
+						    VL_WRITEF("[1]sra\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5948,9 +5617,7 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x19;
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]srl\n\n");
-						    }
+						    VL_WRITEF("[1]srl\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -5965,14 +5632,12 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__ALU_control1 = 0x1b;
 						}
 					    } else {
-						if (VL_UNLIKELY(
-								(1 
-								 & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1)))) {
+						if (
+						    (1 
+						     & (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__funct1))) {
 						    VL_WRITEF("Not an Instruction!\n");
 						} else {
-						    if (VL_UNLIKELY(vlSymsp->TOP__v.__PVT__ID1__DOT__comment1)) {
-							VL_WRITEF("[1]sll,nop\n\n");
-						    }
+						    VL_WRITEF("[1]sll,nop\n\n");
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__link1 = 0;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__RegDst1 = 1;
 						    vlSymsp->TOP__v.__PVT__ID1__DOT__jump1 = 0;
@@ -6438,6 +6103,12 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 					      ? 0 : 
 					     (vlSymsp->TOP__v.Instr1_IFID 
 					      >> 0x10)))));
+    // ALWAYS at ID.v:367
+    VL_WRITEF("[ID]:Operand_A1:%x\n",32,((IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__link1)
+					  ? vlSymsp->TOP__v.PCA_IFID
+					  : ((IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1)
+					      ? vlTOPp->R2_input
+					      : vlSymsp->TOP__v.__PVT__ID1__DOT__readDataA1)));
     vlSymsp->TOP__v.no_fetch = ((IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1) 
 				& (0 != (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__syscalBubbleCounter)));
     vlSymsp->TOP__v.SYS = ((IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1) 
@@ -7155,8 +6826,20 @@ void VMIPS_MIPS::_sequent__TOP__v__10(VMIPS__Syms* __restrict vlSymsp) {
 						    : vlSymsp->TOP__v.__PVT__ID1__DOT__readDataB1);
 }
 
-void VMIPS_MIPS::_settle__TOP__v__11(VMIPS__Syms* __restrict vlSymsp) {
-    VL_DEBUG_IF(VL_PRINTF("      VMIPS_MIPS::_settle__TOP__v__11\n"); );
+void VMIPS_MIPS::_combo__TOP__v__11(VMIPS__Syms* __restrict vlSymsp) {
+    VL_DEBUG_IF(VL_PRINTF("      VMIPS_MIPS::_combo__TOP__v__11\n"); );
+    VMIPS* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
+    // Body
+    // ALWAYS at ID.v:367
+    VL_WRITEF("[ID]:Operand_A1:%x\n",32,((IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__link1)
+					  ? vlSymsp->TOP__v.PCA_IFID
+					  : ((IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1)
+					      ? vlTOPp->R2_input
+					      : vlSymsp->TOP__v.__PVT__ID1__DOT__readDataA1)));
+}
+
+void VMIPS_MIPS::_settle__TOP__v__12(VMIPS__Syms* __restrict vlSymsp) {
+    VL_DEBUG_IF(VL_PRINTF("      VMIPS_MIPS::_settle__TOP__v__12\n"); );
     VMIPS* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
     vlSymsp->TOP__v.writeRegister1_WBID = vlSymsp->TOP__v.writeRegister1_MEMW;
@@ -7445,8 +7128,8 @@ void VMIPS_MIPS::_settle__TOP__v__11(VMIPS__Syms* __restrict vlSymsp) {
 			      | (IData)(vlSymsp->TOP__v.__PVT__IMISS));
 }
 
-void VMIPS_MIPS::_multiclk__TOP__v__12(VMIPS__Syms* __restrict vlSymsp) {
-    VL_DEBUG_IF(VL_PRINTF("      VMIPS_MIPS::_multiclk__TOP__v__12\n"); );
+void VMIPS_MIPS::_multiclk__TOP__v__13(VMIPS__Syms* __restrict vlSymsp) {
+    VL_DEBUG_IF(VL_PRINTF("      VMIPS_MIPS::_multiclk__TOP__v__13\n"); );
     VMIPS* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
     // ALWAYS at EXE.v:92
@@ -8426,16 +8109,16 @@ void VMIPS_MIPS::_multiclk__TOP__v__12(VMIPS__Syms* __restrict vlSymsp) {
     }
 }
 
-void VMIPS_MIPS::_sequent__TOP__v__13(VMIPS__Syms* __restrict vlSymsp) {
-    VL_DEBUG_IF(VL_PRINTF("      VMIPS_MIPS::_sequent__TOP__v__13\n"); );
+void VMIPS_MIPS::_sequent__TOP__v__14(VMIPS__Syms* __restrict vlSymsp) {
+    VL_DEBUG_IF(VL_PRINTF("      VMIPS_MIPS::_sequent__TOP__v__14\n"); );
     VMIPS* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
     vlSymsp->TOP__v.FREEZE = ((IData)(vlSymsp->TOP__v.__PVT__DMISS) 
 			      | (IData)(vlSymsp->TOP__v.__PVT__IMISS));
 }
 
-void VMIPS_MIPS::_settle__TOP__v__14(VMIPS__Syms* __restrict vlSymsp) {
-    VL_DEBUG_IF(VL_PRINTF("      VMIPS_MIPS::_settle__TOP__v__14\n"); );
+void VMIPS_MIPS::_settle__TOP__v__15(VMIPS__Syms* __restrict vlSymsp) {
+    VL_DEBUG_IF(VL_PRINTF("      VMIPS_MIPS::_settle__TOP__v__15\n"); );
     VMIPS* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
     // ALWAYS at ALU.v:18
@@ -9372,15 +9055,15 @@ void VMIPS_MIPS::_settle__TOP__v__14(VMIPS__Syms* __restrict vlSymsp) {
 				       : vlSymsp->TOP__v.aluResult1_EXEM);
 }
 
-void VMIPS_MIPS::_multiclk__TOP__v__15(VMIPS__Syms* __restrict vlSymsp) {
-    VL_DEBUG_IF(VL_PRINTF("      VMIPS_MIPS::_multiclk__TOP__v__15\n"); );
+void VMIPS_MIPS::_multiclk__TOP__v__16(VMIPS__Syms* __restrict vlSymsp) {
+    VL_DEBUG_IF(VL_PRINTF("      VMIPS_MIPS::_multiclk__TOP__v__16\n"); );
     VMIPS* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
     vlSymsp->TOP__v.aluResult1_EXEID = vlSymsp->TOP__v.__PVT__EXE1__DOT__aluResult1;
     vlSymsp->TOP__v.writeData1_MID = ((IData)(vlSymsp->TOP__v.MemRead1_EXEM)
 				       ? vlSymsp->TOP__v.__PVT__MEM1__DOT__data_read_aligned
 				       : vlSymsp->TOP__v.aluResult1_EXEM);
-    // ALWAYS at ID.v:159
+    // ALWAYS at ID.v:153
     vlSymsp->TOP__v.__PVT__ID1__DOT__com_OpA1 = (((IData)(vlSymsp->TOP__v.do_writeback1_IDEXE) 
 						  & ((0x1f 
 						      & (vlSymsp->TOP__v.Instr1_IFID 
@@ -9425,11 +9108,11 @@ void VMIPS_MIPS::_multiclk__TOP__v__15(VMIPS__Syms* __restrict vlSymsp) {
 						    : vlSymsp->TOP__v.__PVT__ID1__DOT__Operand_B1)));
 }
 
-void VMIPS_MIPS::_settle__TOP__v__16(VMIPS__Syms* __restrict vlSymsp) {
-    VL_DEBUG_IF(VL_PRINTF("      VMIPS_MIPS::_settle__TOP__v__16\n"); );
+void VMIPS_MIPS::_settle__TOP__v__17(VMIPS__Syms* __restrict vlSymsp) {
+    VL_DEBUG_IF(VL_PRINTF("      VMIPS_MIPS::_settle__TOP__v__17\n"); );
     VMIPS* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
-    // ALWAYS at ID.v:159
+    // ALWAYS at ID.v:153
     vlSymsp->TOP__v.__PVT__ID1__DOT__com_OpA1 = (((IData)(vlSymsp->TOP__v.do_writeback1_IDEXE) 
 						  & ((0x1f 
 						      & (vlSymsp->TOP__v.Instr1_IFID 
@@ -9518,8 +9201,8 @@ void VMIPS_MIPS::_settle__TOP__v__16(VMIPS__Syms* __restrict vlSymsp) {
 	   | (IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__jump1));
 }
 
-void VMIPS_MIPS::_multiclk__TOP__v__17(VMIPS__Syms* __restrict vlSymsp) {
-    VL_DEBUG_IF(VL_PRINTF("      VMIPS_MIPS::_multiclk__TOP__v__17\n"); );
+void VMIPS_MIPS::_multiclk__TOP__v__18(VMIPS__Syms* __restrict vlSymsp) {
+    VL_DEBUG_IF(VL_PRINTF("      VMIPS_MIPS::_multiclk__TOP__v__18\n"); );
     VMIPS* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
     vlSymsp->TOP__v.__PVT__ID1__DOT__taken_branch1 
@@ -9569,8 +9252,8 @@ void VMIPS_MIPS::_multiclk__TOP__v__17(VMIPS__Syms* __restrict vlSymsp) {
     vlSymsp->TOP__v.fetchNull2_fID = vlSymsp->TOP__v.__PVT__ID1__DOT__taken_branch1;
 }
 
-void VMIPS_MIPS::_settle__TOP__v__18(VMIPS__Syms* __restrict vlSymsp) {
-    VL_DEBUG_IF(VL_PRINTF("      VMIPS_MIPS::_settle__TOP__v__18\n"); );
+void VMIPS_MIPS::_settle__TOP__v__19(VMIPS__Syms* __restrict vlSymsp) {
+    VL_DEBUG_IF(VL_PRINTF("      VMIPS_MIPS::_settle__TOP__v__19\n"); );
     VMIPS* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
     vlSymsp->TOP__v.fetchNull2_fID = vlSymsp->TOP__v.__PVT__ID1__DOT__taken_branch1;
