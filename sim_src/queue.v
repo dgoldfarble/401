@@ -13,7 +13,7 @@ RULES:
 		
 	Probe:
 		curTail_OUT 	- Current value of the tail ptr
-		probeIdx_IN		- Index that is to be read/written from/to
+		probeIdx_IN	- Index that is to be read/written from/to
 		probeData_OUT	- Data read out from buffer[probeIdx_IN]
 		probePusheq_IN	- Push enable for probeData_IN to be written to buffer[probeIdx_IN]
 		probeData_IN	- Data written to buffer[probeIdx_IN] when probePusheq_IN is high
@@ -23,7 +23,7 @@ PUSH: Buffer is written at the next clock edge.
 POP : Buffer is read from in the same cycle. (continuous assignment)
 */
 
-module queue (	clk,
+module queue (			clk,
 				reset,
 				pushReq_IN,		// Push	requested
 				data_IN,		// Pushed data

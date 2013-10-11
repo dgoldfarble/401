@@ -72,7 +72,7 @@ output	[ADDR_WIDTH-1:0]	curTail_OUT, curHead_OUT;
 
 `define MAX_BUF (1<<ADDR_WIDTH)	// Max no of elements in buf
 
-reg	[DATA_WIDTH-1:0]	buffer [`MAX_BUF:0];
+reg	[DATA_WIDTH-1:0]	buffer [`MAX_BUF-1:0];
 reg	[ADDR_WIDTH-1:0]	head;
 reg [ADDR_WIDTH-1:0]	tail;
 reg [ADDR_WIDTH :0]		count;

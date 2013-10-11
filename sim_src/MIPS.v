@@ -223,6 +223,16 @@ module MIPS (	R2_output,
 	wire wQ_IFID_popValid;
 	wire [Q_IFID_DATAWIDTH -1:0] wQ_IFID_pushData;
 	wire [Q_IFID_DATAWIDTH -1:0] wQ_IFID_popData;
+	wire wQ_IFID_curTail_OUT;
+	wire wQ_IFID_curHead_OUT;
+	wire wQ_IFID_probeIdx_IN;
+	wire wQ_IFID_probeData_OUT;
+	wire wQ_IFID_probePushReq_IN;
+	wire wQ_IFID_probeData_IN;
+	
+	
+	
+	
 		
 	assign wQ_IFID_pushData = {PCA_IFID, CIA_IFID, Instr1_IFID};
 			
@@ -230,17 +240,21 @@ module MIPS (	R2_output,
 			.ADDR_WIDTH(Q_IFID_ADDRWIDTH), 	// in bits
 			.SHOW_DEBUG(0),					// True/False
 			.QUEUE_NAME("IFID"))			// Name for debuging
-		Q_IFID (
-			.clk(CLK),
+		Q_IFID (.clk(CLK),
 			.reset(RESET),
 			.pushReq_IN(wQ_IFID_pushReq),		// from IF
 			.data_IN(wQ_IFID_pushData),			// from IF
-			.fullFlag_OUT(wQ_IFID_full),		// to IF
-			
 			.popReq_IN(wQ_IFID_popReq),			// from ID
 			.data_OUT(wQ_IFID_popData),			// to ID
 			.emptyFlag_OUT(wQ_IFID_empty), 		// to ID
-			.flush_IN(0));
+			.fullFlag_OUT(wQ_IFID_full),		// to IF
+			.flush_IN(0),
+
+			.curTail_OUT(wQ_IFID_curTail_OUT),
+			.curHead_OUT(wQ_IFID_curHead_OUT),
+
+			
+			
 	
 	// // Queue popping check
 	// popCheck #(.DATA_WIDTH(Q_IFID_DATAWIDTH))
