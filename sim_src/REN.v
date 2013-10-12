@@ -297,7 +297,12 @@ module REN (	CLK,
 	wire 	wQ_FreeL_pushReq, wQ_FreeL_popReq, wQ_FreeL_empty, wQ_FreeL_full;
 	wire 	[PHYSREGS_DEPTH-1:0] wQ_FreeL_pushData, wQ_FreeL_popData;
 		
-
+    wire    wCurTail_OUT;
+    wire    wCurHead_IN;
+    wire    wProbeIdx_IN;
+    wire    wProbeData_OUT;
+    wire    wProbePushReq_IN;
+    wire    wProbeData;
 	
 	assign wQ_FreeL_popReq = !wQ_FreeL_empty && wDestRegReqd;
 
@@ -311,12 +316,20 @@ module REN (	CLK,
 			.reset(RESET),
 			.pushReq_IN(wQ_FreeL_pushReq),
 			.data_IN(wQ_FreeL_pushData),
-			.fullFlag_OUT(wQ_FreeL_full),
-			
 			.popReq_IN(wQ_FreeL_popReq),
-			.data_OUT(wQ_FreeL_popData),
+            .data_OUT(wQ_FreeL_popData),
 			.emptyFlag_OUT(wQ_FreeL_empty),
-			.flush_IN(0));
+			.fullFlag_OUT(wQ_FreeL_full),
+			.flush_IN(0),
+            
+            .curTail_OUT(wCurTail_OUT),
+            .curHead_OUT(wCurHead_IN),
+            
+            .probeIdx_IN(wProbeIdx_IN),
+            .probeData_OUT(wProbeData_OUT),
+            .probePushReq_IN(wProbePushReq_IN),
+            .probeData_IN(wProbeData)
+            );
 			
 	// Free list underflow. Instr needs free reg, but we don't have any.
 	// It should be used to stall everything in this stage.

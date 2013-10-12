@@ -1,6 +1,7 @@
-verilated.o: /usr/share/verilator/include/verilated.cpp \
- /usr/share/verilator/include/verilated_imp.h \
- /usr/share/verilator/include/verilatedos.h \
- /usr/share/verilator/include/verilated.h \
- /usr/share/verilator/include/verilated_heavy.h \
- /usr/share/verilator/include/verilated_syms.h
+verilated.o: /Users/dgoldfarb/bin/verilator-3.853/include/verilated.cpp \
+  /Users/dgoldfarb/bin/verilator-3.853/include/verilated_imp.h \
+  /Users/dgoldfarb/bin/verilator-3.853/include/verilatedos.h \
+  /Users/dgoldfarb/bin/verilator-3.853/include/verilated.h \
+  /Users/dgoldfarb/bin/verilator-3.853/include/verilated_config.h \
+  /Users/dgoldfarb/bin/verilator-3.853/include/verilated_heavy.h \
+  /Users/dgoldfarb/bin/verilator-3.853/include/verilated_syms.h

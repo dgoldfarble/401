@@ -45,8 +45,8 @@ module queue (			clk,
 	
 
 // SUPPLY DURING INSTANTIATION:
-	parameter	DATA_WIDTH 	= 0; 	// in bits
-	parameter	ADDR_WIDTH 	= 0;	// in bits
+	parameter	DATA_WIDTH 	= 8; 	// in bits
+	parameter	ADDR_WIDTH 	= 4;	// in bits
 	parameter 	SHOW_DEBUG 	= 1; 	// True/False. Show debugging comments or not
 	parameter	INIT_CODE	= 0;	// 0: init with 0. 1: init with 0 to MAX_BUF
 	parameter	QUEUE_NAME	= "Q";	// Name of queue. Useful in debugging
@@ -142,7 +142,7 @@ end
 			buffer[tail] <= rData2Buf;
 			
 		if (probePushReq_IN)
-			buffer[probeIdx_IN] = probeData_IN;
+			buffer[probeIdx_IN] <= probeData_IN;
 	end
  end
 

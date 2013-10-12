@@ -229,11 +229,7 @@ module MIPS (	R2_output,
 	wire wQ_IFID_probeData_OUT;
 	wire wQ_IFID_probePushReq_IN;
 	wire wQ_IFID_probeData_IN;
-	
-	
-	
-	
-		
+			
 	assign wQ_IFID_pushData = {PCA_IFID, CIA_IFID, Instr1_IFID};
 			
 	queue #(.DATA_WIDTH(Q_IFID_DATAWIDTH), 	// in bits
@@ -252,22 +248,21 @@ module MIPS (	R2_output,
 
 			.curTail_OUT(wQ_IFID_curTail_OUT),
 			.curHead_OUT(wQ_IFID_curHead_OUT),
+            
+            .probeIdx_IN(wQ_IFID_probeIdx_IN),
+            .probeData_OUT(wQ_IFID_probeData_OUT),
+            .probePushReq_IN(wQ_IFID_probePushReq_IN),
+            .probeData_IN(wQ_IFID_probeData_IN)
+            );
+			
+            
+            
+            
+	////////////////////////////////////////////////////////////////////////////
+	// INSTRUCTION DECODE //////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////
 
-			
-			
-	
-	// // Queue popping check
-	// popCheck #(.DATA_WIDTH(Q_IFID_DATAWIDTH))
-		// popCheckIFID  (
-			// .clk(CLK), 
-			// .reset(RESET), 
-			// .popOut(wQ_IFID_popReq), 
-			// .dataIn(wQ_IFID_popData), 
-			// .emptyIn(wQ_IFID_empty));
-	////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////
-/*
-	DECODE
+    /*
 		Modifications
 			Freeze logic - should freeze when it cannot push or when it cannot pull
 
@@ -275,7 +270,7 @@ module MIPS (	R2_output,
 			Syscalls - SYS and no_fetch? - connected to iCache right now thru do_fetch.
 			So this DOES stall IF and i$.
 			
-*/
+    */
 	wire wFreezeID;
 	assign wFreezeID = wQ_IFID_empty || wQ_IDREN_full;
 	
@@ -361,6 +356,13 @@ EXE EXE1( CLK, RESET, FREEZE,ALUSrc1_EXEM,ALUSrc1_IDEXE,Instr1_IDREN,Instr1_EXEM
 	wire wQ_IDREN_popValid;
 	wire [Q_IDREN_DATAWIDTH - 1:0] wQ_IDREN_pushData;
 	wire [Q_IDREN_DATAWIDTH - 1:0] wQ_IDREN_popData;
+    
+	wire wQ_IDREN_curTail_OUT;
+	wire wQ_IDREN_curHead_OUT;
+	wire wQ_IDREN_probeIdx_IN;
+	wire wQ_IDREN_probeData_OUT;
+	wire wQ_IDREN_probePushReq_IN;
+	wire wQ_IDREN_probeData_IN;
 	
 	assign wQ_IDREN_pushData = {ALUSrc1_IDEXE,		//1		125:125
 								signExtImm_IDREN,	//32	124:093
@@ -385,20 +387,26 @@ EXE EXE1( CLK, RESET, FREEZE,ALUSrc1_EXEM,ALUSrc1_IDEXE,Instr1_IDREN,Instr1_EXEM
 		Q_IDREN (
 			.clk(CLK),
 			.reset(RESET),
-			.pushReq_IN(wQ_IDREN_pushReq),	
-			.data_IN(wQ_IDREN_pushData),	
-			.fullFlag_OUT(wQ_IDREN_full),	
-			
+			.pushReq_IN(wQ_IDREN_pushReq),
+			.data_IN(wQ_IDREN_pushData),
 			.popReq_IN(wQ_IDREN_popReq),	
-			.data_OUT(wQ_IDREN_popData),	
+            .data_OUT(wQ_IDREN_popData),	
 			.emptyFlag_OUT(wQ_IDREN_empty),
-			.flush_IN(wfROB_flushALL));
-	
-	
-	
-	
-	
-	////////////////////////////////////////////////////////////////////////////
+			.fullFlag_OUT(wQ_IDREN_full),
+			.flush_IN(wfROB_flushALL),
+            
+            .curTail_OUT(wQ_IDREN_curTail_OUT),
+            .curHead_OUT(wQ_IDREN_curHead_OUT),
+            
+            .probeIdx_IN(wQ_IDREN_probeIdx_IN),
+            .probeData_OUT(wQ_IDREN_probeData_OUT),
+            .probePushReq_IN(wQ_IDREN_probePushReq_IN),
+            .probeData_IN(wQ_IDREN_probeData_IN)
+            
+            );
+    
+    
+    ////////////////////////////////////////////////////////////////////////////
 	// REG RENAME - REN.v///////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////
 	
@@ -549,6 +557,7 @@ EXE EXE1( CLK, RESET, FREEZE,ALUSrc1_EXEM,ALUSrc1_IDEXE,Instr1_IDREN,Instr1_EXEM
 	wire [31: 0]	wRF_RW_EXE_Operand_A1;
 	wire [31: 0]	wRF_RW_EXE_Immediate;
 	wire [ 5: 0]	wRF_RW_EXE_ALU_control1;
+    wire            wMem_or_not_mem;
 	wire			wRF_RW_EXE_Mem_Instruction;
 	wire [ 5: 0]	wRF_RW_EXE_readRegisterB1;
 	wire [31: 0]	wRF_RW_EXE_Operand_B1;
@@ -557,6 +566,7 @@ EXE EXE1( CLK, RESET, FREEZE,ALUSrc1_EXEM,ALUSrc1_IDEXE,Instr1_IDREN,Instr1_EXEM
 	wire 		 	wRF_RW_EXE_RegDest;
 	wire 		 	wRF_RW_EXE_Branch_flag;
 	wire			wRF_RW_EXE_jump_flag;
+	wire			wRF_RW_EXE_jump_register;
 	wire [31: 0]	wRF_RW_EXE_Dest_Value1;
 	wire 			wRF_RW_EXE_MemRead1;
 	wire			wRF_RW_EXE_MemWrite1;
@@ -569,11 +579,14 @@ EXE EXE1( CLK, RESET, FREEZE,ALUSrc1_EXEM,ALUSrc1_IDEXE,Instr1_IDREN,Instr1_EXEM
 	RF #(.RENISS_WIDTH(IQLSQ_WIDTH),
 			.IDREN_WIDTH(Q_IDREN_DATAWIDTH),
 			.ROBINDEX(ROB_ADDRWIDTH))
-	RF_ReadWrite	(	.FREEZE(DMISS), .CLK(CLK), .RESET(RESET),
+	RF_ReadWrite	(	.FREEZE(DMISS),
+                        .CLK(CLK),
+                        .RESET(RESET),
 						//inputs
 						.IQLSQ_popData_IN(wIQLSQ_popData),
 						.Valid_Instruction_IN(wValid_Instruction),
 						.Mem_Instruction_IN(wMem_Instruction),
+						.Mem_Instruction_OUT(wRF_RW_EXE_Mem_Instruction),
 						.IQ_LSQ_pop(wIQ_LSQ_pop),
 						//unpacked outputs
 						// common
@@ -586,7 +599,7 @@ EXE EXE1( CLK, RESET, FREEZE,ALUSrc1_EXEM,ALUSrc1_IDEXE,Instr1_IDREN,Instr1_EXEM
 						.Operand_A1(wRF_RW_EXE_Operand_A1),
 						.Immediate(wRF_RW_EXE_Immediate),
 						.ALU_control1(wRF_RW_EXE_ALU_control1),
-						.Mem_Instruction_OUT(wRF_RW_EXE_Mem_Instruction),
+                        .mem_or_not_mem(wMem_or_not_mem),
 						// not memory
 						.readRegisterB1(wRF_RW_EXE_readRegisterB1),
 						.Operand_B1(wRF_RW_EXE_Operand_B1),
@@ -595,6 +608,7 @@ EXE EXE1( CLK, RESET, FREEZE,ALUSrc1_EXEM,ALUSrc1_IDEXE,Instr1_IDREN,Instr1_EXEM
 						.RegDest(wRF_RW_EXE_RegDest),
 						.Branch_flag(wRF_RW_EXE_Branch_flag),
 						.jump_flag(wRF_RW_EXE_jump_flag),
+                        .jump_register(wRF_RW_EXE_jump_register),
 						// memory
 						.Dest_Value1(wRF_RW_EXE_Dest_Value1),
 						.MemRead1(wRF_RW_EXE_MemRead1),
@@ -623,6 +637,7 @@ EXE EXE1( CLK, RESET, FREEZE,ALUSrc1_EXEM,ALUSrc1_IDEXE,Instr1_IDREN,Instr1_EXEM
 	wire 		 	wEXE_MEM_RegDest;
 	wire 		 	wEXE_MEM_Branch_flag;
 	wire [31: 0]	wEXE_MEM_Dest_Value1;
+    wire 			wEXE_MEM_readDataB1;
 	wire 			wEXE_MEM_MemRead1;
 	wire			wEXE_MEM_MemWrite1;
 	wire			wEXE_MEM_Hazard;
@@ -665,6 +680,7 @@ EXE EXE1( CLK, RESET, FREEZE,ALUSrc1_EXEM,ALUSrc1_IDEXE,Instr1_IDREN,Instr1_EXEM
 				.RegDest_IN(wRF_RW_EXE_RegDest),
 				.Branch_flag_IN(wRF_RW_EXE_Branch_flag),
 				.jump_flag_IN(wRF_RW_EXE_jump_flag),
+                .jump_register_IN(wRF_RW_EXE_jump_register),
 
 				.MemRead1_IN(wRF_RW_EXE_MemRead1),
 				.MemWrite1_IN(wRF_RW_EXE_MemWrite1),
@@ -719,6 +735,7 @@ EXE EXE1( CLK, RESET, FREEZE,ALUSrc1_EXEM,ALUSrc1_IDEXE,Instr1_IDREN,Instr1_EXEM
 				.address(wEXE_MEM_address),
 				.data_read_fDM(data_read_fDC),
 				.Dest_Value1(wEXE_MEM_Dest_Value1),
+                .readDataB1(wEXE_MEM_readDataB1),
 				.Instr1(wEXE_MEM_Instr1),
 				.ALU_control1(wEXE_MEM_ALU_control1),
 				.writeRegister1(wEXE_MEM_writeRegister1),

@@ -180,6 +180,13 @@ assign LSQ_full_OUT = wLSQ_full;
 	wire wLSQ_pushReq, wLSQ_popReq, wLSQ_empty, wLSQ_full;
 	wire [5:0] wLSQ_srcReg, wLSQ_destReg_IN;
 //	wire [IQLSQ_WIDTH-1:0] wLSQ_headData, wLSQ_tailData;
+    		
+    wire    wCurTail_OUT;
+    wire    wCurHead_IN;
+    wire    wProbeIdx_IN;
+    wire    wProbeData_OUT;
+    wire    wProbePushReq_IN;
+    wire    wProbeData;
 	
 	assign LSQ_full_OUT 	= wLSQ_full;
 	assign wLSQ_srcReg 		= wRENISS_pushData[98:93];
@@ -195,12 +202,20 @@ assign LSQ_full_OUT = wLSQ_full;
 			.reset(RESET),
 			.pushReq_IN(wLSQ_pushReq),
 			.data_IN(wLSQ_tailData),
-			.fullFlag_OUT(wLSQ_full),
-			
 			.popReq_IN(wLSQ_popReq),
 			.data_OUT(wLSQ_headData),
 			.emptyFlag_OUT(wLSQ_empty),
-			.flush_IN(0));
+			.fullFlag_OUT(wLSQ_full),
+			.flush_IN(0),
+            
+            .curTail_OUT(wCurTail_OUT),
+            .curHead_OUT(wCurHead_IN),
+            
+            .probeIdx_IN(wProbeIdx_IN),
+            .probeData_OUT(wProbeData_OUT),
+            .probePushReq_IN(wProbePushReq_IN),
+            .probeData_IN(wProbeData)
+            );
 		
 
 //==============================================================================
