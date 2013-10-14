@@ -10,7 +10,7 @@ default: VMIPS
 # Perl executable (from $PERL)
 PERL = perl
 # Path to Verilator kit (from $VERILATOR_ROOT)
-VERILATOR_ROOT = /usr/share/verilator
+VERILATOR_ROOT = /Users/dgoldfarb/bin/verilator-3.853
 # Path to SystemPerl kit top (from $SYSTEMPERL)
 SYSTEMPERL = 
 # Path to SystemPerl kit includes (from $SYSTEMPERL_INCLUDE)

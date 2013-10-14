@@ -5,6 +5,8 @@
 #include "VMIPS_MIPS.h"        // For This
 #include "VMIPS__Syms.h"
 
+#include "verilated_dpi.h"
+
 //--------------------
 // STATIC VARIABLES
 
@@ -2137,8 +2139,8 @@ void VMIPS_MIPS::_sequent__TOP__v__4(VMIPS__Syms* __restrict vlSymsp) {
     VL_DEBUG_IF(VL_PRINTF("      VMIPS_MIPS::_sequent__TOP__v__4\n"); );
     VMIPS* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
-    vlSymsp->TOP__v.__Vdly__do_writeback1_MEMW = vlSymsp->TOP__v.do_writeback1_MEMW;
     vlSymsp->TOP__v.__Vdly__writeRegister1_MEMW = vlSymsp->TOP__v.writeRegister1_MEMW;
+    vlSymsp->TOP__v.__Vdly__do_writeback1_MEMW = vlSymsp->TOP__v.do_writeback1_MEMW;
     // ALWAYS at MEM.v:153
     if (vlTOPp->RESET) {
 	if ((1 & (~ (IData)(vlSymsp->TOP__v.FREEZE)))) {
@@ -6104,6 +6106,8 @@ void VMIPS_MIPS::_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp) {
 					     (vlSymsp->TOP__v.Instr1_IFID 
 					      >> 0x10)))));
     // ALWAYS at ID.v:367
+    VL_WRITEF("[ID]:\tPCA:%x\n",32,vlSymsp->TOP__v.PCA_IFID);
+    VL_WRITEF("[ID]:\tCIA:%x\n",32,vlSymsp->TOP__v.CIA_IFID);
     VL_WRITEF("[ID]:Operand_A1:%x\n",32,((IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__link1)
 					  ? vlSymsp->TOP__v.PCA_IFID
 					  : ((IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1)
@@ -6831,6 +6835,8 @@ void VMIPS_MIPS::_combo__TOP__v__11(VMIPS__Syms* __restrict vlSymsp) {
     VMIPS* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
     // ALWAYS at ID.v:367
+    VL_WRITEF("[ID]:\tPCA:%x\n",32,vlSymsp->TOP__v.PCA_IFID);
+    VL_WRITEF("[ID]:\tCIA:%x\n",32,vlSymsp->TOP__v.CIA_IFID);
     VL_WRITEF("[ID]:Operand_A1:%x\n",32,((IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__link1)
 					  ? vlSymsp->TOP__v.PCA_IFID
 					  : ((IData)(vlSymsp->TOP__v.__PVT__ID1__DOT__syscal1)
@@ -7306,17 +7312,21 @@ void VMIPS_MIPS::_multiclk__TOP__v__13(VMIPS__Syms* __restrict vlSymsp) {
 				   >> (IData)(vlSymsp->TOP__v.Instr1_10_6_IDEXE));
 			} else {
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp 
-				= ((VL_ULL(0xfffffffe00000000) 
+				= ((VL_ULL(0xfffffffeffffffff) 
 				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp) 
-				   | (((QData)((IData)(
-						       (1 
-							& (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1 
-							   >> 0x1f)))) 
-				       << 0x20) | (QData)((IData)(
-								  (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1 
-								   >> 
-								   (0x1f 
-								    & vlSymsp->TOP__v.__PVT__EXE1__DOT__OpA1))))));
+				   | ((QData)((IData)(
+						      (1 
+						       & (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1 
+							  >> 0x1f)))) 
+				      << 0x20));
+			    vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp 
+				= ((VL_ULL(0xffffffff00000000) 
+				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp) 
+				   | (IData)((IData)(
+						     (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1 
+						      >> 
+						      (0x1f 
+						       & vlSymsp->TOP__v.__PVT__EXE1__DOT__OpA1)))));
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__i = 0;
 			    while (((IData)(vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__i) 
 				    <= (0x1f & vlSymsp->TOP__v.__PVT__EXE1__DOT__OpA1))) {
@@ -7344,15 +7354,19 @@ void VMIPS_MIPS::_multiclk__TOP__v__13(VMIPS__Syms* __restrict vlSymsp) {
 		    } else {
 			if ((1 & (IData)(vlSymsp->TOP__v.ALU_control1_IDEXE))) {
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp 
-				= ((VL_ULL(0xfffffffe00000000) 
+				= ((VL_ULL(0xfffffffeffffffff) 
 				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp) 
-				   | (((QData)((IData)(
-						       (1 
-							& (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1 
-							   >> 0x1f)))) 
-				       << 0x20) | (QData)((IData)(
-								  (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1 
-								   >> (IData)(vlSymsp->TOP__v.Instr1_10_6_IDEXE))))));
+				   | ((QData)((IData)(
+						      (1 
+						       & (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1 
+							  >> 0x1f)))) 
+				      << 0x20));
+			    vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp 
+				= ((VL_ULL(0xffffffff00000000) 
+				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp) 
+				   | (IData)((IData)(
+						     (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1 
+						      >> (IData)(vlSymsp->TOP__v.Instr1_10_6_IDEXE)))));
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp 
 				= ((VL_ULL(0xffffffff7fffffff) 
 				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp) 
@@ -7838,15 +7852,11 @@ void VMIPS_MIPS::_multiclk__TOP__v__13(VMIPS__Syms* __restrict vlSymsp) {
 			if ((1 & (IData)(vlSymsp->TOP__v.ALU_control1_IDEXE))) {
 			    if ((0 != vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1)) {
 				vlSymsp->TOP__v.__PVT__EXE1__DOT__LO 
-				    = ((0x80000000 
-					& (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpA1 
-					   | vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1)) 
-				       | (0x7fffffff 
-					  & VL_DIV_III(31, 
-						       (0x7fffffff 
-							& vlSymsp->TOP__v.__PVT__EXE1__DOT__OpA1), 
-						       (0x7fffffff 
-							& vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1))));
+				    = ((0x7fffffff 
+					& vlSymsp->TOP__v.__PVT__EXE1__DOT__LO) 
+				       | (0x80000000 
+					  & (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpA1 
+					     | vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1)));
 				vlSymsp->TOP__v.__PVT__EXE1__DOT__HI 
 				    = ((0x80000000 
 					& vlSymsp->TOP__v.__PVT__EXE1__DOT__HI) 
@@ -7856,6 +7866,15 @@ void VMIPS_MIPS::_multiclk__TOP__v__13(VMIPS__Syms* __restrict vlSymsp) {
 							   & vlSymsp->TOP__v.__PVT__EXE1__DOT__OpA1), 
 							  (0x7fffffff 
 							   & vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1))));
+				vlSymsp->TOP__v.__PVT__EXE1__DOT__LO 
+				    = ((0x80000000 
+					& vlSymsp->TOP__v.__PVT__EXE1__DOT__LO) 
+				       | (0x7fffffff 
+					  & VL_DIV_III(31, 
+						       (0x7fffffff 
+							& vlSymsp->TOP__v.__PVT__EXE1__DOT__OpA1), 
+						       (0x7fffffff 
+							& vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1))));
 			    }
 			} else {
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__aluResult1 
@@ -8248,17 +8267,21 @@ void VMIPS_MIPS::_settle__TOP__v__15(VMIPS__Syms* __restrict vlSymsp) {
 				   >> (IData)(vlSymsp->TOP__v.Instr1_10_6_IDEXE));
 			} else {
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp 
-				= ((VL_ULL(0xfffffffe00000000) 
+				= ((VL_ULL(0xfffffffeffffffff) 
 				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp) 
-				   | (((QData)((IData)(
-						       (1 
-							& (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1 
-							   >> 0x1f)))) 
-				       << 0x20) | (QData)((IData)(
-								  (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1 
-								   >> 
-								   (0x1f 
-								    & vlSymsp->TOP__v.__PVT__EXE1__DOT__OpA1))))));
+				   | ((QData)((IData)(
+						      (1 
+						       & (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1 
+							  >> 0x1f)))) 
+				      << 0x20));
+			    vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp 
+				= ((VL_ULL(0xffffffff00000000) 
+				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp) 
+				   | (IData)((IData)(
+						     (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1 
+						      >> 
+						      (0x1f 
+						       & vlSymsp->TOP__v.__PVT__EXE1__DOT__OpA1)))));
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__i = 0;
 			    while (((IData)(vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__i) 
 				    <= (0x1f & vlSymsp->TOP__v.__PVT__EXE1__DOT__OpA1))) {
@@ -8286,15 +8309,19 @@ void VMIPS_MIPS::_settle__TOP__v__15(VMIPS__Syms* __restrict vlSymsp) {
 		    } else {
 			if ((1 & (IData)(vlSymsp->TOP__v.ALU_control1_IDEXE))) {
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp 
-				= ((VL_ULL(0xfffffffe00000000) 
+				= ((VL_ULL(0xfffffffeffffffff) 
 				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp) 
-				   | (((QData)((IData)(
-						       (1 
-							& (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1 
-							   >> 0x1f)))) 
-				       << 0x20) | (QData)((IData)(
-								  (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1 
-								   >> (IData)(vlSymsp->TOP__v.Instr1_10_6_IDEXE))))));
+				   | ((QData)((IData)(
+						      (1 
+						       & (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1 
+							  >> 0x1f)))) 
+				      << 0x20));
+			    vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp 
+				= ((VL_ULL(0xffffffff00000000) 
+				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp) 
+				   | (IData)((IData)(
+						     (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1 
+						      >> (IData)(vlSymsp->TOP__v.Instr1_10_6_IDEXE)))));
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp 
 				= ((VL_ULL(0xffffffff7fffffff) 
 				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp) 
@@ -8780,15 +8807,11 @@ void VMIPS_MIPS::_settle__TOP__v__15(VMIPS__Syms* __restrict vlSymsp) {
 			if ((1 & (IData)(vlSymsp->TOP__v.ALU_control1_IDEXE))) {
 			    if ((0 != vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1)) {
 				vlSymsp->TOP__v.__PVT__EXE1__DOT__LO 
-				    = ((0x80000000 
-					& (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpA1 
-					   | vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1)) 
-				       | (0x7fffffff 
-					  & VL_DIV_III(31, 
-						       (0x7fffffff 
-							& vlSymsp->TOP__v.__PVT__EXE1__DOT__OpA1), 
-						       (0x7fffffff 
-							& vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1))));
+				    = ((0x7fffffff 
+					& vlSymsp->TOP__v.__PVT__EXE1__DOT__LO) 
+				       | (0x80000000 
+					  & (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpA1 
+					     | vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1)));
 				vlSymsp->TOP__v.__PVT__EXE1__DOT__HI 
 				    = ((0x80000000 
 					& vlSymsp->TOP__v.__PVT__EXE1__DOT__HI) 
@@ -8798,6 +8821,15 @@ void VMIPS_MIPS::_settle__TOP__v__15(VMIPS__Syms* __restrict vlSymsp) {
 							   & vlSymsp->TOP__v.__PVT__EXE1__DOT__OpA1), 
 							  (0x7fffffff 
 							   & vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1))));
+				vlSymsp->TOP__v.__PVT__EXE1__DOT__LO 
+				    = ((0x80000000 
+					& vlSymsp->TOP__v.__PVT__EXE1__DOT__LO) 
+				       | (0x7fffffff 
+					  & VL_DIV_III(31, 
+						       (0x7fffffff 
+							& vlSymsp->TOP__v.__PVT__EXE1__DOT__OpA1), 
+						       (0x7fffffff 
+							& vlSymsp->TOP__v.__PVT__EXE1__DOT__OpB1))));
 			    }
 			} else {
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__aluResult1 

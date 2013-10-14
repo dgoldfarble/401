@@ -7,6 +7,8 @@
 
 #include "verilated.h"
 #include "VMIPS__Inlines.h"
+#include "VMIPS__Dpi.h"
+
 class VMIPS__Syms;
 
 //----------
@@ -259,6 +261,6 @@ VL_MODULE(VMIPS_MIPS) {
     static void	_settle__TOP__v__19(VMIPS__Syms* __restrict vlSymsp);
     static void	_settle__TOP__v__5(VMIPS__Syms* __restrict vlSymsp);
     static void	_settle__TOP__v__8(VMIPS__Syms* __restrict vlSymsp);
-} VL_ATTR_ALIGNED(64);
+} VL_ATTR_ALIGNED(128);
 
 #endif  /*guard*/
