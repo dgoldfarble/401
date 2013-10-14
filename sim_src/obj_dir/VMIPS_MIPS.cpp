@@ -5,6 +5,8 @@
 #include "VMIPS_MIPS.h"        // For This
 #include "VMIPS__Syms.h"
 
+#include "verilated_dpi.h"
+
 //--------------------
 // STATIC VARIABLES
 
@@ -143,9 +145,15 @@ VL_CTOR_IMP(VMIPS_MIPS) {
     __PVT__wQ_IFID_pushReq = VL_RAND_RESET_I(1);
     __PVT__wQ_IFID_popReq = VL_RAND_RESET_I(1);
     VL_RAND_RESET_W(96,__PVT__wQ_IFID_popData);
+    __PVT__wQ_IFID_probeIdx_IN = VL_RAND_RESET_I(3);
+    __PVT__wQ_IFID_probePushReq_IN = VL_RAND_RESET_I(1);
+    VL_RAND_RESET_W(96,__PVT__wQ_IFID_probeData_IN);
     __PVT__wFreezeID = VL_RAND_RESET_I(1);
     __PVT__wQ_IDREN_pushReq = VL_RAND_RESET_I(1);
     VL_RAND_RESET_W(126,__PVT__wQ_IDREN_popData);
+    __PVT__wQ_IDREN_probeIdx_IN = VL_RAND_RESET_I(3);
+    __PVT__wQ_IDREN_probePushReq_IN = VL_RAND_RESET_I(1);
+    VL_RAND_RESET_W(126,__PVT__wQ_IDREN_probeData_IN);
     __PVT__wtIQ_pushReq = VL_RAND_RESET_I(1);
     VL_RAND_RESET_W(183,__PVT__wtIQ_pushData);
     __PVT__wtLSQ_pushReq = VL_RAND_RESET_I(1);
@@ -246,9 +254,6 @@ VL_CTOR_IMP(VMIPS_MIPS) {
     __PVT__IF1__DOT__PC = VL_RAND_RESET_I(32);
     __PVT__IF1__DOT__FPC = VL_RAND_RESET_I(32);
     __PVT__IF1__DOT__wCarryOn = VL_RAND_RESET_I(1);
-    VL_RAND_RESET_W(96,__PVT__Q_IFID__DOT__probeData_IN);
-    __PVT__Q_IFID__DOT__probeIdx_IN = VL_RAND_RESET_I(3);
-    __PVT__Q_IFID__DOT__probePushReq_IN = VL_RAND_RESET_I(1);
     { int __Vi0=0; for (; __Vi0<8; ++__Vi0) {
 	    VL_RAND_RESET_W(96,__PVT__Q_IFID__DOT__buffer[__Vi0]);
     }}
@@ -287,9 +292,6 @@ VL_CTOR_IMP(VMIPS_MIPS) {
     __PVT__ID1__DOT__wPCA = VL_RAND_RESET_I(32);
     __PVT__ID1__DOT__wCIA = VL_RAND_RESET_I(32);
     __PVT__ID1__DOT__syscalBubbleCounter = VL_RAND_RESET_I(2);
-    VL_RAND_RESET_W(126,__PVT__Q_IDREN__DOT__probeData_IN);
-    __PVT__Q_IDREN__DOT__probeIdx_IN = VL_RAND_RESET_I(3);
-    __PVT__Q_IDREN__DOT__probePushReq_IN = VL_RAND_RESET_I(1);
     { int __Vi0=0; for (; __Vi0<8; ++__Vi0) {
 	    VL_RAND_RESET_W(126,__PVT__Q_IDREN__DOT__buffer[__Vi0]);
     }}
@@ -316,9 +318,9 @@ VL_CTOR_IMP(VMIPS_MIPS) {
     __PVT__rename__DOT__wQ_FreeL_popReq = VL_RAND_RESET_I(1);
     __PVT__rename__DOT__wQ_FreeL_pushData = VL_RAND_RESET_I(6);
     __PVT__rename__DOT__wQ_FreeL_popData = VL_RAND_RESET_I(6);
-    __PVT__rename__DOT__freelist__DOT__probeData_IN = VL_RAND_RESET_I(6);
-    __PVT__rename__DOT__freelist__DOT__probeIdx_IN = VL_RAND_RESET_I(6);
-    __PVT__rename__DOT__freelist__DOT__probePushReq_IN = VL_RAND_RESET_I(1);
+    __PVT__rename__DOT__wProbeIdx_IN = VL_RAND_RESET_I(6);
+    __PVT__rename__DOT__wProbePushReq_IN = VL_RAND_RESET_I(1);
+    __PVT__rename__DOT__wProbeData = VL_RAND_RESET_I(6);
     { int __Vi0=0; for (; __Vi0<64; ++__Vi0) {
 	    __PVT__rename__DOT__freelist__DOT__buffer[__Vi0] = VL_RAND_RESET_I(6);
     }}
@@ -350,24 +352,24 @@ VL_CTOR_IMP(VMIPS_MIPS) {
     __PVT__issue__DOT__grant_bus = VL_RAND_RESET_I(16);
     VL_RAND_RESET_W(137,__PVT__issue__DOT__wIQ_popData);
     VL_RAND_RESET_W(137,__PVT__issue__DOT__wLSQ_popData);
+    issue__DOT____Vcellout__PE0____pinNumber3 = VL_RAND_RESET_I(4);
+    issue__DOT____Vcellout__PE1____pinNumber3 = VL_RAND_RESET_I(4);
+    issue__DOT____Vcellout__PE2____pinNumber3 = VL_RAND_RESET_I(4);
+    issue__DOT____Vcellout__PE3____pinNumber3 = VL_RAND_RESET_I(4);
     __PVT__issue__DOT__counter = VL_RAND_RESET_I(32);
     __PVT__issue__DOT__pos = VL_RAND_RESET_I(32);
     __PVT__issue__DOT__IQcount = VL_RAND_RESET_I(32);
     __PVT__issue__DOT__wLSQ_pushReq = VL_RAND_RESET_I(1);
     __PVT__issue__DOT__wLSQ_popReq = VL_RAND_RESET_I(1);
+    __PVT__issue__DOT__wProbeIdx_IN = VL_RAND_RESET_I(4);
+    __PVT__issue__DOT__wProbePushReq_IN = VL_RAND_RESET_I(1);
+    VL_RAND_RESET_W(137,__PVT__issue__DOT__wProbeData);
     __PVT__issue__DOT__wbusy_temp = VL_RAND_RESET_I(6);
-    issue__DOT____Vcellinp__PE0____pinNumber3 = VL_RAND_RESET_I(4);
-    issue__DOT____Vcellinp__PE1____pinNumber3 = VL_RAND_RESET_I(4);
-    issue__DOT____Vcellinp__PE2____pinNumber3 = VL_RAND_RESET_I(4);
-    issue__DOT____Vcellinp__PE3____pinNumber3 = VL_RAND_RESET_I(4);
     issue__DOT____Vlvbound1 = VL_RAND_RESET_I(1);
     issue__DOT____Vlvbound2 = VL_RAND_RESET_I(1);
     issue__DOT____Vlvbound3 = VL_RAND_RESET_I(1);
     VL_RAND_RESET_W(137,issue__DOT____Vlvbound4);
     VL_RAND_RESET_W(137,issue__DOT____Vlvbound5);
-    VL_RAND_RESET_W(137,__PVT__issue__DOT__LSQ__DOT__probeData_IN);
-    __PVT__issue__DOT__LSQ__DOT__probeIdx_IN = VL_RAND_RESET_I(4);
-    __PVT__issue__DOT__LSQ__DOT__probePushReq_IN = VL_RAND_RESET_I(1);
     { int __Vi0=0; for (; __Vi0<16; ++__Vi0) {
 	    VL_RAND_RESET_W(137,__PVT__issue__DOT__LSQ__DOT__buffer[__Vi0]);
     }}
@@ -415,88 +417,103 @@ VL_CTOR_IMP(VMIPS_MIPS) {
     __Vdly__Q_IFID__DOT__count = VL_RAND_RESET_I(4);
     __Vdly__Q_IFID__DOT__tail = VL_RAND_RESET_I(3);
     __Vdly__Q_IFID__DOT__head = VL_RAND_RESET_I(3);
-    __Vdlyvdim0__Q_IFID__DOT__buffer__v0 = 0;
-    VL_ZERO_RESET_W(96,__Vdlyvval__Q_IFID__DOT__buffer__v0);
-    __Vdlyvset__Q_IFID__DOT__buffer__v0 = 0;
-    __Vdlyvdim0__Q_IFID__DOT__buffer__v1 = 0;
-    __Vdlyvset__Q_IFID__DOT__buffer__v1 = 0;
+    __Vdlyvdim0__Q_IFID__DOT__buffer__v0 = VL_RAND_RESET_I(3);
+    VL_RAND_RESET_W(96,__Vdlyvval__Q_IFID__DOT__buffer__v0);
+    __Vdlyvset__Q_IFID__DOT__buffer__v0 = VL_RAND_RESET_I(1);
+    __Vdlyvdim0__Q_IFID__DOT__buffer__v1 = VL_RAND_RESET_I(3);
+    VL_RAND_RESET_W(96,__Vdlyvval__Q_IFID__DOT__buffer__v1);
+    __Vdlyvset__Q_IFID__DOT__buffer__v1 = VL_RAND_RESET_I(1);
+    __Vdlyvdim0__Q_IFID__DOT__buffer__v2 = VL_RAND_RESET_I(3);
+    __Vdlyvset__Q_IFID__DOT__buffer__v2 = VL_RAND_RESET_I(1);
     __Vdly__Q_IDREN__DOT__count = VL_RAND_RESET_I(4);
     __Vdly__Q_IDREN__DOT__tail = VL_RAND_RESET_I(3);
     __Vdly__Q_IDREN__DOT__head = VL_RAND_RESET_I(3);
-    __Vdlyvdim0__Q_IDREN__DOT__buffer__v0 = 0;
-    VL_ZERO_RESET_W(126,__Vdlyvval__Q_IDREN__DOT__buffer__v0);
-    __Vdlyvset__Q_IDREN__DOT__buffer__v0 = 0;
-    __Vdlyvdim0__Q_IDREN__DOT__buffer__v1 = 0;
-    __Vdlyvset__Q_IDREN__DOT__buffer__v1 = 0;
+    __Vdlyvdim0__Q_IDREN__DOT__buffer__v0 = VL_RAND_RESET_I(3);
+    VL_RAND_RESET_W(126,__Vdlyvval__Q_IDREN__DOT__buffer__v0);
+    __Vdlyvset__Q_IDREN__DOT__buffer__v0 = VL_RAND_RESET_I(1);
+    __Vdlyvdim0__Q_IDREN__DOT__buffer__v1 = VL_RAND_RESET_I(3);
+    VL_RAND_RESET_W(126,__Vdlyvval__Q_IDREN__DOT__buffer__v1);
+    __Vdlyvset__Q_IDREN__DOT__buffer__v1 = VL_RAND_RESET_I(1);
+    __Vdlyvdim0__Q_IDREN__DOT__buffer__v2 = VL_RAND_RESET_I(3);
+    __Vdlyvset__Q_IDREN__DOT__buffer__v2 = VL_RAND_RESET_I(1);
     __Vdly__rename__DOT__rIQoverflow = VL_RAND_RESET_I(1);
     __Vdly__rename__DOT__rLSQoverflow = VL_RAND_RESET_I(1);
-    __Vdlyvval__renrat__v0 = 0;
-    __Vdlyvset__renrat__v0 = 0;
-    __Vdlyvval__renrat__v1 = 0;
-    __Vdlyvval__renrat__v2 = 0;
-    __Vdlyvval__renrat__v3 = 0;
-    __Vdlyvval__renrat__v4 = 0;
-    __Vdlyvval__renrat__v5 = 0;
-    __Vdlyvval__renrat__v6 = 0;
-    __Vdlyvval__renrat__v7 = 0;
-    __Vdlyvval__renrat__v8 = 0;
-    __Vdlyvval__renrat__v9 = 0;
-    __Vdlyvval__renrat__v10 = 0;
-    __Vdlyvval__renrat__v11 = 0;
-    __Vdlyvval__renrat__v12 = 0;
-    __Vdlyvval__renrat__v13 = 0;
-    __Vdlyvval__renrat__v14 = 0;
-    __Vdlyvval__renrat__v15 = 0;
-    __Vdlyvval__renrat__v16 = 0;
-    __Vdlyvval__renrat__v17 = 0;
-    __Vdlyvval__renrat__v18 = 0;
-    __Vdlyvval__renrat__v19 = 0;
-    __Vdlyvval__renrat__v20 = 0;
-    __Vdlyvval__renrat__v21 = 0;
-    __Vdlyvval__renrat__v22 = 0;
-    __Vdlyvval__renrat__v23 = 0;
-    __Vdlyvval__renrat__v24 = 0;
-    __Vdlyvval__renrat__v25 = 0;
-    __Vdlyvval__renrat__v26 = 0;
-    __Vdlyvval__renrat__v27 = 0;
-    __Vdlyvval__renrat__v28 = 0;
-    __Vdlyvval__renrat__v29 = 0;
-    __Vdlyvval__renrat__v30 = 0;
-    __Vdlyvval__renrat__v31 = 0;
-    __Vdlyvdim0__renrat__v32 = 0;
-    __Vdlyvval__renrat__v32 = 0;
-    __Vdlyvset__renrat__v32 = 0;
+    __Vdlyvval__renrat__v0 = VL_RAND_RESET_I(6);
+    __Vdlyvset__renrat__v0 = VL_RAND_RESET_I(1);
+    __Vdlyvval__renrat__v1 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v2 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v3 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v4 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v5 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v6 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v7 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v8 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v9 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v10 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v11 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v12 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v13 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v14 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v15 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v16 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v17 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v18 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v19 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v20 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v21 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v22 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v23 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v24 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v25 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v26 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v27 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v28 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v29 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v30 = VL_RAND_RESET_I(6);
+    __Vdlyvval__renrat__v31 = VL_RAND_RESET_I(6);
+    __Vdlyvdim0__renrat__v32 = VL_RAND_RESET_I(5);
+    __Vdlyvval__renrat__v32 = VL_RAND_RESET_I(6);
+    __Vdlyvset__renrat__v32 = VL_RAND_RESET_I(1);
     __Vdly__rename__DOT__rFreeLUnderflow = VL_RAND_RESET_I(1);
     __Vdly__rename__DOT__freelist__DOT__count = VL_RAND_RESET_I(7);
     __Vdly__rename__DOT__freelist__DOT__tail = VL_RAND_RESET_I(6);
     __Vdly__rename__DOT__freelist__DOT__head = VL_RAND_RESET_I(6);
-    __Vdlyvdim0__rename__DOT__freelist__DOT__buffer__v0 = 0;
-    __Vdlyvval__rename__DOT__freelist__DOT__buffer__v0 = 0;
-    __Vdlyvset__rename__DOT__freelist__DOT__buffer__v0 = 0;
-    __Vdlyvdim0__rename__DOT__freelist__DOT__buffer__v1 = 0;
-    __Vdlyvset__rename__DOT__freelist__DOT__buffer__v1 = 0;
+    __Vdlyvdim0__rename__DOT__freelist__DOT__buffer__v0 = VL_RAND_RESET_I(6);
+    __Vdlyvval__rename__DOT__freelist__DOT__buffer__v0 = VL_RAND_RESET_I(6);
+    __Vdlyvset__rename__DOT__freelist__DOT__buffer__v0 = VL_RAND_RESET_I(1);
+    __Vdlyvdim0__rename__DOT__freelist__DOT__buffer__v1 = VL_RAND_RESET_I(6);
+    __Vdlyvval__rename__DOT__freelist__DOT__buffer__v1 = VL_RAND_RESET_I(6);
+    __Vdlyvset__rename__DOT__freelist__DOT__buffer__v1 = VL_RAND_RESET_I(1);
+    __Vdlyvdim0__rename__DOT__freelist__DOT__buffer__v2 = VL_RAND_RESET_I(6);
+    __Vdlyvset__rename__DOT__freelist__DOT__buffer__v2 = VL_RAND_RESET_I(1);
     __Vdly__issue__DOT__rPr = VL_RAND_RESET_I(1);
     __Vdly__issue__DOT__wIQselected = VL_RAND_RESET_I(1);
     __Vdly__issue__DOT__wLSQselected = VL_RAND_RESET_I(1);
     __Vdly__issue__DOT__LSQ__DOT__count = VL_RAND_RESET_I(5);
     __Vdly__issue__DOT__LSQ__DOT__tail = VL_RAND_RESET_I(4);
     __Vdly__issue__DOT__LSQ__DOT__head = VL_RAND_RESET_I(4);
-    __Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v0 = 0;
-    VL_ZERO_RESET_W(137,__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v0);
-    __Vdlyvset__issue__DOT__LSQ__DOT__buffer__v0 = 0;
-    __Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v1 = 0;
-    __Vdlyvset__issue__DOT__LSQ__DOT__buffer__v1 = 0;
-    __Vdlyvdim0__retrat__v0 = 0;
-    __Vdlyvval__retrat__v0 = 0;
-    __Vdlyvset__retrat__v0 = 0;
+    __Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v0 = VL_RAND_RESET_I(4);
+    VL_RAND_RESET_W(137,__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v0);
+    __Vdlyvset__issue__DOT__LSQ__DOT__buffer__v0 = VL_RAND_RESET_I(1);
+    __Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v1 = VL_RAND_RESET_I(4);
+    VL_RAND_RESET_W(137,__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v1);
+    __Vdlyvset__issue__DOT__LSQ__DOT__buffer__v1 = VL_RAND_RESET_I(1);
+    __Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v2 = VL_RAND_RESET_I(4);
+    __Vdlyvset__issue__DOT__LSQ__DOT__buffer__v2 = VL_RAND_RESET_I(1);
+    __Vdlyvdim0__retrat__v0 = VL_RAND_RESET_I(5);
+    __Vdlyvval__retrat__v0 = VL_RAND_RESET_I(6);
+    __Vdlyvset__retrat__v0 = VL_RAND_RESET_I(1);
     __Vdly__commit__DOT__ROB__DOT__count = VL_RAND_RESET_I(7);
     __Vdly__commit__DOT__ROB__DOT__tail = VL_RAND_RESET_I(6);
     __Vdly__commit__DOT__ROB__DOT__head = VL_RAND_RESET_I(6);
-    __Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v0 = 0;
-    VL_ZERO_RESET_W(185,__Vdlyvval__commit__DOT__ROB__DOT__buffer__v0);
-    __Vdlyvset__commit__DOT__ROB__DOT__buffer__v0 = 0;
-    __Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v1 = 0;
-    __Vdlyvset__commit__DOT__ROB__DOT__buffer__v1 = 0;
+    __Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v0 = VL_RAND_RESET_I(6);
+    VL_RAND_RESET_W(185,__Vdlyvval__commit__DOT__ROB__DOT__buffer__v0);
+    __Vdlyvset__commit__DOT__ROB__DOT__buffer__v0 = VL_RAND_RESET_I(1);
+    __Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v1 = VL_RAND_RESET_I(6);
+    VL_RAND_RESET_W(185,__Vdlyvval__commit__DOT__ROB__DOT__buffer__v1);
+    __Vdlyvset__commit__DOT__ROB__DOT__buffer__v1 = VL_RAND_RESET_I(1);
+    __Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v2 = VL_RAND_RESET_I(6);
+    __Vdlyvset__commit__DOT__ROB__DOT__buffer__v2 = VL_RAND_RESET_I(1);
     __Vdly__Instr2_IFID = VL_RAND_RESET_I(32);
     __Vdly__IF1__DOT__FPC = VL_RAND_RESET_I(32);
     __Vdly__IF1__DOT__PC = VL_RAND_RESET_I(32);
@@ -1302,11 +1319,23 @@ void VMIPS_MIPS::_settle__TOP__v__1(VMIPS__Syms* __restrict vlSymsp) {
     VL_DEBUG_IF(VL_PRINTF("      VMIPS_MIPS::_settle__TOP__v__1\n"); );
     VMIPS* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
-    // ALWAYS at dCache.v:93
     // ALWAYS at iCache.v:86
+    // ALWAYS at dCache.v:93
     // ALWAYS at EXE.v:236
     vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
-	= (0x3ff & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus));
+	= (0xfdff & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus));
+    vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
+	= (0xfbff & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus));
+    vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
+	= (0xf7ff & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus));
+    vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
+	= (0xefff & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus));
+    vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
+	= (0xdfff & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus));
+    vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
+	= (0xbfff & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus));
+    vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
+	= (0x7fff & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus));
 }
 
 void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
@@ -1336,31 +1365,33 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
 	= vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__count;
     vlSymsp->TOP__v.__Vdly__rename__DOT__freelist__DOT__head 
 	= vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__head;
-    vlSymsp->TOP__v.__Vdlyvset__rename__DOT__freelist__DOT__buffer__v0 = 0;
-    vlSymsp->TOP__v.__Vdlyvset__rename__DOT__freelist__DOT__buffer__v1 = 0;
     vlSymsp->TOP__v.__Vdly__rename__DOT__rFreeLUnderflow 
 	= vlSymsp->TOP__v.__PVT__rename__DOT__rFreeLUnderflow;
+    vlSymsp->TOP__v.__Vdlyvset__rename__DOT__freelist__DOT__buffer__v0 = 0;
+    vlSymsp->TOP__v.__Vdlyvset__rename__DOT__freelist__DOT__buffer__v1 = 0;
+    vlSymsp->TOP__v.__Vdlyvset__rename__DOT__freelist__DOT__buffer__v2 = 0;
     vlSymsp->TOP__v.__Vdly__rename__DOT__rIQoverflow 
 	= vlSymsp->TOP__v.__PVT__rename__DOT__rIQoverflow;
     vlSymsp->TOP__v.__Vdly__rename__DOT__rLSQoverflow 
 	= vlSymsp->TOP__v.__PVT__rename__DOT__rLSQoverflow;
     vlSymsp->TOP__v.__Vdly__Q_IFID__DOT__tail = vlSymsp->TOP__v.__PVT__Q_IFID__DOT__tail;
-    vlSymsp->TOP__v.__Vdly__issue__DOT__wLSQselected 
-	= vlSymsp->TOP__v.__PVT__issue__DOT__wLSQselected;
     vlSymsp->TOP__v.__Vdly__issue__DOT__wIQselected 
 	= vlSymsp->TOP__v.__PVT__issue__DOT__wIQselected;
+    vlSymsp->TOP__v.__Vdly__issue__DOT__wLSQselected 
+	= vlSymsp->TOP__v.__PVT__issue__DOT__wLSQselected;
     vlSymsp->TOP__v.__Vdly__Q_IFID__DOT__head = vlSymsp->TOP__v.__PVT__Q_IFID__DOT__head;
+    vlSymsp->TOP__v.__Vdly__Q_IFID__DOT__count = vlSymsp->TOP__v.__PVT__Q_IFID__DOT__count;
     vlSymsp->TOP__v.__Vdlyvset__issue__DOT__LSQ__DOT__buffer__v0 = 0;
     vlSymsp->TOP__v.__Vdlyvset__issue__DOT__LSQ__DOT__buffer__v1 = 0;
-    vlSymsp->TOP__v.__Vdly__Q_IFID__DOT__count = vlSymsp->TOP__v.__PVT__Q_IFID__DOT__count;
+    vlSymsp->TOP__v.__Vdlyvset__issue__DOT__LSQ__DOT__buffer__v2 = 0;
     vlSymsp->TOP__v.__Vdly__dCache1__DOT__waitCount 
 	= vlSymsp->TOP__v.__PVT__dCache1__DOT__waitCount;
     vlSymsp->TOP__v.__Vdlyvset__Q_IFID__DOT__buffer__v0 = 0;
     vlSymsp->TOP__v.__Vdlyvset__Q_IFID__DOT__buffer__v1 = 0;
+    vlSymsp->TOP__v.__Vdlyvset__Q_IFID__DOT__buffer__v2 = 0;
     vlSymsp->TOP__v.__Vdlyvset__Q_IDREN__DOT__buffer__v0 = 0;
     vlSymsp->TOP__v.__Vdlyvset__Q_IDREN__DOT__buffer__v1 = 0;
-    vlSymsp->TOP__v.__Vdlyvset__commit__DOT__ROB__DOT__buffer__v0 = 0;
-    vlSymsp->TOP__v.__Vdlyvset__commit__DOT__ROB__DOT__buffer__v1 = 0;
+    vlSymsp->TOP__v.__Vdlyvset__Q_IDREN__DOT__buffer__v2 = 0;
     vlSymsp->TOP__v.__Vdlyvset__retrat__v0 = 0;
     vlSymsp->TOP__v.__Vdly__commit__DOT__ROB__DOT__tail 
 	= vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__tail;
@@ -1371,9 +1402,12 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
 	= vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__count;
     vlSymsp->TOP__v.__Vdly__Q_IDREN__DOT__head = vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__head;
     vlSymsp->TOP__v.__Vdly__Q_IDREN__DOT__count = vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__count;
+    vlSymsp->TOP__v.__Vdlyvset__commit__DOT__ROB__DOT__buffer__v0 = 0;
+    vlSymsp->TOP__v.__Vdlyvset__commit__DOT__ROB__DOT__buffer__v1 = 0;
+    vlSymsp->TOP__v.__Vdlyvset__commit__DOT__ROB__DOT__buffer__v2 = 0;
     vlSymsp->TOP__v.__Vdlyvset__renrat__v0 = 0;
     vlSymsp->TOP__v.__Vdlyvset__renrat__v32 = 0;
-    // ALWAYS at ID.v:395
+    // ALWAYS at ID.v:389
     if (vlSymsp->TOP__v.do_writeback1_WBID) {
 	vlSymsp->TOP__v.Reg_ID[(IData)(vlSymsp->TOP__v.writeRegister1_WBID)] 
 	    = vlSymsp->TOP__v.writeData1_WBID;
@@ -3241,12 +3275,14 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
 	vlSymsp->TOP__v.__Vdly__rename__DOT__freelist__DOT__tail = 0;
 	vlSymsp->TOP__v.__Vdly__rename__DOT__freelist__DOT__head = 0;
     }
+    // ALWAYS at REN.v:339
+    vlSymsp->TOP__v.__Vdly__rename__DOT__rFreeLUnderflow 
+	= ((IData)(vlTOPp->RESET) & ((IData)(vlSymsp->TOP__v.__PVT__rename__DOT__rFreeLUnderflow)
+				      ? (0 == (IData)(vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__count))
+				      : ((IData)(vlSymsp->TOP__v.__PVT__rename__DOT__wDestRegReqd) 
+					 & (0 == (IData)(vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__count)))));
     // ALWAYS at queue.v:137
     if (vlTOPp->RESET) {
-	if (vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__probePushReq_IN) {
-	    vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__buffer[(IData)(vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__probeIdx_IN)] 
-		= vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__probeData_IN;
-	}
 	if (vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__validPush) {
 	    vlSymsp->TOP__v.__Vdlyvval__rename__DOT__freelist__DOT__buffer__v0 
 		= vlSymsp->TOP__v.__PVT__rename__DOT__wQ_FreeL_pushData;
@@ -3254,17 +3290,18 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
 	    vlSymsp->TOP__v.__Vdlyvdim0__rename__DOT__freelist__DOT__buffer__v0 
 		= vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__tail;
 	}
+	if (vlSymsp->TOP__v.__PVT__rename__DOT__wProbePushReq_IN) {
+	    vlSymsp->TOP__v.__Vdlyvval__rename__DOT__freelist__DOT__buffer__v1 
+		= vlSymsp->TOP__v.__PVT__rename__DOT__wProbeData;
+	    vlSymsp->TOP__v.__Vdlyvset__rename__DOT__freelist__DOT__buffer__v1 = 1;
+	    vlSymsp->TOP__v.__Vdlyvdim0__rename__DOT__freelist__DOT__buffer__v1 
+		= vlSymsp->TOP__v.__PVT__rename__DOT__wProbeIdx_IN;
+	}
     } else {
-	vlSymsp->TOP__v.__Vdlyvset__rename__DOT__freelist__DOT__buffer__v1 = 1;
-	vlSymsp->TOP__v.__Vdlyvdim0__rename__DOT__freelist__DOT__buffer__v1 
+	vlSymsp->TOP__v.__Vdlyvset__rename__DOT__freelist__DOT__buffer__v2 = 1;
+	vlSymsp->TOP__v.__Vdlyvdim0__rename__DOT__freelist__DOT__buffer__v2 
 	    = vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__tail;
     }
-    // ALWAYS at REN.v:326
-    vlSymsp->TOP__v.__Vdly__rename__DOT__rFreeLUnderflow 
-	= ((IData)(vlTOPp->RESET) & ((IData)(vlSymsp->TOP__v.__PVT__rename__DOT__rFreeLUnderflow)
-				      ? (0 == (IData)(vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__count))
-				      : ((IData)(vlSymsp->TOP__v.__PVT__rename__DOT__wDestRegReqd) 
-					 & (0 == (IData)(vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__count)))));
     // ALWAYS at REN.v:167
     if (vlTOPp->RESET) {
 	vlSymsp->TOP__v.__Vdly__rename__DOT__rIQoverflow 
@@ -3300,40 +3337,6 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
 	vlSymsp->TOP__v.__Vdly__Q_IFID__DOT__tail = 0;
 	vlSymsp->TOP__v.__Vdly__Q_IFID__DOT__head = 0;
     }
-    // ALWAYS at queue.v:137
-    if (vlTOPp->RESET) {
-	if (vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__probePushReq_IN) {
-	    vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer[(IData)(vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__probeIdx_IN)][0] 
-		= vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__probeData_IN[0];
-	    vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer[(IData)(vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__probeIdx_IN)][1] 
-		= vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__probeData_IN[1];
-	    vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer[(IData)(vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__probeIdx_IN)][2] 
-		= vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__probeData_IN[2];
-	    vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer[(IData)(vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__probeIdx_IN)][3] 
-		= vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__probeData_IN[3];
-	    vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer[(IData)(vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__probeIdx_IN)][4] 
-		= vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__probeData_IN[4];
-	}
-	if (vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__validPush) {
-	    vlSymsp->TOP__v.__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v0[0] 
-		= vlSymsp->TOP__v.__PVT__issue__DOT__wLSQ_tailData[0];
-	    vlSymsp->TOP__v.__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v0[1] 
-		= vlSymsp->TOP__v.__PVT__issue__DOT__wLSQ_tailData[1];
-	    vlSymsp->TOP__v.__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v0[2] 
-		= vlSymsp->TOP__v.__PVT__issue__DOT__wLSQ_tailData[2];
-	    vlSymsp->TOP__v.__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v0[3] 
-		= vlSymsp->TOP__v.__PVT__issue__DOT__wLSQ_tailData[3];
-	    vlSymsp->TOP__v.__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v0[4] 
-		= vlSymsp->TOP__v.__PVT__issue__DOT__wLSQ_tailData[4];
-	    vlSymsp->TOP__v.__Vdlyvset__issue__DOT__LSQ__DOT__buffer__v0 = 1;
-	    vlSymsp->TOP__v.__Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v0 
-		= vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__tail;
-	}
-    } else {
-	vlSymsp->TOP__v.__Vdlyvset__issue__DOT__LSQ__DOT__buffer__v1 = 1;
-	vlSymsp->TOP__v.__Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v1 
-	    = vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__tail;
-    }
     // ALWAYS at queue.v:107
     if (vlTOPp->RESET) {
 	if (((IData)(vlSymsp->TOP__v.__PVT__Q_IFID__DOT__validPush) 
@@ -3352,14 +3355,43 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
     }
     // ALWAYS at queue.v:137
     if (vlTOPp->RESET) {
-	if (vlSymsp->TOP__v.__PVT__Q_IFID__DOT__probePushReq_IN) {
-	    vlSymsp->TOP__v.__PVT__Q_IFID__DOT__buffer[(IData)(vlSymsp->TOP__v.__PVT__Q_IFID__DOT__probeIdx_IN)][0] 
-		= vlSymsp->TOP__v.__PVT__Q_IFID__DOT__probeData_IN[0];
-	    vlSymsp->TOP__v.__PVT__Q_IFID__DOT__buffer[(IData)(vlSymsp->TOP__v.__PVT__Q_IFID__DOT__probeIdx_IN)][1] 
-		= vlSymsp->TOP__v.__PVT__Q_IFID__DOT__probeData_IN[1];
-	    vlSymsp->TOP__v.__PVT__Q_IFID__DOT__buffer[(IData)(vlSymsp->TOP__v.__PVT__Q_IFID__DOT__probeIdx_IN)][2] 
-		= vlSymsp->TOP__v.__PVT__Q_IFID__DOT__probeData_IN[2];
+	if (vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__validPush) {
+	    vlSymsp->TOP__v.__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v0[0] 
+		= vlSymsp->TOP__v.__PVT__issue__DOT__wLSQ_tailData[0];
+	    vlSymsp->TOP__v.__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v0[1] 
+		= vlSymsp->TOP__v.__PVT__issue__DOT__wLSQ_tailData[1];
+	    vlSymsp->TOP__v.__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v0[2] 
+		= vlSymsp->TOP__v.__PVT__issue__DOT__wLSQ_tailData[2];
+	    vlSymsp->TOP__v.__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v0[3] 
+		= vlSymsp->TOP__v.__PVT__issue__DOT__wLSQ_tailData[3];
+	    vlSymsp->TOP__v.__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v0[4] 
+		= vlSymsp->TOP__v.__PVT__issue__DOT__wLSQ_tailData[4];
+	    vlSymsp->TOP__v.__Vdlyvset__issue__DOT__LSQ__DOT__buffer__v0 = 1;
+	    vlSymsp->TOP__v.__Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v0 
+		= vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__tail;
 	}
+	if (vlSymsp->TOP__v.__PVT__issue__DOT__wProbePushReq_IN) {
+	    vlSymsp->TOP__v.__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v1[0] 
+		= vlSymsp->TOP__v.__PVT__issue__DOT__wProbeData[0];
+	    vlSymsp->TOP__v.__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v1[1] 
+		= vlSymsp->TOP__v.__PVT__issue__DOT__wProbeData[1];
+	    vlSymsp->TOP__v.__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v1[2] 
+		= vlSymsp->TOP__v.__PVT__issue__DOT__wProbeData[2];
+	    vlSymsp->TOP__v.__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v1[3] 
+		= vlSymsp->TOP__v.__PVT__issue__DOT__wProbeData[3];
+	    vlSymsp->TOP__v.__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v1[4] 
+		= vlSymsp->TOP__v.__PVT__issue__DOT__wProbeData[4];
+	    vlSymsp->TOP__v.__Vdlyvset__issue__DOT__LSQ__DOT__buffer__v1 = 1;
+	    vlSymsp->TOP__v.__Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v1 
+		= vlSymsp->TOP__v.__PVT__issue__DOT__wProbeIdx_IN;
+	}
+    } else {
+	vlSymsp->TOP__v.__Vdlyvset__issue__DOT__LSQ__DOT__buffer__v2 = 1;
+	vlSymsp->TOP__v.__Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v2 
+	    = vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__tail;
+    }
+    // ALWAYS at queue.v:137
+    if (vlTOPp->RESET) {
 	if (vlSymsp->TOP__v.__PVT__Q_IFID__DOT__validPush) {
 	    vlSymsp->TOP__v.__Vdlyvval__Q_IFID__DOT__buffer__v0[0] 
 		= vlSymsp->TOP__v.Instr1_IFID;
@@ -3374,23 +3406,24 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
 	    vlSymsp->TOP__v.__Vdlyvdim0__Q_IFID__DOT__buffer__v0 
 		= vlSymsp->TOP__v.__PVT__Q_IFID__DOT__tail;
 	}
+	if (vlSymsp->TOP__v.__PVT__wQ_IFID_probePushReq_IN) {
+	    vlSymsp->TOP__v.__Vdlyvval__Q_IFID__DOT__buffer__v1[0] 
+		= vlSymsp->TOP__v.__PVT__wQ_IFID_probeData_IN[0];
+	    vlSymsp->TOP__v.__Vdlyvval__Q_IFID__DOT__buffer__v1[1] 
+		= vlSymsp->TOP__v.__PVT__wQ_IFID_probeData_IN[1];
+	    vlSymsp->TOP__v.__Vdlyvval__Q_IFID__DOT__buffer__v1[2] 
+		= vlSymsp->TOP__v.__PVT__wQ_IFID_probeData_IN[2];
+	    vlSymsp->TOP__v.__Vdlyvset__Q_IFID__DOT__buffer__v1 = 1;
+	    vlSymsp->TOP__v.__Vdlyvdim0__Q_IFID__DOT__buffer__v1 
+		= vlSymsp->TOP__v.__PVT__wQ_IFID_probeIdx_IN;
+	}
     } else {
-	vlSymsp->TOP__v.__Vdlyvset__Q_IFID__DOT__buffer__v1 = 1;
-	vlSymsp->TOP__v.__Vdlyvdim0__Q_IFID__DOT__buffer__v1 
+	vlSymsp->TOP__v.__Vdlyvset__Q_IFID__DOT__buffer__v2 = 1;
+	vlSymsp->TOP__v.__Vdlyvdim0__Q_IFID__DOT__buffer__v2 
 	    = vlSymsp->TOP__v.__PVT__Q_IFID__DOT__tail;
     }
     // ALWAYS at queue.v:137
     if (vlTOPp->RESET) {
-	if (vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__probePushReq_IN) {
-	    vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer[(IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__probeIdx_IN)][0] 
-		= vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__probeData_IN[0];
-	    vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer[(IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__probeIdx_IN)][1] 
-		= vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__probeData_IN[1];
-	    vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer[(IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__probeIdx_IN)][2] 
-		= vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__probeData_IN[2];
-	    vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer[(IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__probeIdx_IN)][3] 
-		= vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__probeData_IN[3];
-	}
 	if (vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__validPush) {
 	    __Vtemp98[0] = (IData)((((QData)((IData)(vlSymsp->TOP__v.readRegisterA1_IDEXE)) 
 				     << 0x32) | (((QData)((IData)(vlSymsp->TOP__v.readRegisterB1_IDEXE)) 
@@ -3457,49 +3490,23 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
 	    vlSymsp->TOP__v.__Vdlyvdim0__Q_IDREN__DOT__buffer__v0 
 		= vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__tail;
 	}
+	if (vlSymsp->TOP__v.__PVT__wQ_IDREN_probePushReq_IN) {
+	    vlSymsp->TOP__v.__Vdlyvval__Q_IDREN__DOT__buffer__v1[0] 
+		= vlSymsp->TOP__v.__PVT__wQ_IDREN_probeData_IN[0];
+	    vlSymsp->TOP__v.__Vdlyvval__Q_IDREN__DOT__buffer__v1[1] 
+		= vlSymsp->TOP__v.__PVT__wQ_IDREN_probeData_IN[1];
+	    vlSymsp->TOP__v.__Vdlyvval__Q_IDREN__DOT__buffer__v1[2] 
+		= vlSymsp->TOP__v.__PVT__wQ_IDREN_probeData_IN[2];
+	    vlSymsp->TOP__v.__Vdlyvval__Q_IDREN__DOT__buffer__v1[3] 
+		= vlSymsp->TOP__v.__PVT__wQ_IDREN_probeData_IN[3];
+	    vlSymsp->TOP__v.__Vdlyvset__Q_IDREN__DOT__buffer__v1 = 1;
+	    vlSymsp->TOP__v.__Vdlyvdim0__Q_IDREN__DOT__buffer__v1 
+		= vlSymsp->TOP__v.__PVT__wQ_IDREN_probeIdx_IN;
+	}
     } else {
-	vlSymsp->TOP__v.__Vdlyvset__Q_IDREN__DOT__buffer__v1 = 1;
-	vlSymsp->TOP__v.__Vdlyvdim0__Q_IDREN__DOT__buffer__v1 
+	vlSymsp->TOP__v.__Vdlyvset__Q_IDREN__DOT__buffer__v2 = 1;
+	vlSymsp->TOP__v.__Vdlyvdim0__Q_IDREN__DOT__buffer__v2 
 	    = vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__tail;
-    }
-    // ALWAYS at queue.v:137
-    if (vlTOPp->RESET) {
-	if (vlSymsp->TOP__v.__PVT__wMEM_ROB_Valid_Instruction) {
-	    vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__PVT__wtROB_probeIdx)][0] 
-		= vlSymsp->TOP__v.__PVT__commit__DOT__wROB_probeDataIn[0];
-	    vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__PVT__wtROB_probeIdx)][1] 
-		= vlSymsp->TOP__v.__PVT__commit__DOT__wROB_probeDataIn[1];
-	    vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__PVT__wtROB_probeIdx)][2] 
-		= vlSymsp->TOP__v.__PVT__commit__DOT__wROB_probeDataIn[2];
-	    vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__PVT__wtROB_probeIdx)][3] 
-		= vlSymsp->TOP__v.__PVT__commit__DOT__wROB_probeDataIn[3];
-	    vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__PVT__wtROB_probeIdx)][4] 
-		= vlSymsp->TOP__v.__PVT__commit__DOT__wROB_probeDataIn[4];
-	    vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__PVT__wtROB_probeIdx)][5] 
-		= vlSymsp->TOP__v.__PVT__commit__DOT__wROB_probeDataIn[5];
-	}
-	if (vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__validPush) {
-	    VL_EXTEND_WW(185,183, __Vtemp102, vlSymsp->TOP__v.__PVT__wtROB_pushData);
-	    vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v0[0] 
-		= __Vtemp102[0];
-	    vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v0[1] 
-		= __Vtemp102[1];
-	    vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v0[2] 
-		= __Vtemp102[2];
-	    vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v0[3] 
-		= __Vtemp102[3];
-	    vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v0[4] 
-		= __Vtemp102[4];
-	    vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v0[5] 
-		= __Vtemp102[5];
-	    vlSymsp->TOP__v.__Vdlyvset__commit__DOT__ROB__DOT__buffer__v0 = 1;
-	    vlSymsp->TOP__v.__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v0 
-		= vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__tail;
-	}
-    } else {
-	vlSymsp->TOP__v.__Vdlyvset__commit__DOT__ROB__DOT__buffer__v1 = 1;
-	vlSymsp->TOP__v.__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v1 
-	    = vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__tail;
     }
     // ALWAYS at queue.v:123
     if ((1 & ((~ (IData)(vlTOPp->RESET)) | (IData)(vlSymsp->TOP__v.__PVT__wfROB_flushALL)))) {
@@ -3560,6 +3567,48 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
 		= (0xf & ((IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__count) 
 			  - (IData)(1)));
 	}
+    }
+    // ALWAYS at queue.v:137
+    if (vlTOPp->RESET) {
+	if (vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__validPush) {
+	    VL_EXTEND_WW(185,183, __Vtemp102, vlSymsp->TOP__v.__PVT__wtROB_pushData);
+	    vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v0[0] 
+		= __Vtemp102[0];
+	    vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v0[1] 
+		= __Vtemp102[1];
+	    vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v0[2] 
+		= __Vtemp102[2];
+	    vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v0[3] 
+		= __Vtemp102[3];
+	    vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v0[4] 
+		= __Vtemp102[4];
+	    vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v0[5] 
+		= __Vtemp102[5];
+	    vlSymsp->TOP__v.__Vdlyvset__commit__DOT__ROB__DOT__buffer__v0 = 1;
+	    vlSymsp->TOP__v.__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v0 
+		= vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__tail;
+	}
+	if (vlSymsp->TOP__v.__PVT__wMEM_ROB_Valid_Instruction) {
+	    vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v1[0] 
+		= vlSymsp->TOP__v.__PVT__commit__DOT__wROB_probeDataIn[0];
+	    vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v1[1] 
+		= vlSymsp->TOP__v.__PVT__commit__DOT__wROB_probeDataIn[1];
+	    vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v1[2] 
+		= vlSymsp->TOP__v.__PVT__commit__DOT__wROB_probeDataIn[2];
+	    vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v1[3] 
+		= vlSymsp->TOP__v.__PVT__commit__DOT__wROB_probeDataIn[3];
+	    vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v1[4] 
+		= vlSymsp->TOP__v.__PVT__commit__DOT__wROB_probeDataIn[4];
+	    vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v1[5] 
+		= vlSymsp->TOP__v.__PVT__commit__DOT__wROB_probeDataIn[5];
+	    vlSymsp->TOP__v.__Vdlyvset__commit__DOT__ROB__DOT__buffer__v1 = 1;
+	    vlSymsp->TOP__v.__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v1 
+		= vlSymsp->TOP__v.__PVT__wtROB_probeIdx;
+	}
+    } else {
+	vlSymsp->TOP__v.__Vdlyvset__commit__DOT__ROB__DOT__buffer__v2 = 1;
+	vlSymsp->TOP__v.__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v2 
+	    = vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__tail;
     }
     // ALWAYS at REN.v:239
     if (vlTOPp->RESET) {
@@ -3710,6 +3759,10 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
 	= vlSymsp->TOP__v.__Vdly__issue__DOT__LSQ__DOT__head;
     vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__head 
 	= vlSymsp->TOP__v.__Vdly__rename__DOT__freelist__DOT__head;
+    vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__count 
+	= vlSymsp->TOP__v.__Vdly__rename__DOT__freelist__DOT__count;
+    vlSymsp->TOP__v.__PVT__rename__DOT__rFreeLUnderflow 
+	= vlSymsp->TOP__v.__Vdly__rename__DOT__rFreeLUnderflow;
     vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__tail 
 	= vlSymsp->TOP__v.__Vdly__rename__DOT__freelist__DOT__tail;
     // ALWAYSPOST at queue.v:142
@@ -3718,17 +3771,18 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
 	    = vlSymsp->TOP__v.__Vdlyvval__rename__DOT__freelist__DOT__buffer__v0;
     }
     if (vlSymsp->TOP__v.__Vdlyvset__rename__DOT__freelist__DOT__buffer__v1) {
-	vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__rename__DOT__freelist__DOT__buffer__v1)] = 0;
+	vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__rename__DOT__freelist__DOT__buffer__v1)] 
+	    = vlSymsp->TOP__v.__Vdlyvval__rename__DOT__freelist__DOT__buffer__v1;
     }
-    vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__count 
-	= vlSymsp->TOP__v.__Vdly__rename__DOT__freelist__DOT__count;
-    vlSymsp->TOP__v.__PVT__rename__DOT__rFreeLUnderflow 
-	= vlSymsp->TOP__v.__Vdly__rename__DOT__rFreeLUnderflow;
+    if (vlSymsp->TOP__v.__Vdlyvset__rename__DOT__freelist__DOT__buffer__v2) {
+	vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__rename__DOT__freelist__DOT__buffer__v2)] = 0;
+    }
     vlSymsp->TOP__v.__PVT__rename__DOT__rIQoverflow 
 	= vlSymsp->TOP__v.__Vdly__rename__DOT__rIQoverflow;
     vlSymsp->TOP__v.__PVT__rename__DOT__rLSQoverflow 
 	= vlSymsp->TOP__v.__Vdly__rename__DOT__rLSQoverflow;
     vlSymsp->TOP__v.__PVT__Q_IFID__DOT__head = vlSymsp->TOP__v.__Vdly__Q_IFID__DOT__head;
+    vlSymsp->TOP__v.__PVT__Q_IFID__DOT__count = vlSymsp->TOP__v.__Vdly__Q_IFID__DOT__count;
     vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__tail 
 	= vlSymsp->TOP__v.__Vdly__issue__DOT__LSQ__DOT__tail;
     // ALWAYSPOST at queue.v:142
@@ -3745,13 +3799,24 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
 	    = vlSymsp->TOP__v.__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v0[4];
     }
     if (vlSymsp->TOP__v.__Vdlyvset__issue__DOT__LSQ__DOT__buffer__v1) {
-	vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v1)][0] = 0;
-	vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v1)][1] = 0;
-	vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v1)][2] = 0;
-	vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v1)][3] = 0;
-	vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v1)][4] = 0;
+	vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v1)][0] 
+	    = vlSymsp->TOP__v.__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v1[0];
+	vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v1)][1] 
+	    = vlSymsp->TOP__v.__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v1[1];
+	vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v1)][2] 
+	    = vlSymsp->TOP__v.__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v1[2];
+	vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v1)][3] 
+	    = vlSymsp->TOP__v.__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v1[3];
+	vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v1)][4] 
+	    = vlSymsp->TOP__v.__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v1[4];
     }
-    vlSymsp->TOP__v.__PVT__Q_IFID__DOT__count = vlSymsp->TOP__v.__Vdly__Q_IFID__DOT__count;
+    if (vlSymsp->TOP__v.__Vdlyvset__issue__DOT__LSQ__DOT__buffer__v2) {
+	vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v2)][0] = 0;
+	vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v2)][1] = 0;
+	vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v2)][2] = 0;
+	vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v2)][3] = 0;
+	vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v2)][4] = 0;
+    }
     vlSymsp->TOP__v.__PVT__Q_IFID__DOT__tail = vlSymsp->TOP__v.__Vdly__Q_IFID__DOT__tail;
     // ALWAYSPOST at queue.v:142
     if (vlSymsp->TOP__v.__Vdlyvset__Q_IFID__DOT__buffer__v0) {
@@ -3763,9 +3828,17 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
 	    = vlSymsp->TOP__v.__Vdlyvval__Q_IFID__DOT__buffer__v0[2];
     }
     if (vlSymsp->TOP__v.__Vdlyvset__Q_IFID__DOT__buffer__v1) {
-	vlSymsp->TOP__v.__PVT__Q_IFID__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__Q_IFID__DOT__buffer__v1)][0] = 0;
-	vlSymsp->TOP__v.__PVT__Q_IFID__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__Q_IFID__DOT__buffer__v1)][1] = 0;
-	vlSymsp->TOP__v.__PVT__Q_IFID__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__Q_IFID__DOT__buffer__v1)][2] = 0;
+	vlSymsp->TOP__v.__PVT__Q_IFID__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__Q_IFID__DOT__buffer__v1)][0] 
+	    = vlSymsp->TOP__v.__Vdlyvval__Q_IFID__DOT__buffer__v1[0];
+	vlSymsp->TOP__v.__PVT__Q_IFID__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__Q_IFID__DOT__buffer__v1)][1] 
+	    = vlSymsp->TOP__v.__Vdlyvval__Q_IFID__DOT__buffer__v1[1];
+	vlSymsp->TOP__v.__PVT__Q_IFID__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__Q_IFID__DOT__buffer__v1)][2] 
+	    = vlSymsp->TOP__v.__Vdlyvval__Q_IFID__DOT__buffer__v1[2];
+    }
+    if (vlSymsp->TOP__v.__Vdlyvset__Q_IFID__DOT__buffer__v2) {
+	vlSymsp->TOP__v.__PVT__Q_IFID__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__Q_IFID__DOT__buffer__v2)][0] = 0;
+	vlSymsp->TOP__v.__PVT__Q_IFID__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__Q_IFID__DOT__buffer__v2)][1] = 0;
+	vlSymsp->TOP__v.__PVT__Q_IFID__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__Q_IFID__DOT__buffer__v2)][2] = 0;
     }
     // ALWAYSPOST at queue.v:142
     if (vlSymsp->TOP__v.__Vdlyvset__Q_IDREN__DOT__buffer__v0) {
@@ -3779,11 +3852,28 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
 	    = vlSymsp->TOP__v.__Vdlyvval__Q_IDREN__DOT__buffer__v0[3];
     }
     if (vlSymsp->TOP__v.__Vdlyvset__Q_IDREN__DOT__buffer__v1) {
-	vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__Q_IDREN__DOT__buffer__v1)][0] = 0;
-	vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__Q_IDREN__DOT__buffer__v1)][1] = 0;
-	vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__Q_IDREN__DOT__buffer__v1)][2] = 0;
-	vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__Q_IDREN__DOT__buffer__v1)][3] = 0;
+	vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__Q_IDREN__DOT__buffer__v1)][0] 
+	    = vlSymsp->TOP__v.__Vdlyvval__Q_IDREN__DOT__buffer__v1[0];
+	vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__Q_IDREN__DOT__buffer__v1)][1] 
+	    = vlSymsp->TOP__v.__Vdlyvval__Q_IDREN__DOT__buffer__v1[1];
+	vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__Q_IDREN__DOT__buffer__v1)][2] 
+	    = vlSymsp->TOP__v.__Vdlyvval__Q_IDREN__DOT__buffer__v1[2];
+	vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__Q_IDREN__DOT__buffer__v1)][3] 
+	    = vlSymsp->TOP__v.__Vdlyvval__Q_IDREN__DOT__buffer__v1[3];
     }
+    if (vlSymsp->TOP__v.__Vdlyvset__Q_IDREN__DOT__buffer__v2) {
+	vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__Q_IDREN__DOT__buffer__v2)][0] = 0;
+	vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__Q_IDREN__DOT__buffer__v2)][1] = 0;
+	vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__Q_IDREN__DOT__buffer__v2)][2] = 0;
+	vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__Q_IDREN__DOT__buffer__v2)][3] = 0;
+    }
+    vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__head 
+	= vlSymsp->TOP__v.__Vdly__commit__DOT__ROB__DOT__head;
+    vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__tail = vlSymsp->TOP__v.__Vdly__Q_IDREN__DOT__tail;
+    vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__head = vlSymsp->TOP__v.__Vdly__Q_IDREN__DOT__head;
+    vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__count = vlSymsp->TOP__v.__Vdly__Q_IDREN__DOT__count;
+    vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__tail 
+	= vlSymsp->TOP__v.__Vdly__commit__DOT__ROB__DOT__tail;
     // ALWAYSPOST at queue.v:142
     if (vlSymsp->TOP__v.__Vdlyvset__commit__DOT__ROB__DOT__buffer__v0) {
 	vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v0)][0] 
@@ -3800,20 +3890,27 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
 	    = vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v0[5];
     }
     if (vlSymsp->TOP__v.__Vdlyvset__commit__DOT__ROB__DOT__buffer__v1) {
-	vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v1)][0] = 0;
-	vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v1)][1] = 0;
-	vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v1)][2] = 0;
-	vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v1)][3] = 0;
-	vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v1)][4] = 0;
-	vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v1)][5] = 0;
+	vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v1)][0] 
+	    = vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v1[0];
+	vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v1)][1] 
+	    = vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v1[1];
+	vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v1)][2] 
+	    = vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v1[2];
+	vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v1)][3] 
+	    = vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v1[3];
+	vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v1)][4] 
+	    = vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v1[4];
+	vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v1)][5] 
+	    = vlSymsp->TOP__v.__Vdlyvval__commit__DOT__ROB__DOT__buffer__v1[5];
     }
-    vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__tail 
-	= vlSymsp->TOP__v.__Vdly__commit__DOT__ROB__DOT__tail;
-    vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__head 
-	= vlSymsp->TOP__v.__Vdly__commit__DOT__ROB__DOT__head;
-    vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__tail = vlSymsp->TOP__v.__Vdly__Q_IDREN__DOT__tail;
-    vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__head = vlSymsp->TOP__v.__Vdly__Q_IDREN__DOT__head;
-    vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__count = vlSymsp->TOP__v.__Vdly__Q_IDREN__DOT__count;
+    if (vlSymsp->TOP__v.__Vdlyvset__commit__DOT__ROB__DOT__buffer__v2) {
+	vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v2)][0] = 0;
+	vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v2)][1] = 0;
+	vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v2)][2] = 0;
+	vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v2)][3] = 0;
+	vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v2)][4] = 0;
+	vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v2)][5] = 0;
+    }
     // ALWAYSPOST at REN.v:252
     if (vlSymsp->TOP__v.__Vdlyvset__renrat__v0) {
 	vlSymsp->TOP__v.renrat[0] = vlSymsp->TOP__v.__Vdlyvval__renrat__v0;
@@ -3890,13 +3987,16 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
 	vlSymsp->TOP__v.__PVT__dCache1__DOT__policy[7] = 0;
 	vlSymsp->TOP__v.__PVT__dCache1__DOT__policy[8] = 0;
     }
-    vlSymsp->TOP__v.__PVT__rename__DOT__wQ_FreeL_popData 
-	= (IData)(vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__buffer)
-	[(IData)(vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__head)];
     vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__validPush 
 	= ((0x40 != (IData)(vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__count)) 
 	   & (IData)(vlSymsp->TOP__v.__PVT__rename__DOT__wQ_FreeL_pushReq));
-    // ALWAYS at ISS.v:210
+    vlSymsp->TOP__v.__PVT__rename__DOT__wQ_FreeL_popData 
+	= (IData)(vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__buffer)
+	[(IData)(vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__head)];
+    vlSymsp->TOP__v.__PVT__Q_IFID__DOT__validPush = 
+	((8 != (IData)(vlSymsp->TOP__v.__PVT__Q_IFID__DOT__count)) 
+	 & (IData)(vlSymsp->TOP__v.__PVT__wQ_IFID_pushReq));
+    // ALWAYS at ISS.v:225
     if (vlTOPp->RESET) {
 	if ((1 & (~ (IData)(vlSymsp->TOP__v.__PVT__DMISS)))) {
 	    vlSymsp->TOP__v.__PVT__issue__DOT__pos = 0;
@@ -4154,11 +4254,6 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
 		vlSymsp->TOP__v.__PVT__issue__DOT__IQcount 
 		    = ((IData)(1) + vlSymsp->TOP__v.__PVT__issue__DOT__IQcount);
 	    }
-	    vlSymsp->TOP__v.__Vdly__issue__DOT__wIQselected 
-		= ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__wIQrdy) 
-		   & ((~ (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__rPr)) 
-		      | ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__rPr) 
-			 & (~ (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__wLSQrdy)))));
 	    if (vlSymsp->TOP__v.__PVT__issue__DOT__wLSQselected) {
 		if ((1 & vlSymsp->TOP__v.__PVT__issue__DOT__wLSQ_headData[3])) {
 		    vlSymsp->TOP__v.__PVT__issue__DOT__busy_bits[(0x3f 
@@ -4227,6 +4322,11 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
 	    } else {
 		vlSymsp->TOP__v.__PVT__issue__DOT__wLSQ_popReq = 0;
 	    }
+	    vlSymsp->TOP__v.__Vdly__issue__DOT__wIQselected 
+		= ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__wIQrdy) 
+		   & ((~ (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__rPr)) 
+		      | ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__rPr) 
+			 & (~ (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__wLSQrdy)))));
 	    if (((0x10 != (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__count)) 
 		 & (IData)(vlSymsp->TOP__v.__PVT__wtLSQ_pushReq))) {
 		if ((0x200000 & vlSymsp->TOP__v.__PVT__issue__DOT__wRENISS_pushData[4])) {
@@ -4259,15 +4359,41 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
     } else {
 	vlSymsp->TOP__v.__PVT__issue__DOT__IQcount = 0;
     }
-    vlSymsp->TOP__v.__PVT__Q_IFID__DOT__validPush = 
-	((8 != (IData)(vlSymsp->TOP__v.__PVT__Q_IFID__DOT__count)) 
-	 & (IData)(vlSymsp->TOP__v.__PVT__wQ_IFID_pushReq));
     vlSymsp->TOP__v.__PVT__wQ_IFID_popData[0] = vlSymsp->TOP__v.__PVT__Q_IFID__DOT__buffer
 	[(IData)(vlSymsp->TOP__v.__PVT__Q_IFID__DOT__head)][0];
     vlSymsp->TOP__v.__PVT__wQ_IFID_popData[1] = vlSymsp->TOP__v.__PVT__Q_IFID__DOT__buffer
 	[(IData)(vlSymsp->TOP__v.__PVT__Q_IFID__DOT__head)][1];
     vlSymsp->TOP__v.__PVT__wQ_IFID_popData[2] = vlSymsp->TOP__v.__PVT__Q_IFID__DOT__buffer
 	[(IData)(vlSymsp->TOP__v.__PVT__Q_IFID__DOT__head)][2];
+    vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[0] = vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer
+	[(IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__head)][0];
+    vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[1] = vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer
+	[(IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__head)][1];
+    vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[2] = vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer
+	[(IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__head)][2];
+    vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[3] = vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer
+	[(IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__head)][3];
+    vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__validPush 
+	= ((8 != (IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__count)) 
+	   & (IData)(vlSymsp->TOP__v.__PVT__wQ_IDREN_pushReq));
+    vlSymsp->TOP__v.__PVT__commit__DOT__wROB_popData[0] 
+	= vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer
+	[(IData)(vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__head)][0];
+    vlSymsp->TOP__v.__PVT__commit__DOT__wROB_popData[1] 
+	= vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer
+	[(IData)(vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__head)][1];
+    vlSymsp->TOP__v.__PVT__commit__DOT__wROB_popData[2] 
+	= vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer
+	[(IData)(vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__head)][2];
+    vlSymsp->TOP__v.__PVT__commit__DOT__wROB_popData[3] 
+	= vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer
+	[(IData)(vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__head)][3];
+    vlSymsp->TOP__v.__PVT__commit__DOT__wROB_popData[4] 
+	= vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer
+	[(IData)(vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__head)][4];
+    vlSymsp->TOP__v.__PVT__commit__DOT__wROB_popData[5] 
+	= vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer
+	[(IData)(vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__head)][5];
     // ALWAYS at REN.v:212
     if (vlSymsp->TOP__v.__PVT__rename__DOT__wCarryOn) {
 	vlSymsp->TOP__v.__PVT__wtROB_pushReq = ((IData)(vlSymsp->TOP__v.__PVT__rename__DOT__wIQpushable) 
@@ -4293,35 +4419,6 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
 	vlSymsp->TOP__v.__PVT__wtROB_pushData[4] = 0;
 	vlSymsp->TOP__v.__PVT__wtROB_pushData[5] = 0;
     }
-    vlSymsp->TOP__v.__PVT__commit__DOT__wROB_popData[0] 
-	= vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer
-	[(IData)(vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__head)][0];
-    vlSymsp->TOP__v.__PVT__commit__DOT__wROB_popData[1] 
-	= vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer
-	[(IData)(vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__head)][1];
-    vlSymsp->TOP__v.__PVT__commit__DOT__wROB_popData[2] 
-	= vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer
-	[(IData)(vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__head)][2];
-    vlSymsp->TOP__v.__PVT__commit__DOT__wROB_popData[3] 
-	= vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer
-	[(IData)(vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__head)][3];
-    vlSymsp->TOP__v.__PVT__commit__DOT__wROB_popData[4] 
-	= vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer
-	[(IData)(vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__head)][4];
-    vlSymsp->TOP__v.__PVT__commit__DOT__wROB_popData[5] 
-	= vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer
-	[(IData)(vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__head)][5];
-    vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[0] = vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer
-	[(IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__head)][0];
-    vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[1] = vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer
-	[(IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__head)][1];
-    vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[2] = vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer
-	[(IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__head)][2];
-    vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[3] = vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer
-	[(IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__head)][3];
-    vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__validPush 
-	= ((8 != (IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__count)) 
-	   & (IData)(vlSymsp->TOP__v.__PVT__wQ_IDREN_pushReq));
     // ALWAYS at COMMIT.v:206
     if (vlTOPp->RESET) {
 	if ((1 & (~ (IData)(vlSymsp->TOP__v.__PVT__wCommitFreeze)))) {
@@ -4425,29 +4522,39 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
     vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__count 
 	= vlSymsp->TOP__v.__Vdly__issue__DOT__LSQ__DOT__count;
     vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
-	= ((0xfffc & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
-	   | ((2 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
-		    [1][3] >> 7)) | (1 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
-					  [0][3] >> 8))));
+	= ((0xfffe & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
+	   | (1 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
+		   [0][3] >> 8)));
     vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
-	= ((0xfff3 & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
-	   | ((8 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
-		    [3][3] >> 5)) | (4 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
-					  [2][3] >> 6))));
+	= ((0xfffd & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
+	   | (2 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
+		   [1][3] >> 7)));
     vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
-	= ((0xffcf & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
-	   | ((0x20 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
-		       [5][3] >> 3)) | (0x10 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
-						[4][3] 
-						>> 4))));
+	= ((0xfffb & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
+	   | (4 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
+		   [2][3] >> 6)));
     vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
-	= ((0xff3f & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
-	   | ((0x80 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
-		       [7][3] >> 1)) | (0x40 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
-						[6][3] 
-						>> 2))));
+	= ((0xfff7 & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
+	   | (8 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
+		   [3][3] >> 5)));
     vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
-	= ((0xfcff & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
+	= ((0xffef & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
+	   | (0x10 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
+		      [4][3] >> 4)));
+    vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
+	= ((0xffdf & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
+	   | (0x20 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
+		      [5][3] >> 3)));
+    vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
+	= ((0xffbf & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
+	   | (0x40 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
+		      [6][3] >> 2)));
+    vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
+	= ((0xff7f & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
+	   | (0x80 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
+		      [7][3] >> 1)));
+    vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
+	= ((0xfeff & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
 	   | (0x100 & vlSymsp->TOP__v.__PVT__issue__DOT__IQ
 	      [8][3]));
     // ALWAYSPOST at COMMIT.v:219
@@ -4753,7 +4860,7 @@ void VMIPS_MIPS::_sequent__TOP__v__3(VMIPS__Syms* __restrict vlSymsp) {
 	vlSymsp->TOP__v.CIA_IFID = 0;
 	vlSymsp->TOP__v.__Vdly__IF1__DOT__PC = vlTOPp->PC_init;
     }
-    // ALWAYS at ID.v:378
+    // ALWAYS at ID.v:372
     if (vlTOPp->RESET) {
 	if ((1 & (~ (IData)(vlSymsp->TOP__v.__PVT__wFreezeID)))) {
 	    vlSymsp->TOP__v.__Vdly__ID1__DOT__syscalBubbleCounter 
@@ -4780,7 +4887,7 @@ void VMIPS_MIPS::_sequent__TOP__v__3(VMIPS__Syms* __restrict vlSymsp) {
 	vlSymsp->TOP__v.R2_output_ID = 0;
 	vlSymsp->TOP__v.nextInstruction_address_IDIF = 0;
     }
-    // ALWAYS at ID.v:402
+    // ALWAYS at ID.v:396
     if ((1 & ((~ (IData)(vlTOPp->RESET)) | (IData)(vlSymsp->TOP__v.no_fetch)))) {
 	vlSymsp->TOP__v.Operand_A1_IDEXE = 0;
 	vlSymsp->TOP__v.Operand_B1_IDEXE = 0;
@@ -4929,12 +5036,12 @@ void VMIPS_MIPS::_settle__TOP__v__5(VMIPS__Syms* __restrict vlSymsp) {
 						  & (vlSymsp->TOP__v.Instr_fMEM 
 						     >> 0x1a)))
 					      ? 2 : 0));
-    vlSymsp->TOP__v.__PVT__rename__DOT__wQ_FreeL_popData 
-	= (IData)(vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__buffer)
-	[(IData)(vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__head)];
     vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__validPush 
 	= ((0x40 != (IData)(vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__count)) 
 	   & (IData)(vlSymsp->TOP__v.__PVT__rename__DOT__wQ_FreeL_pushReq));
+    vlSymsp->TOP__v.__PVT__rename__DOT__wQ_FreeL_popData 
+	= (IData)(vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__buffer)
+	[(IData)(vlSymsp->TOP__v.__PVT__rename__DOT__freelist__DOT__head)];
     vlSymsp->TOP__v.__PVT__Q_IFID__DOT__validPush = 
 	((8 != (IData)(vlSymsp->TOP__v.__PVT__Q_IFID__DOT__count)) 
 	 & (IData)(vlSymsp->TOP__v.__PVT__wQ_IFID_pushReq));
@@ -4944,6 +5051,17 @@ void VMIPS_MIPS::_settle__TOP__v__5(VMIPS__Syms* __restrict vlSymsp) {
 	[(IData)(vlSymsp->TOP__v.__PVT__Q_IFID__DOT__head)][1];
     vlSymsp->TOP__v.__PVT__wQ_IFID_popData[2] = vlSymsp->TOP__v.__PVT__Q_IFID__DOT__buffer
 	[(IData)(vlSymsp->TOP__v.__PVT__Q_IFID__DOT__head)][2];
+    vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[0] = vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer
+	[(IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__head)][0];
+    vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[1] = vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer
+	[(IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__head)][1];
+    vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[2] = vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer
+	[(IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__head)][2];
+    vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[3] = vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer
+	[(IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__head)][3];
+    vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__validPush 
+	= ((8 != (IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__count)) 
+	   & (IData)(vlSymsp->TOP__v.__PVT__wQ_IDREN_pushReq));
     vlSymsp->TOP__v.__PVT__commit__DOT__wROB_popData[0] 
 	= vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer
 	[(IData)(vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__head)][0];
@@ -4962,17 +5080,6 @@ void VMIPS_MIPS::_settle__TOP__v__5(VMIPS__Syms* __restrict vlSymsp) {
     vlSymsp->TOP__v.__PVT__commit__DOT__wROB_popData[5] 
 	= vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer
 	[(IData)(vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__head)][5];
-    vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[0] = vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer
-	[(IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__head)][0];
-    vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[1] = vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer
-	[(IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__head)][1];
-    vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[2] = vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer
-	[(IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__head)][2];
-    vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[3] = vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__buffer
-	[(IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__head)][3];
-    vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__validPush 
-	= ((8 != (IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__count)) 
-	   & (IData)(vlSymsp->TOP__v.__PVT__wQ_IDREN_pushReq));
     vlSymsp->TOP__v.__PVT__issue__DOT__wLSQ_headData[0] 
 	= vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer
 	[(IData)(vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__head)][0];
@@ -4989,29 +5096,39 @@ void VMIPS_MIPS::_settle__TOP__v__5(VMIPS__Syms* __restrict vlSymsp) {
 	= vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer
 	[(IData)(vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__head)][4];
     vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
-	= ((0xfffc & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
-	   | ((2 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
-		    [1][3] >> 7)) | (1 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
-					  [0][3] >> 8))));
+	= ((0xfffe & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
+	   | (1 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
+		   [0][3] >> 8)));
     vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
-	= ((0xfff3 & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
-	   | ((8 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
-		    [3][3] >> 5)) | (4 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
-					  [2][3] >> 6))));
+	= ((0xfffd & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
+	   | (2 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
+		   [1][3] >> 7)));
     vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
-	= ((0xffcf & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
-	   | ((0x20 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
-		       [5][3] >> 3)) | (0x10 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
-						[4][3] 
-						>> 4))));
+	= ((0xfffb & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
+	   | (4 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
+		   [2][3] >> 6)));
     vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
-	= ((0xff3f & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
-	   | ((0x80 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
-		       [7][3] >> 1)) | (0x40 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
-						[6][3] 
-						>> 2))));
+	= ((0xfff7 & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
+	   | (8 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
+		   [3][3] >> 5)));
     vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
-	= ((0xfcff & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
+	= ((0xffef & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
+	   | (0x10 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
+		      [4][3] >> 4)));
+    vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
+	= ((0xffdf & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
+	   | (0x20 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
+		      [5][3] >> 3)));
+    vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
+	= ((0xffbf & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
+	   | (0x40 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
+		      [6][3] >> 2)));
+    vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
+	= ((0xff7f & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
+	   | (0x80 & (vlSymsp->TOP__v.__PVT__issue__DOT__IQ
+		      [7][3] >> 1)));
+    vlSymsp->TOP__v.__PVT__issue__DOT__request_bus 
+	= ((0xfeff & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
 	   | (0x100 & vlSymsp->TOP__v.__PVT__issue__DOT__IQ
 	      [8][3]));
     vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__validPush 
@@ -5285,6 +5402,18 @@ void VMIPS_MIPS::_settle__TOP__v__5(VMIPS__Syms* __restrict vlSymsp) {
     vlSymsp->TOP__v.__PVT__commit__DOT__wROB_probeDataOut[5] 
 	= vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__buffer
 	[(IData)(vlSymsp->TOP__v.__PVT__wtROB_probeIdx)][5];
+    vlSymsp->TOP__v.__PVT__rename__DOT__rPhysSrc1Reg 
+	= (IData)(vlSymsp->TOP__v.renrat)[(0x1f & (
+						   (vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[2] 
+						    << 0x12) 
+						   | (vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[1] 
+						      >> 0xe)))];
+    vlSymsp->TOP__v.__PVT__rename__DOT__rPhysSrc2Reg 
+	= (IData)(vlSymsp->TOP__v.renrat)[(0x1f & (
+						   (vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[2] 
+						    << 0x17) 
+						   | (vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[1] 
+						      >> 9)))];
     vlSymsp->TOP__v.__PVT__commit__DOT__wROBhead[0] 
 	= ((0 == (IData)(vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__count))
 	    ? 0 : vlSymsp->TOP__v.__PVT__commit__DOT__wROB_popData[0]);
@@ -5303,18 +5432,6 @@ void VMIPS_MIPS::_settle__TOP__v__5(VMIPS__Syms* __restrict vlSymsp) {
     vlSymsp->TOP__v.__PVT__commit__DOT__wROBhead[5] 
 	= ((0 == (IData)(vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__count))
 	    ? 0 : vlSymsp->TOP__v.__PVT__commit__DOT__wROB_popData[5]);
-    vlSymsp->TOP__v.__PVT__rename__DOT__rPhysSrc1Reg 
-	= (IData)(vlSymsp->TOP__v.renrat)[(0x1f & (
-						   (vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[2] 
-						    << 0x12) 
-						   | (vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[1] 
-						      >> 0xe)))];
-    vlSymsp->TOP__v.__PVT__rename__DOT__rPhysSrc2Reg 
-	= (IData)(vlSymsp->TOP__v.renrat)[(0x1f & (
-						   (vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[2] 
-						    << 0x17) 
-						   | (vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[1] 
-						      >> 9)))];
     vlSymsp->TOP__v.__PVT__issue__DOT__wLSQrdy = ((0 
 						   != (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__count)) 
 						  & (~ 
@@ -5326,16 +5443,20 @@ void VMIPS_MIPS::_settle__TOP__v__5(VMIPS__Syms* __restrict vlSymsp) {
 							 | (vlSymsp->TOP__v.__PVT__issue__DOT__wLSQ_headData[2] 
 							    >> 0xc)))]));
     vlSymsp->TOP__v.__PVT__issue__DOT__PE_Request = 
-	((0xc & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__PE_Request)) 
-	 | (((IData)((0 != (0xf & ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
-				   >> 4)))) << 1) | 
-	    (0 != (0xf & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)))));
+	((0xe & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__PE_Request)) 
+	 | (0 != (0xf & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus))));
     vlSymsp->TOP__v.__PVT__issue__DOT__PE_Request = 
-	((3 & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__PE_Request)) 
-	 | ((((IData)((0 != (0xf & ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
-				    >> 0xc)))) << 1) 
-	     | (0 != (0xf & ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
-			     >> 8)))) << 2));
+	((0xd & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__PE_Request)) 
+	 | ((IData)((0 != (0xf & ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
+				  >> 4)))) << 1));
+    vlSymsp->TOP__v.__PVT__issue__DOT__PE_Request = 
+	((0xb & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__PE_Request)) 
+	 | ((IData)((0 != (0xf & ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
+				  >> 8)))) << 2));
+    vlSymsp->TOP__v.__PVT__issue__DOT__PE_Request = 
+	((7 & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__PE_Request)) 
+	 | ((IData)((0 != (0xf & ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
+				  >> 0xc)))) << 3));
     vlSymsp->TOP__v.__PVT__issue__DOT__wSrc1Rdy = (1 
 						   & (~ 
 						      (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__busy_bits)
@@ -5503,6 +5624,18 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 	[2];
     vlSymsp->TOP__v.__PVT__wFreezeID = ((0 == (IData)(vlSymsp->TOP__v.__PVT__Q_IFID__DOT__count)) 
 					| (8 == (IData)(vlSymsp->TOP__v.__PVT__Q_IDREN__DOT__count)));
+    vlSymsp->TOP__v.__PVT__rename__DOT__rPhysSrc1Reg 
+	= (IData)(vlSymsp->TOP__v.renrat)[(0x1f & (
+						   (vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[2] 
+						    << 0x12) 
+						   | (vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[1] 
+						      >> 0xe)))];
+    vlSymsp->TOP__v.__PVT__rename__DOT__rPhysSrc2Reg 
+	= (IData)(vlSymsp->TOP__v.renrat)[(0x1f & (
+						   (vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[2] 
+						    << 0x17) 
+						   | (vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[1] 
+						      >> 9)))];
     vlSymsp->TOP__v.__PVT__commit__DOT__wROBhead[0] 
 	= ((0 == (IData)(vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__count))
 	    ? 0 : vlSymsp->TOP__v.__PVT__commit__DOT__wROB_popData[0]);
@@ -5521,18 +5654,6 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
     vlSymsp->TOP__v.__PVT__commit__DOT__wROBhead[5] 
 	= ((0 == (IData)(vlSymsp->TOP__v.__PVT__commit__DOT__ROB__DOT__count))
 	    ? 0 : vlSymsp->TOP__v.__PVT__commit__DOT__wROB_popData[5]);
-    vlSymsp->TOP__v.__PVT__rename__DOT__rPhysSrc1Reg 
-	= (IData)(vlSymsp->TOP__v.renrat)[(0x1f & (
-						   (vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[2] 
-						    << 0x12) 
-						   | (vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[1] 
-						      >> 0xe)))];
-    vlSymsp->TOP__v.__PVT__rename__DOT__rPhysSrc2Reg 
-	= (IData)(vlSymsp->TOP__v.renrat)[(0x1f & (
-						   (vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[2] 
-						    << 0x17) 
-						   | (vlSymsp->TOP__v.__PVT__wQ_IDREN_popData[1] 
-						      >> 9)))];
     vlSymsp->TOP__v.__PVT__issue__DOT__wLSQrdy = ((0 
 						   != (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__count)) 
 						  & (~ 
@@ -5544,16 +5665,20 @@ void VMIPS_MIPS::_sequent__TOP__v__7(VMIPS__Syms* __restrict vlSymsp) {
 							 | (vlSymsp->TOP__v.__PVT__issue__DOT__wLSQ_headData[2] 
 							    >> 0xc)))]));
     vlSymsp->TOP__v.__PVT__issue__DOT__PE_Request = 
-	((0xc & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__PE_Request)) 
-	 | (((IData)((0 != (0xf & ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
-				   >> 4)))) << 1) | 
-	    (0 != (0xf & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)))));
+	((0xe & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__PE_Request)) 
+	 | (0 != (0xf & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus))));
     vlSymsp->TOP__v.__PVT__issue__DOT__PE_Request = 
-	((3 & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__PE_Request)) 
-	 | ((((IData)((0 != (0xf & ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
-				    >> 0xc)))) << 1) 
-	     | (0 != (0xf & ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
-			     >> 8)))) << 2));
+	((0xd & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__PE_Request)) 
+	 | ((IData)((0 != (0xf & ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
+				  >> 4)))) << 1));
+    vlSymsp->TOP__v.__PVT__issue__DOT__PE_Request = 
+	((0xb & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__PE_Request)) 
+	 | ((IData)((0 != (0xf & ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
+				  >> 8)))) << 2));
+    vlSymsp->TOP__v.__PVT__issue__DOT__PE_Request = 
+	((7 & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__PE_Request)) 
+	 | ((IData)((0 != (0xf & ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
+				  >> 0xc)))) << 3));
     vlSymsp->TOP__v.__PVT__issue__DOT__wSrc1Rdy = (1 
 						   & (~ 
 						      (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__busy_bits)
@@ -8760,7 +8885,7 @@ void VMIPS_MIPS::_settle__TOP__v__13(VMIPS__Syms* __restrict vlSymsp) {
     vlSymsp->TOP__v.__PVT__ID1__DOT__readDataB1 = vlSymsp->TOP__v.Reg_ID
 	[(0x1f & (vlSymsp->TOP__v.__PVT__ID1__DOT__wInstr1 
 		  >> 0x10))];
-    // ALWAYS at ID.v:261
+    // ALWAYS at ID.v:255
     vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1 = (0x3f 
 						& (vlSymsp->TOP__v.__PVT__ID1__DOT__wInstr1 
 						   >> 0x1a));
@@ -10528,17 +10653,21 @@ void VMIPS_MIPS::_settle__TOP__v__13(VMIPS__Syms* __restrict vlSymsp) {
 				= vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2;
 			} else {
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__AGU__DOT__temp 
-				= ((VL_ULL(0xfffffffe00000000) 
+				= ((VL_ULL(0xfffffffeffffffff) 
 				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__AGU__DOT__temp) 
-				   | (((QData)((IData)(
-						       (1 
-							& (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2 
-							   >> 0x1f)))) 
-				       << 0x20) | (QData)((IData)(
-								  (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2 
-								   >> 
-								   (0x1f 
-								    & vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS1))))));
+				   | ((QData)((IData)(
+						      (1 
+						       & (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2 
+							  >> 0x1f)))) 
+				      << 0x20));
+			    vlSymsp->TOP__v.__PVT__EXE1__DOT__AGU__DOT__temp 
+				= ((VL_ULL(0xffffffff00000000) 
+				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__AGU__DOT__temp) 
+				   | (IData)((IData)(
+						     (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2 
+						      >> 
+						      (0x1f 
+						       & vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS1)))));
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__AGU__DOT__i = 0;
 			    while (((IData)(vlSymsp->TOP__v.__PVT__EXE1__DOT__AGU__DOT__i) 
 				    <= (0x1f & vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS1))) {
@@ -10566,13 +10695,17 @@ void VMIPS_MIPS::_settle__TOP__v__13(VMIPS__Syms* __restrict vlSymsp) {
 		    } else {
 			if ((0x40 & vlSymsp->TOP__v.__PVT__wIQLSQ_popData[1])) {
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__AGU__DOT__temp 
-				= ((VL_ULL(0xfffffffe00000000) 
+				= ((VL_ULL(0xfffffffeffffffff) 
 				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__AGU__DOT__temp) 
-				   | (((QData)((IData)(
-						       (1 
-							& (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2 
-							   >> 0x1f)))) 
-				       << 0x20) | (QData)((IData)(vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2))));
+				   | ((QData)((IData)(
+						      (1 
+						       & (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2 
+							  >> 0x1f)))) 
+				      << 0x20));
+			    vlSymsp->TOP__v.__PVT__EXE1__DOT__AGU__DOT__temp 
+				= ((VL_ULL(0xffffffff00000000) 
+				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__AGU__DOT__temp) 
+				   | (IData)((IData)(vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2)));
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__AGU__DOT__temp 
 				= ((VL_ULL(0xffffffff7fffffff) 
 				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__AGU__DOT__temp) 
@@ -10685,15 +10818,11 @@ void VMIPS_MIPS::_settle__TOP__v__13(VMIPS__Syms* __restrict vlSymsp) {
 			if ((0x40 & vlSymsp->TOP__v.__PVT__wIQLSQ_popData[1])) {
 			    if ((0 != vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2)) {
 				vlSymsp->TOP__v.__PVT__EXE1__DOT__LO2 
-				    = ((0x80000000 
-					& (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS1 
-					   | vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2)) 
-				       | (0x7fffffff 
-					  & VL_DIV_III(31, 
-						       (0x7fffffff 
-							& vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS1), 
-						       (0x7fffffff 
-							& vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2))));
+				    = ((0x7fffffff 
+					& vlSymsp->TOP__v.__PVT__EXE1__DOT__LO2) 
+				       | (0x80000000 
+					  & (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS1 
+					     | vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2)));
 				vlSymsp->TOP__v.__PVT__EXE1__DOT__HI2 
 				    = ((0x80000000 
 					& vlSymsp->TOP__v.__PVT__EXE1__DOT__HI2) 
@@ -10703,6 +10832,15 @@ void VMIPS_MIPS::_settle__TOP__v__13(VMIPS__Syms* __restrict vlSymsp) {
 							   & vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS1), 
 							  (0x7fffffff 
 							   & vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2))));
+				vlSymsp->TOP__v.__PVT__EXE1__DOT__LO2 
+				    = ((0x80000000 
+					& vlSymsp->TOP__v.__PVT__EXE1__DOT__LO2) 
+				       | (0x7fffffff 
+					  & VL_DIV_III(31, 
+						       (0x7fffffff 
+							& vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS1), 
+						       (0x7fffffff 
+							& vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2))));
 			    }
 			} else {
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__address_out 
@@ -10724,22 +10862,22 @@ void VMIPS_MIPS::_settle__TOP__v__13(VMIPS__Syms* __restrict vlSymsp) {
     }
     // ALWAYS at PE.v:22
     if ((1 & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__PE_Grant))) {
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE0____pinNumber3 
-	    = ((0xe & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE0____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE0____pinNumber3 
+	    = ((0xe & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE0____pinNumber3)) 
 	       | (1 & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)));
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE0____pinNumber3 
-	    = ((0xd & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE0____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE0____pinNumber3 
+	    = ((0xd & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE0____pinNumber3)) 
 	       | (2 & ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 		       & ((~ (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
 			  << 1))));
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE0____pinNumber3 
-	    = ((0xb & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE0____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE0____pinNumber3 
+	    = ((0xb & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE0____pinNumber3)) 
 	       | (4 & (((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			& ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			       >> 1)) << 2)) & ((~ (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
 						<< 2))));
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE0____pinNumber3 
-	    = ((7 & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE0____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE0____pinNumber3 
+	    = ((7 & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE0____pinNumber3)) 
 	       | (8 & ((((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			 & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 				>> 2)) << 3)) & ((~ 
@@ -10751,24 +10889,24 @@ void VMIPS_MIPS::_settle__TOP__v__13(VMIPS__Syms* __restrict vlSymsp) {
     }
     // ALWAYS at PE.v:22
     if ((2 & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__PE_Grant))) {
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE1____pinNumber3 
-	    = ((0xe & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE1____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE1____pinNumber3 
+	    = ((0xe & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE1____pinNumber3)) 
 	       | (1 & ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 		       >> 4)));
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE1____pinNumber3 
-	    = ((0xd & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE1____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE1____pinNumber3 
+	    = ((0xd & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE1____pinNumber3)) 
 	       | (2 & (((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			>> 4) & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 				     >> 4)) << 1))));
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE1____pinNumber3 
-	    = ((0xb & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE1____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE1____pinNumber3 
+	    = ((0xb & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE1____pinNumber3)) 
 	       | (4 & ((((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			 >> 4) & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 				      >> 5)) << 2)) 
 		       & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			      >> 4)) << 2))));
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE1____pinNumber3 
-	    = ((7 & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE1____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE1____pinNumber3 
+	    = ((7 & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE1____pinNumber3)) 
 	       | (8 & (((((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			  >> 4) & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 				       >> 6)) << 3)) 
@@ -10780,24 +10918,24 @@ void VMIPS_MIPS::_settle__TOP__v__13(VMIPS__Syms* __restrict vlSymsp) {
     }
     // ALWAYS at PE.v:22
     if ((4 & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__PE_Grant))) {
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE2____pinNumber3 
-	    = ((0xe & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE2____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE2____pinNumber3 
+	    = ((0xe & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE2____pinNumber3)) 
 	       | (1 & ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 		       >> 8)));
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE2____pinNumber3 
-	    = ((0xd & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE2____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE2____pinNumber3 
+	    = ((0xd & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE2____pinNumber3)) 
 	       | (2 & (((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			>> 8) & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 				     >> 8)) << 1))));
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE2____pinNumber3 
-	    = ((0xb & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE2____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE2____pinNumber3 
+	    = ((0xb & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE2____pinNumber3)) 
 	       | (4 & ((((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			 >> 8) & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 				      >> 9)) << 2)) 
 		       & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			      >> 8)) << 2))));
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE2____pinNumber3 
-	    = ((7 & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE2____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE2____pinNumber3 
+	    = ((7 & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE2____pinNumber3)) 
 	       | (8 & (((((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			  >> 8) & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 				       >> 0xa)) << 3)) 
@@ -10809,24 +10947,24 @@ void VMIPS_MIPS::_settle__TOP__v__13(VMIPS__Syms* __restrict vlSymsp) {
     }
     // ALWAYS at PE.v:22
     if ((8 & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__PE_Grant))) {
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE3____pinNumber3 
-	    = ((0xe & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE3____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE3____pinNumber3 
+	    = ((0xe & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE3____pinNumber3)) 
 	       | (1 & ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 		       >> 0xc)));
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE3____pinNumber3 
-	    = ((0xd & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE3____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE3____pinNumber3 
+	    = ((0xd & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE3____pinNumber3)) 
 	       | (2 & (((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			>> 0xc) & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 				       >> 0xc)) << 1))));
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE3____pinNumber3 
-	    = ((0xb & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE3____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE3____pinNumber3 
+	    = ((0xb & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE3____pinNumber3)) 
 	       | (4 & ((((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			 >> 0xc) & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 					>> 0xd)) << 2)) 
 		       & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			      >> 0xc)) << 2))));
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE3____pinNumber3 
-	    = ((7 & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE3____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE3____pinNumber3 
+	    = ((7 & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE3____pinNumber3)) 
 	       | (8 & (((((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			  >> 0xc) & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 					 >> 0xe)) << 3)) 
@@ -11091,7 +11229,7 @@ void VMIPS_MIPS::_combo__TOP__v__15(VMIPS__Syms* __restrict vlSymsp) {
     vlSymsp->TOP__v.__PVT__ID1__DOT__readDataB1 = vlSymsp->TOP__v.Reg_ID
 	[(0x1f & (vlSymsp->TOP__v.__PVT__ID1__DOT__wInstr1 
 		  >> 0x10))];
-    // ALWAYS at ID.v:261
+    // ALWAYS at ID.v:255
     vlSymsp->TOP__v.__PVT__ID1__DOT__opcode1 = (0x3f 
 						& (vlSymsp->TOP__v.__PVT__ID1__DOT__wInstr1 
 						   >> 0x1a));
@@ -12886,17 +13024,21 @@ void VMIPS_MIPS::_sequent__TOP__v__16(VMIPS__Syms* __restrict vlSymsp) {
 				= vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2;
 			} else {
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__AGU__DOT__temp 
-				= ((VL_ULL(0xfffffffe00000000) 
+				= ((VL_ULL(0xfffffffeffffffff) 
 				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__AGU__DOT__temp) 
-				   | (((QData)((IData)(
-						       (1 
-							& (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2 
-							   >> 0x1f)))) 
-				       << 0x20) | (QData)((IData)(
-								  (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2 
-								   >> 
-								   (0x1f 
-								    & vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS1))))));
+				   | ((QData)((IData)(
+						      (1 
+						       & (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2 
+							  >> 0x1f)))) 
+				      << 0x20));
+			    vlSymsp->TOP__v.__PVT__EXE1__DOT__AGU__DOT__temp 
+				= ((VL_ULL(0xffffffff00000000) 
+				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__AGU__DOT__temp) 
+				   | (IData)((IData)(
+						     (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2 
+						      >> 
+						      (0x1f 
+						       & vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS1)))));
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__AGU__DOT__i = 0;
 			    while (((IData)(vlSymsp->TOP__v.__PVT__EXE1__DOT__AGU__DOT__i) 
 				    <= (0x1f & vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS1))) {
@@ -12924,13 +13066,17 @@ void VMIPS_MIPS::_sequent__TOP__v__16(VMIPS__Syms* __restrict vlSymsp) {
 		    } else {
 			if ((0x40 & vlSymsp->TOP__v.__PVT__wIQLSQ_popData[1])) {
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__AGU__DOT__temp 
-				= ((VL_ULL(0xfffffffe00000000) 
+				= ((VL_ULL(0xfffffffeffffffff) 
 				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__AGU__DOT__temp) 
-				   | (((QData)((IData)(
-						       (1 
-							& (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2 
-							   >> 0x1f)))) 
-				       << 0x20) | (QData)((IData)(vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2))));
+				   | ((QData)((IData)(
+						      (1 
+						       & (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2 
+							  >> 0x1f)))) 
+				      << 0x20));
+			    vlSymsp->TOP__v.__PVT__EXE1__DOT__AGU__DOT__temp 
+				= ((VL_ULL(0xffffffff00000000) 
+				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__AGU__DOT__temp) 
+				   | (IData)((IData)(vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2)));
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__AGU__DOT__temp 
 				= ((VL_ULL(0xffffffff7fffffff) 
 				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__AGU__DOT__temp) 
@@ -13043,15 +13189,11 @@ void VMIPS_MIPS::_sequent__TOP__v__16(VMIPS__Syms* __restrict vlSymsp) {
 			if ((0x40 & vlSymsp->TOP__v.__PVT__wIQLSQ_popData[1])) {
 			    if ((0 != vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2)) {
 				vlSymsp->TOP__v.__PVT__EXE1__DOT__LO2 
-				    = ((0x80000000 
-					& (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS1 
-					   | vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2)) 
-				       | (0x7fffffff 
-					  & VL_DIV_III(31, 
-						       (0x7fffffff 
-							& vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS1), 
-						       (0x7fffffff 
-							& vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2))));
+				    = ((0x7fffffff 
+					& vlSymsp->TOP__v.__PVT__EXE1__DOT__LO2) 
+				       | (0x80000000 
+					  & (vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS1 
+					     | vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2)));
 				vlSymsp->TOP__v.__PVT__EXE1__DOT__HI2 
 				    = ((0x80000000 
 					& vlSymsp->TOP__v.__PVT__EXE1__DOT__HI2) 
@@ -13061,6 +13203,15 @@ void VMIPS_MIPS::_sequent__TOP__v__16(VMIPS__Syms* __restrict vlSymsp) {
 							   & vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS1), 
 							  (0x7fffffff 
 							   & vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2))));
+				vlSymsp->TOP__v.__PVT__EXE1__DOT__LO2 
+				    = ((0x80000000 
+					& vlSymsp->TOP__v.__PVT__EXE1__DOT__LO2) 
+				       | (0x7fffffff 
+					  & VL_DIV_III(31, 
+						       (0x7fffffff 
+							& vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS1), 
+						       (0x7fffffff 
+							& vlSymsp->TOP__v.__PVT__EXE1__DOT__OpLS2))));
 			    }
 			} else {
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__address_out 
@@ -13088,22 +13239,22 @@ void VMIPS_MIPS::_sequent__TOP__v__17(VMIPS__Syms* __restrict vlSymsp) {
     // Body
     // ALWAYS at PE.v:22
     if ((1 & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__PE_Grant))) {
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE0____pinNumber3 
-	    = ((0xe & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE0____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE0____pinNumber3 
+	    = ((0xe & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE0____pinNumber3)) 
 	       | (1 & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)));
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE0____pinNumber3 
-	    = ((0xd & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE0____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE0____pinNumber3 
+	    = ((0xd & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE0____pinNumber3)) 
 	       | (2 & ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 		       & ((~ (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
 			  << 1))));
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE0____pinNumber3 
-	    = ((0xb & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE0____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE0____pinNumber3 
+	    = ((0xb & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE0____pinNumber3)) 
 	       | (4 & (((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			& ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			       >> 1)) << 2)) & ((~ (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
 						<< 2))));
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE0____pinNumber3 
-	    = ((7 & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE0____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE0____pinNumber3 
+	    = ((7 & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE0____pinNumber3)) 
 	       | (8 & ((((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			 & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 				>> 2)) << 3)) & ((~ 
@@ -13115,24 +13266,24 @@ void VMIPS_MIPS::_sequent__TOP__v__17(VMIPS__Syms* __restrict vlSymsp) {
     }
     // ALWAYS at PE.v:22
     if ((2 & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__PE_Grant))) {
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE1____pinNumber3 
-	    = ((0xe & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE1____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE1____pinNumber3 
+	    = ((0xe & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE1____pinNumber3)) 
 	       | (1 & ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 		       >> 4)));
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE1____pinNumber3 
-	    = ((0xd & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE1____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE1____pinNumber3 
+	    = ((0xd & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE1____pinNumber3)) 
 	       | (2 & (((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			>> 4) & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 				     >> 4)) << 1))));
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE1____pinNumber3 
-	    = ((0xb & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE1____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE1____pinNumber3 
+	    = ((0xb & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE1____pinNumber3)) 
 	       | (4 & ((((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			 >> 4) & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 				      >> 5)) << 2)) 
 		       & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			      >> 4)) << 2))));
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE1____pinNumber3 
-	    = ((7 & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE1____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE1____pinNumber3 
+	    = ((7 & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE1____pinNumber3)) 
 	       | (8 & (((((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			  >> 4) & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 				       >> 6)) << 3)) 
@@ -13144,24 +13295,24 @@ void VMIPS_MIPS::_sequent__TOP__v__17(VMIPS__Syms* __restrict vlSymsp) {
     }
     // ALWAYS at PE.v:22
     if ((4 & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__PE_Grant))) {
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE2____pinNumber3 
-	    = ((0xe & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE2____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE2____pinNumber3 
+	    = ((0xe & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE2____pinNumber3)) 
 	       | (1 & ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 		       >> 8)));
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE2____pinNumber3 
-	    = ((0xd & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE2____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE2____pinNumber3 
+	    = ((0xd & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE2____pinNumber3)) 
 	       | (2 & (((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			>> 8) & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 				     >> 8)) << 1))));
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE2____pinNumber3 
-	    = ((0xb & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE2____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE2____pinNumber3 
+	    = ((0xb & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE2____pinNumber3)) 
 	       | (4 & ((((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			 >> 8) & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 				      >> 9)) << 2)) 
 		       & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			      >> 8)) << 2))));
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE2____pinNumber3 
-	    = ((7 & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE2____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE2____pinNumber3 
+	    = ((7 & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE2____pinNumber3)) 
 	       | (8 & (((((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			  >> 8) & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 				       >> 0xa)) << 3)) 
@@ -13173,24 +13324,24 @@ void VMIPS_MIPS::_sequent__TOP__v__17(VMIPS__Syms* __restrict vlSymsp) {
     }
     // ALWAYS at PE.v:22
     if ((8 & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__PE_Grant))) {
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE3____pinNumber3 
-	    = ((0xe & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE3____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE3____pinNumber3 
+	    = ((0xe & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE3____pinNumber3)) 
 	       | (1 & ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 		       >> 0xc)));
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE3____pinNumber3 
-	    = ((0xd & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE3____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE3____pinNumber3 
+	    = ((0xd & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE3____pinNumber3)) 
 	       | (2 & (((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			>> 0xc) & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 				       >> 0xc)) << 1))));
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE3____pinNumber3 
-	    = ((0xb & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE3____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE3____pinNumber3 
+	    = ((0xb & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE3____pinNumber3)) 
 	       | (4 & ((((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			 >> 0xc) & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 					>> 0xd)) << 2)) 
 		       & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			      >> 0xc)) << 2))));
-	vlSymsp->TOP__v.issue__DOT____Vcellinp__PE3____pinNumber3 
-	    = ((7 & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE3____pinNumber3)) 
+	vlSymsp->TOP__v.issue__DOT____Vcellout__PE3____pinNumber3 
+	    = ((7 & (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE3____pinNumber3)) 
 	       | (8 & (((((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 			  >> 0xc) & ((~ ((IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus) 
 					 >> 0xe)) << 3)) 
@@ -13201,10 +13352,20 @@ void VMIPS_MIPS::_sequent__TOP__v__17(VMIPS__Syms* __restrict vlSymsp) {
 						  << 3))));
     }
     vlSymsp->TOP__v.__PVT__issue__DOT__grant_bus = 
-	(((IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE3____pinNumber3) 
-	  << 0xc) | (((IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE2____pinNumber3) 
-		      << 8) | (((IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE1____pinNumber3) 
-				<< 4) | (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE0____pinNumber3))));
+	((0xfff0 & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__grant_bus)) 
+	 | (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE0____pinNumber3));
+    vlSymsp->TOP__v.__PVT__issue__DOT__grant_bus = 
+	((0xff0f & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__grant_bus)) 
+	 | ((IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE1____pinNumber3) 
+	    << 4));
+    vlSymsp->TOP__v.__PVT__issue__DOT__grant_bus = 
+	((0xf0ff & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__grant_bus)) 
+	 | ((IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE2____pinNumber3) 
+	    << 8));
+    vlSymsp->TOP__v.__PVT__issue__DOT__grant_bus = 
+	((0xfff & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__grant_bus)) 
+	 | ((IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE3____pinNumber3) 
+	    << 0xc));
 }
 
 void VMIPS_MIPS::_settle__TOP__v__18(VMIPS__Syms* __restrict vlSymsp) {
@@ -13236,10 +13397,20 @@ void VMIPS_MIPS::_settle__TOP__v__18(VMIPS__Syms* __restrict vlSymsp) {
 			      << 0x10)) | (0xffff & vlSymsp->TOP__v.__PVT__ID1__DOT__wInstr1))
 	    : (0xffff & vlSymsp->TOP__v.__PVT__ID1__DOT__wInstr1));
     vlSymsp->TOP__v.__PVT__issue__DOT__grant_bus = 
-	(((IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE3____pinNumber3) 
-	  << 0xc) | (((IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE2____pinNumber3) 
-		      << 8) | (((IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE1____pinNumber3) 
-				<< 4) | (IData)(vlSymsp->TOP__v.issue__DOT____Vcellinp__PE0____pinNumber3))));
+	((0xfff0 & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__grant_bus)) 
+	 | (IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE0____pinNumber3));
+    vlSymsp->TOP__v.__PVT__issue__DOT__grant_bus = 
+	((0xff0f & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__grant_bus)) 
+	 | ((IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE1____pinNumber3) 
+	    << 4));
+    vlSymsp->TOP__v.__PVT__issue__DOT__grant_bus = 
+	((0xf0ff & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__grant_bus)) 
+	 | ((IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE2____pinNumber3) 
+	    << 8));
+    vlSymsp->TOP__v.__PVT__issue__DOT__grant_bus = 
+	((0xfff & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__grant_bus)) 
+	 | ((IData)(vlSymsp->TOP__v.issue__DOT____Vcellout__PE3____pinNumber3) 
+	    << 0xc));
     // ALWAYS at EXE.v:138
     if (((IData)(vlSymsp->TOP__v.__PVT__wEXE_MEM_RegDest) 
 	 & ((IData)(vlSymsp->TOP__v.__PVT__wEXE_MEM_writeRegister1) 
@@ -13514,17 +13685,21 @@ void VMIPS_MIPS::_multiclk__TOP__v__19(VMIPS__Syms* __restrict vlSymsp) {
 				   >> (IData)(vlSymsp->TOP__v.__PVT__wRF_RW_EXE_Instr1_10_6));
 			} else {
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp 
-				= ((VL_ULL(0xfffffffe00000000) 
+				= ((VL_ULL(0xfffffffeffffffff) 
 				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp) 
-				   | (((QData)((IData)(
-						       (1 
-							& (vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2 
-							   >> 0x1f)))) 
-				       << 0x20) | (QData)((IData)(
-								  (vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2 
-								   >> 
-								   (0x1f 
-								    & vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand1))))));
+				   | ((QData)((IData)(
+						      (1 
+						       & (vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2 
+							  >> 0x1f)))) 
+				      << 0x20));
+			    vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp 
+				= ((VL_ULL(0xffffffff00000000) 
+				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp) 
+				   | (IData)((IData)(
+						     (vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2 
+						      >> 
+						      (0x1f 
+						       & vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand1)))));
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__i = 0;
 			    while (((IData)(vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__i) 
 				    <= (0x1f & vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand1))) {
@@ -13552,15 +13727,19 @@ void VMIPS_MIPS::_multiclk__TOP__v__19(VMIPS__Syms* __restrict vlSymsp) {
 		    } else {
 			if ((0x40 & vlSymsp->TOP__v.__PVT__wIQLSQ_popData[1])) {
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp 
-				= ((VL_ULL(0xfffffffe00000000) 
+				= ((VL_ULL(0xfffffffeffffffff) 
 				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp) 
-				   | (((QData)((IData)(
-						       (1 
-							& (vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2 
-							   >> 0x1f)))) 
-				       << 0x20) | (QData)((IData)(
-								  (vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2 
-								   >> (IData)(vlSymsp->TOP__v.__PVT__wRF_RW_EXE_Instr1_10_6))))));
+				   | ((QData)((IData)(
+						      (1 
+						       & (vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2 
+							  >> 0x1f)))) 
+				      << 0x20));
+			    vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp 
+				= ((VL_ULL(0xffffffff00000000) 
+				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp) 
+				   | (IData)((IData)(
+						     (vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2 
+						      >> (IData)(vlSymsp->TOP__v.__PVT__wRF_RW_EXE_Instr1_10_6)))));
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp 
 				= ((VL_ULL(0xffffffff7fffffff) 
 				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp) 
@@ -14046,15 +14225,11 @@ void VMIPS_MIPS::_multiclk__TOP__v__19(VMIPS__Syms* __restrict vlSymsp) {
 			if ((0x40 & vlSymsp->TOP__v.__PVT__wIQLSQ_popData[1])) {
 			    if ((0 != vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2)) {
 				vlSymsp->TOP__v.__PVT__EXE1__DOT__LO1 
-				    = ((0x80000000 
-					& (vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand1 
-					   | vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2)) 
-				       | (0x7fffffff 
-					  & VL_DIV_III(31, 
-						       (0x7fffffff 
-							& vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand1), 
-						       (0x7fffffff 
-							& vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2))));
+				    = ((0x7fffffff 
+					& vlSymsp->TOP__v.__PVT__EXE1__DOT__LO1) 
+				       | (0x80000000 
+					  & (vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand1 
+					     | vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2)));
 				vlSymsp->TOP__v.__PVT__EXE1__DOT__HI1 
 				    = ((0x80000000 
 					& vlSymsp->TOP__v.__PVT__EXE1__DOT__HI1) 
@@ -14064,6 +14239,15 @@ void VMIPS_MIPS::_multiclk__TOP__v__19(VMIPS__Syms* __restrict vlSymsp) {
 							   & vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand1), 
 							  (0x7fffffff 
 							   & vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2))));
+				vlSymsp->TOP__v.__PVT__EXE1__DOT__LO1 
+				    = ((0x80000000 
+					& vlSymsp->TOP__v.__PVT__EXE1__DOT__LO1) 
+				       | (0x7fffffff 
+					  & VL_DIV_III(31, 
+						       (0x7fffffff 
+							& vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand1), 
+						       (0x7fffffff 
+							& vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2))));
 			    }
 			} else {
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__aluResult1 
@@ -14098,7 +14282,7 @@ void VMIPS_MIPS::_combo__TOP__v__20(VMIPS__Syms* __restrict vlSymsp) {
 						    : vlSymsp->TOP__v.__PVT__ID1__DOT__readDataB1);
     vlSymsp->TOP__v.FREEZE = ((IData)(vlSymsp->TOP__v.__PVT__DMISS) 
 			      | (IData)(vlSymsp->TOP__v.__PVT__IMISS));
-    // ALWAYS at ID.v:229
+    // ALWAYS at ID.v:223
     vlSymsp->TOP__v.__PVT__ID1__DOT__com_OpA1 = (((IData)(vlSymsp->TOP__v.do_writeback1_IDEXE) 
 						  & ((0x1f 
 						      & (vlSymsp->TOP__v.__PVT__ID1__DOT__wInstr1 
@@ -14276,17 +14460,21 @@ void VMIPS_MIPS::_settle__TOP__v__21(VMIPS__Syms* __restrict vlSymsp) {
 				   >> (IData)(vlSymsp->TOP__v.__PVT__wRF_RW_EXE_Instr1_10_6));
 			} else {
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp 
-				= ((VL_ULL(0xfffffffe00000000) 
+				= ((VL_ULL(0xfffffffeffffffff) 
 				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp) 
-				   | (((QData)((IData)(
-						       (1 
-							& (vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2 
-							   >> 0x1f)))) 
-				       << 0x20) | (QData)((IData)(
-								  (vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2 
-								   >> 
-								   (0x1f 
-								    & vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand1))))));
+				   | ((QData)((IData)(
+						      (1 
+						       & (vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2 
+							  >> 0x1f)))) 
+				      << 0x20));
+			    vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp 
+				= ((VL_ULL(0xffffffff00000000) 
+				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp) 
+				   | (IData)((IData)(
+						     (vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2 
+						      >> 
+						      (0x1f 
+						       & vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand1)))));
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__i = 0;
 			    while (((IData)(vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__i) 
 				    <= (0x1f & vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand1))) {
@@ -14314,15 +14502,19 @@ void VMIPS_MIPS::_settle__TOP__v__21(VMIPS__Syms* __restrict vlSymsp) {
 		    } else {
 			if ((0x40 & vlSymsp->TOP__v.__PVT__wIQLSQ_popData[1])) {
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp 
-				= ((VL_ULL(0xfffffffe00000000) 
+				= ((VL_ULL(0xfffffffeffffffff) 
 				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp) 
-				   | (((QData)((IData)(
-						       (1 
-							& (vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2 
-							   >> 0x1f)))) 
-				       << 0x20) | (QData)((IData)(
-								  (vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2 
-								   >> (IData)(vlSymsp->TOP__v.__PVT__wRF_RW_EXE_Instr1_10_6))))));
+				   | ((QData)((IData)(
+						      (1 
+						       & (vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2 
+							  >> 0x1f)))) 
+				      << 0x20));
+			    vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp 
+				= ((VL_ULL(0xffffffff00000000) 
+				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp) 
+				   | (IData)((IData)(
+						     (vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2 
+						      >> (IData)(vlSymsp->TOP__v.__PVT__wRF_RW_EXE_Instr1_10_6)))));
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp 
 				= ((VL_ULL(0xffffffff7fffffff) 
 				    & vlSymsp->TOP__v.__PVT__EXE1__DOT__ALU1__DOT__temp) 
@@ -14808,15 +15000,11 @@ void VMIPS_MIPS::_settle__TOP__v__21(VMIPS__Syms* __restrict vlSymsp) {
 			if ((0x40 & vlSymsp->TOP__v.__PVT__wIQLSQ_popData[1])) {
 			    if ((0 != vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2)) {
 				vlSymsp->TOP__v.__PVT__EXE1__DOT__LO1 
-				    = ((0x80000000 
-					& (vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand1 
-					   | vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2)) 
-				       | (0x7fffffff 
-					  & VL_DIV_III(31, 
-						       (0x7fffffff 
-							& vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand1), 
-						       (0x7fffffff 
-							& vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2))));
+				    = ((0x7fffffff 
+					& vlSymsp->TOP__v.__PVT__EXE1__DOT__LO1) 
+				       | (0x80000000 
+					  & (vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand1 
+					     | vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2)));
 				vlSymsp->TOP__v.__PVT__EXE1__DOT__HI1 
 				    = ((0x80000000 
 					& vlSymsp->TOP__v.__PVT__EXE1__DOT__HI1) 
@@ -14826,6 +15014,15 @@ void VMIPS_MIPS::_settle__TOP__v__21(VMIPS__Syms* __restrict vlSymsp) {
 							   & vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand1), 
 							  (0x7fffffff 
 							   & vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2))));
+				vlSymsp->TOP__v.__PVT__EXE1__DOT__LO1 
+				    = ((0x80000000 
+					& vlSymsp->TOP__v.__PVT__EXE1__DOT__LO1) 
+				       | (0x7fffffff 
+					  & VL_DIV_III(31, 
+						       (0x7fffffff 
+							& vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand1), 
+						       (0x7fffffff 
+							& vlSymsp->TOP__v.__PVT__EXE1__DOT__Operand2))));
 			    }
 			} else {
 			    vlSymsp->TOP__v.__PVT__EXE1__DOT__aluResult1 
@@ -14847,7 +15044,7 @@ void VMIPS_MIPS::_settle__TOP__v__21(VMIPS__Syms* __restrict vlSymsp) {
     }
     vlSymsp->TOP__v.FREEZE = ((IData)(vlSymsp->TOP__v.__PVT__DMISS) 
 			      | (IData)(vlSymsp->TOP__v.__PVT__IMISS));
-    // ALWAYS at ID.v:229
+    // ALWAYS at ID.v:223
     vlSymsp->TOP__v.__PVT__ID1__DOT__com_OpA1 = (((IData)(vlSymsp->TOP__v.do_writeback1_IDEXE) 
 						  & ((0x1f 
 						      & (vlSymsp->TOP__v.__PVT__ID1__DOT__wInstr1 

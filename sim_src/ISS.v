@@ -181,12 +181,12 @@ assign LSQ_full_OUT = wLSQ_full;
 	wire [5:0] wLSQ_srcReg, wLSQ_destReg_IN;
 //	wire [IQLSQ_WIDTH-1:0] wLSQ_headData, wLSQ_tailData;
     		
-    wire    wCurTail_OUT;
-    wire    wCurHead_IN;
-    wire    wProbeIdx_IN;
-    wire    wProbeData_OUT;
-    wire    wProbePushReq_IN;
-    wire    wProbeData;
+    wire    [IQLSQ_DEPTH-1:0]   wCurTail_OUT;
+    wire    [IQLSQ_DEPTH-1:0]   wCurHead_IN;
+    wire    [IQLSQ_DEPTH-1:0]   wProbeIdx_IN;
+    wire    [IQLSQ_WIDTH-1:0]   wProbeData_OUT;
+    wire                        wProbePushReq_IN;
+    wire    [IQLSQ_WIDTH-1:0]   wProbeData;
 	
 	assign LSQ_full_OUT 	= wLSQ_full;
 	assign wLSQ_srcReg 		= wRENISS_pushData[98:93];

@@ -7,6 +7,8 @@
 
 #include "verilated.h"
 #include "VMIPS__Inlines.h"
+#include "VMIPS__Dpi.h"
+
 class VMIPS__Syms;
 
 //----------
@@ -100,8 +102,12 @@ VL_MODULE(VMIPS_MIPS) {
     VL_SIG8(__PVT__branch_misprediction,0,0);
     VL_SIG8(__PVT__wQ_IFID_pushReq,0,0);
     VL_SIG8(__PVT__wQ_IFID_popReq,0,0);
+    VL_SIG8(__PVT__wQ_IFID_probeIdx_IN,2,0);
+    VL_SIG8(__PVT__wQ_IFID_probePushReq_IN,0,0);
     VL_SIG8(__PVT__wFreezeID,0,0);
     VL_SIG8(__PVT__wQ_IDREN_pushReq,0,0);
+    VL_SIG8(__PVT__wQ_IDREN_probeIdx_IN,2,0);
+    VL_SIG8(__PVT__wQ_IDREN_probePushReq_IN,0,0);
     VL_SIG8(__PVT__wtIQ_pushReq,0,0);
     VL_SIG8(__PVT__wtLSQ_pushReq,0,0);
     VL_SIG8(__PVT__wfLSQ_full,0,0);
@@ -144,8 +150,6 @@ VL_MODULE(VMIPS_MIPS) {
     VL_SIG8(__PVT__dCache1__DOT__hit1,0,0);
     VL_SIG8(__PVT__dCache1__DOT__waitCount,3,0);
     VL_SIG8(__PVT__IF1__DOT__wCarryOn,0,0);
-    VL_SIG8(__PVT__Q_IFID__DOT__probeIdx_IN,2,0);
-    VL_SIG8(__PVT__Q_IFID__DOT__probePushReq_IN,0,0);
     VL_SIG8(__PVT__Q_IFID__DOT__head,2,0);
     VL_SIG8(__PVT__Q_IFID__DOT__tail,2,0);
     VL_SIG8(__PVT__Q_IFID__DOT__count,3,0);
@@ -171,8 +175,6 @@ VL_MODULE(VMIPS_MIPS) {
     VL_SIG8(__PVT__ID1__DOT__sign_or_zero_Flag1,0,0);
     VL_SIG8(__PVT__ID1__DOT__syscal1,0,0);
     VL_SIG8(__PVT__ID1__DOT__syscalBubbleCounter,1,0);
-    VL_SIG8(__PVT__Q_IDREN__DOT__probeIdx_IN,2,0);
-    VL_SIG8(__PVT__Q_IDREN__DOT__probePushReq_IN,0,0);
     VL_SIG8(__PVT__Q_IDREN__DOT__head,2,0);
     VL_SIG8(__PVT__Q_IDREN__DOT__tail,2,0);
     VL_SIG8(__PVT__Q_IDREN__DOT__count,3,0);
@@ -194,9 +196,9 @@ VL_MODULE(VMIPS_MIPS) {
     VL_SIG8(__PVT__rename__DOT__wQ_FreeL_popReq,0,0);
     VL_SIG8(__PVT__rename__DOT__wQ_FreeL_pushData,5,0);
     VL_SIG8(__PVT__rename__DOT__wQ_FreeL_popData,5,0);
-    VL_SIG8(__PVT__rename__DOT__freelist__DOT__probeData_IN,5,0);
-    VL_SIG8(__PVT__rename__DOT__freelist__DOT__probeIdx_IN,5,0);
-    VL_SIG8(__PVT__rename__DOT__freelist__DOT__probePushReq_IN,0,0);
+    VL_SIG8(__PVT__rename__DOT__wProbeIdx_IN,5,0);
+    VL_SIG8(__PVT__rename__DOT__wProbePushReq_IN,0,0);
+    VL_SIG8(__PVT__rename__DOT__wProbeData,5,0);
     VL_SIG8(__PVT__rename__DOT__freelist__DOT__head,5,0);
     VL_SIG8(__PVT__rename__DOT__freelist__DOT__tail,5,0);
     VL_SIG8(__PVT__rename__DOT__freelist__DOT__count,6,0);
@@ -213,9 +215,9 @@ VL_MODULE(VMIPS_MIPS) {
     VL_SIG8(__PVT__issue__DOT__PE_Grant,3,0);
     VL_SIG8(__PVT__issue__DOT__wLSQ_pushReq,0,0);
     VL_SIG8(__PVT__issue__DOT__wLSQ_popReq,0,0);
+    VL_SIG8(__PVT__issue__DOT__wProbeIdx_IN,3,0);
+    VL_SIG8(__PVT__issue__DOT__wProbePushReq_IN,0,0);
     VL_SIG8(__PVT__issue__DOT__wbusy_temp,5,0);
-    VL_SIG8(__PVT__issue__DOT__LSQ__DOT__probeIdx_IN,3,0);
-    VL_SIG8(__PVT__issue__DOT__LSQ__DOT__probePushReq_IN,0,0);
     VL_SIG8(__PVT__issue__DOT__LSQ__DOT__head,3,0);
     VL_SIG8(__PVT__issue__DOT__LSQ__DOT__tail,3,0);
     VL_SIG8(__PVT__issue__DOT__LSQ__DOT__count,4,0);
@@ -281,7 +283,10 @@ VL_MODULE(VMIPS_MIPS) {
     //char	__VpadToAlign540[4];
     VL_SIGW(__PVT__wQ_IFID_popData,95,0,3);
     //char	__VpadToAlign556[4];
+    VL_SIGW(__PVT__wQ_IFID_probeData_IN,95,0,3);
+    //char	__VpadToAlign572[4];
     VL_SIGW(__PVT__wQ_IDREN_popData,125,0,4);
+    VL_SIGW(__PVT__wQ_IDREN_probeData_IN,125,0,4);
     VL_SIGW(__PVT__wtIQ_pushData,182,0,6);
     VL_SIGW(__PVT__wtLSQ_pushData,182,0,6);
     VL_SIGW(__PVT__wIQLSQ_popData,136,0,5);
@@ -297,7 +302,7 @@ VL_MODULE(VMIPS_MIPS) {
     VL_SIG(__PVT__wMEM_ROB_target_PC,31,0);
     VL_SIG(__PVT__wMEM_ROB_ALUResult,31,0);
     VL_SIG(__PVT__wMEM_ROB_Dest_Value1,31,0);
-    //char	__VpadToAlign692[4];
+    //char	__VpadToAlign724[4];
     VL_SIGW(__PVT__wtROB_pushData,182,0,6);
     VL_SIGW(__PVT__wRetRat,191,0,6);
     VL_SIGW(__PVT__iCache1__DOT__cc0__DOT__valid,1023,0,32);
@@ -307,14 +312,13 @@ VL_MODULE(VMIPS_MIPS) {
     VL_SIGW(__PVT__dCache1__DOT__block_out0,255,0,8);
     VL_SIGW(__PVT__dCache1__DOT__block_out1,255,0,8);
     VL_SIGW(__PVT__dCache1__DOT__policy,256,0,9);
-    //char	__VpadToAlign1164[4];
+    //char	__VpadToAlign1196[4];
     VL_SIGW(__PVT__dCache1__DOT__cc0__DOT__valid,511,0,16);
     VL_SIGW(__PVT__dCache1__DOT__cc0__DOT__dirty,511,0,16);
     VL_SIGW(__PVT__dCache1__DOT__cc1__DOT__valid,511,0,16);
     VL_SIGW(__PVT__dCache1__DOT__cc1__DOT__dirty,511,0,16);
     VL_SIG(__PVT__IF1__DOT__PC,31,0);
     VL_SIG(__PVT__IF1__DOT__FPC,31,0);
-    VL_SIGW(__PVT__Q_IFID__DOT__probeData_IN,95,0,3);
     VL_SIG(__PVT__ID1__DOT__com_OpA1,31,0);
     VL_SIG(__PVT__ID1__DOT__com_OpB1,31,0);
     VL_SIG(__PVT__ID1__DOT__signExtended_output1,31,0);
@@ -325,8 +329,6 @@ VL_MODULE(VMIPS_MIPS) {
     VL_SIG(__PVT__ID1__DOT__wInstr1,31,0);
     VL_SIG(__PVT__ID1__DOT__wPCA,31,0);
     VL_SIG(__PVT__ID1__DOT__wCIA,31,0);
-    //char	__VpadToAlign1484[4];
-    VL_SIGW(__PVT__Q_IDREN__DOT__probeData_IN,125,0,4);
     VL_SIGW(__PVT__rename__DOT__wPushDataIQLSQ,182,0,6);
     VL_SIG(__PVT__rename__DOT__wtarget,31,0);
     //char	__VpadToAlign1532[4];
@@ -343,7 +345,7 @@ VL_MODULE(VMIPS_MIPS) {
     VL_SIG(__PVT__issue__DOT__counter,31,0);
     VL_SIG(__PVT__issue__DOT__pos,31,0);
     VL_SIG(__PVT__issue__DOT__IQcount,31,0);
-    VL_SIGW(__PVT__issue__DOT__LSQ__DOT__probeData_IN,136,0,5);
+    VL_SIGW(__PVT__issue__DOT__wProbeData,136,0,5);
     VL_SIG(__PVT__EXE1__DOT__aluResult1,31,0);
     VL_SIG(__PVT__EXE1__DOT__address_out,31,0);
     VL_SIG(__PVT__EXE1__DOT__OpA1,31,0);
@@ -386,10 +388,10 @@ VL_MODULE(VMIPS_MIPS) {
     
     // LOCAL VARIABLES
     VL_SIG8(dCache1__DOT____Vlvbound1,0,0);
-    VL_SIG8(issue__DOT____Vcellinp__PE0____pinNumber3,3,0);
-    VL_SIG8(issue__DOT____Vcellinp__PE1____pinNumber3,3,0);
-    VL_SIG8(issue__DOT____Vcellinp__PE2____pinNumber3,3,0);
-    VL_SIG8(issue__DOT____Vcellinp__PE3____pinNumber3,3,0);
+    VL_SIG8(issue__DOT____Vcellout__PE0____pinNumber3,3,0);
+    VL_SIG8(issue__DOT____Vcellout__PE1____pinNumber3,3,0);
+    VL_SIG8(issue__DOT____Vcellout__PE2____pinNumber3,3,0);
+    VL_SIG8(issue__DOT____Vcellout__PE3____pinNumber3,3,0);
     VL_SIG8(issue__DOT____Vlvbound1,0,0);
     VL_SIG8(issue__DOT____Vlvbound2,0,0);
     VL_SIG8(issue__DOT____Vlvbound3,0,0);
@@ -402,6 +404,8 @@ VL_MODULE(VMIPS_MIPS) {
     VL_SIG8(__Vdlyvset__Q_IFID__DOT__buffer__v0,0,0);
     VL_SIG8(__Vdlyvdim0__Q_IFID__DOT__buffer__v1,2,0);
     VL_SIG8(__Vdlyvset__Q_IFID__DOT__buffer__v1,0,0);
+    VL_SIG8(__Vdlyvdim0__Q_IFID__DOT__buffer__v2,2,0);
+    VL_SIG8(__Vdlyvset__Q_IFID__DOT__buffer__v2,0,0);
     VL_SIG8(__Vdly__Q_IDREN__DOT__count,3,0);
     VL_SIG8(__Vdly__Q_IDREN__DOT__tail,2,0);
     VL_SIG8(__Vdly__Q_IDREN__DOT__head,2,0);
@@ -409,6 +413,8 @@ VL_MODULE(VMIPS_MIPS) {
     VL_SIG8(__Vdlyvset__Q_IDREN__DOT__buffer__v0,0,0);
     VL_SIG8(__Vdlyvdim0__Q_IDREN__DOT__buffer__v1,2,0);
     VL_SIG8(__Vdlyvset__Q_IDREN__DOT__buffer__v1,0,0);
+    VL_SIG8(__Vdlyvdim0__Q_IDREN__DOT__buffer__v2,2,0);
+    VL_SIG8(__Vdlyvset__Q_IDREN__DOT__buffer__v2,0,0);
     VL_SIG8(__Vdly__rename__DOT__rIQoverflow,0,0);
     VL_SIG8(__Vdly__rename__DOT__rLSQoverflow,0,0);
     VL_SIG8(__Vdlyvval__renrat__v0,5,0);
@@ -455,7 +461,10 @@ VL_MODULE(VMIPS_MIPS) {
     VL_SIG8(__Vdlyvval__rename__DOT__freelist__DOT__buffer__v0,5,0);
     VL_SIG8(__Vdlyvset__rename__DOT__freelist__DOT__buffer__v0,0,0);
     VL_SIG8(__Vdlyvdim0__rename__DOT__freelist__DOT__buffer__v1,5,0);
+    VL_SIG8(__Vdlyvval__rename__DOT__freelist__DOT__buffer__v1,5,0);
     VL_SIG8(__Vdlyvset__rename__DOT__freelist__DOT__buffer__v1,0,0);
+    VL_SIG8(__Vdlyvdim0__rename__DOT__freelist__DOT__buffer__v2,5,0);
+    VL_SIG8(__Vdlyvset__rename__DOT__freelist__DOT__buffer__v2,0,0);
     VL_SIG8(__Vdly__issue__DOT__rPr,0,0);
     VL_SIG8(__Vdly__issue__DOT__wIQselected,0,0);
     VL_SIG8(__Vdly__issue__DOT__wLSQselected,0,0);
@@ -466,6 +475,8 @@ VL_MODULE(VMIPS_MIPS) {
     VL_SIG8(__Vdlyvset__issue__DOT__LSQ__DOT__buffer__v0,0,0);
     VL_SIG8(__Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v1,3,0);
     VL_SIG8(__Vdlyvset__issue__DOT__LSQ__DOT__buffer__v1,0,0);
+    VL_SIG8(__Vdlyvdim0__issue__DOT__LSQ__DOT__buffer__v2,3,0);
+    VL_SIG8(__Vdlyvset__issue__DOT__LSQ__DOT__buffer__v2,0,0);
     VL_SIG8(__Vdlyvdim0__retrat__v0,4,0);
     VL_SIG8(__Vdlyvval__retrat__v0,5,0);
     VL_SIG8(__Vdlyvset__retrat__v0,0,0);
@@ -476,17 +487,26 @@ VL_MODULE(VMIPS_MIPS) {
     VL_SIG8(__Vdlyvset__commit__DOT__ROB__DOT__buffer__v0,0,0);
     VL_SIG8(__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v1,5,0);
     VL_SIG8(__Vdlyvset__commit__DOT__ROB__DOT__buffer__v1,0,0);
+    VL_SIG8(__Vdlyvdim0__commit__DOT__ROB__DOT__buffer__v2,5,0);
+    VL_SIG8(__Vdlyvset__commit__DOT__ROB__DOT__buffer__v2,0,0);
     VL_SIG8(__Vdly__ID1__DOT__syscalBubbleCounter,1,0);
+    //char	__VpadToAlign78555[5];
     VL_SIGW(issue__DOT____Vlvbound4,136,0,5);
-    //char	__VpadToAlign78564[4];
+    //char	__VpadToAlign78580[4];
     VL_SIGW(issue__DOT____Vlvbound5,136,0,5);
-    //char	__VpadToAlign78588[4];
-    VL_SIGW(__Vdlyvval__Q_IFID__DOT__buffer__v0,95,0,3);
     //char	__VpadToAlign78604[4];
+    VL_SIGW(__Vdlyvval__Q_IFID__DOT__buffer__v0,95,0,3);
+    //char	__VpadToAlign78620[4];
+    VL_SIGW(__Vdlyvval__Q_IFID__DOT__buffer__v1,95,0,3);
+    //char	__VpadToAlign78636[4];
     VL_SIGW(__Vdlyvval__Q_IDREN__DOT__buffer__v0,125,0,4);
+    VL_SIGW(__Vdlyvval__Q_IDREN__DOT__buffer__v1,125,0,4);
     VL_SIGW(__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v0,136,0,5);
-    //char	__VpadToAlign78644[4];
+    //char	__VpadToAlign78692[4];
+    VL_SIGW(__Vdlyvval__issue__DOT__LSQ__DOT__buffer__v1,136,0,5);
+    //char	__VpadToAlign78716[4];
     VL_SIGW(__Vdlyvval__commit__DOT__ROB__DOT__buffer__v0,184,0,6);
+    VL_SIGW(__Vdlyvval__commit__DOT__ROB__DOT__buffer__v1,184,0,6);
     VL_SIG(__Vdly__Instr2_IFID,31,0);
     VL_SIG(__Vdly__IF1__DOT__FPC,31,0);
     VL_SIG(__Vdly__IF1__DOT__PC,31,0);
@@ -536,6 +556,6 @@ VL_MODULE(VMIPS_MIPS) {
     static void	_settle__TOP__v__23(VMIPS__Syms* __restrict vlSymsp);
     static void	_settle__TOP__v__5(VMIPS__Syms* __restrict vlSymsp);
     static void	_settle__TOP__v__9(VMIPS__Syms* __restrict vlSymsp);
-} VL_ATTR_ALIGNED(64);
+} VL_ATTR_ALIGNED(128);
 
 #endif  /*guard*/

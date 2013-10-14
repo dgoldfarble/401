@@ -297,12 +297,12 @@ module REN (	CLK,
 	wire 	wQ_FreeL_pushReq, wQ_FreeL_popReq, wQ_FreeL_empty, wQ_FreeL_full;
 	wire 	[PHYSREGS_DEPTH-1:0] wQ_FreeL_pushData, wQ_FreeL_popData;
 		
-    wire    wCurTail_OUT;
-    wire    wCurHead_IN;
-    wire    wProbeIdx_IN;
-    wire    wProbeData_OUT;
-    wire    wProbePushReq_IN;
-    wire    wProbeData;
+    wire    [PHYSREGS_DEPTH-1:0]    wCurTail_OUT;
+    wire    [PHYSREGS_DEPTH-1:0]    wCurHead_IN;
+    wire    [PHYSREGS_DEPTH-1:0]    wProbeIdx_IN;
+    wire    [PHYSREGS_DEPTH-1:0]    wProbeData_OUT;
+    wire                            wProbePushReq_IN;
+    wire    [PHYSREGS_DEPTH-1:0]    wProbeData;
 	
 	assign wQ_FreeL_popReq = !wQ_FreeL_empty && wDestRegReqd;
 

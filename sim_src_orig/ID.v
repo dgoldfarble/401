@@ -380,7 +380,9 @@ module ID ( 	CLK,
 		$display("[ID]:\tCIA:%x",CIA);
 		/*
 		$display("[ID]:\tbranch1:%x\n[ID]:\tbranch2:%x",branch1,branch2);/*
-		*/$display("[ID]:\tInstr1:%x\n[ID]:\tInstr2:%x",Instr1,Instr2);/*
+		*/
+        //$display("[ID]:\tInstr1:%x\n[ID]:\tInstr2:%x",Instr1,Instr2);
+        /*
 		$display("[ID]:\tnextInstruction_address:%x",nextInstruction_address);
                 $display("[ID]:syscal1:%x\t\t\t|syscal2:%x",syscal1,syscal2);
 	 	$display("[ID]:writeRegister1_PR:%x\t|writeRegister2_PR:%x",writeRegister1_PR,writeRegister2_PR); 

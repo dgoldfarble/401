@@ -216,19 +216,19 @@ module MIPS (	R2_output,
 	parameter Q_IFID_DATAWIDTH = 32 + 32 + 32; 	// PCA + CIA + Instr
 	parameter Q_IFID_ADDRWIDTH = 3;		// bits in addr ptr. 2^x elems in queue
 	
-	wire wQ_IFID_empty;
-	wire wQ_IFID_full;
-	wire wQ_IFID_pushReq;
-	wire wQ_IFID_popReq;
-	wire wQ_IFID_popValid;
-	wire [Q_IFID_DATAWIDTH -1:0] wQ_IFID_pushData;
-	wire [Q_IFID_DATAWIDTH -1:0] wQ_IFID_popData;
-	wire wQ_IFID_curTail_OUT;
-	wire wQ_IFID_curHead_OUT;
-	wire wQ_IFID_probeIdx_IN;
-	wire wQ_IFID_probeData_OUT;
-	wire wQ_IFID_probePushReq_IN;
-	wire wQ_IFID_probeData_IN;
+	wire                        wQ_IFID_empty;
+	wire                        wQ_IFID_full;
+	wire                        wQ_IFID_pushReq;
+	wire                        wQ_IFID_popReq;
+	wire                        wQ_IFID_popValid;
+	wire [Q_IFID_DATAWIDTH-1:0] wQ_IFID_pushData;
+	wire [Q_IFID_DATAWIDTH-1:0] wQ_IFID_popData;
+    wire [Q_IFID_ADDRWIDTH-1:0] wQ_IFID_curTail_OUT;
+	wire [Q_IFID_ADDRWIDTH-1:0] wQ_IFID_curHead_OUT;
+	wire [Q_IFID_ADDRWIDTH-1:0] wQ_IFID_probeIdx_IN;
+	wire [Q_IFID_DATAWIDTH-1:0] wQ_IFID_probeData_OUT;
+	wire                        wQ_IFID_probePushReq_IN;
+	wire [Q_IFID_DATAWIDTH-1:0] wQ_IFID_probeData_IN;
 			
 	assign wQ_IFID_pushData = {PCA_IFID, CIA_IFID, Instr1_IFID};
 			
@@ -354,15 +354,15 @@ EXE EXE1( CLK, RESET, FREEZE,ALUSrc1_EXEM,ALUSrc1_IDEXE,Instr1_IDREN,Instr1_EXEM
 	wire wQ_IDREN_pushReq;
 	wire wQ_IDREN_popReq;
 	wire wQ_IDREN_popValid;
-	wire [Q_IDREN_DATAWIDTH - 1:0] wQ_IDREN_pushData;
-	wire [Q_IDREN_DATAWIDTH - 1:0] wQ_IDREN_popData;
+	wire [Q_IDREN_DATAWIDTH - 1:0]  wQ_IDREN_pushData;
+	wire [Q_IDREN_DATAWIDTH - 1:0]  wQ_IDREN_popData;
     
-	wire wQ_IDREN_curTail_OUT;
-	wire wQ_IDREN_curHead_OUT;
-	wire wQ_IDREN_probeIdx_IN;
-	wire wQ_IDREN_probeData_OUT;
+    wire [Q_IDREN_ADDRWIDTH-1:0]    wQ_IDREN_curTail_OUT;
+	wire [Q_IDREN_ADDRWIDTH-1:0]    wQ_IDREN_curHead_OUT;
+	wire [Q_IDREN_ADDRWIDTH-1:0]    wQ_IDREN_probeIdx_IN;
+	wire [Q_IDREN_DATAWIDTH-1:0]    wQ_IDREN_probeData_OUT;
 	wire wQ_IDREN_probePushReq_IN;
-	wire wQ_IDREN_probeData_IN;
+	wire [Q_IDREN_DATAWIDTH-1:0]    wQ_IDREN_probeData_IN;
 	
 	assign wQ_IDREN_pushData = {ALUSrc1_IDEXE,		//1		125:125
 								signExtImm_IDREN,	//32	124:093
@@ -637,7 +637,7 @@ EXE EXE1( CLK, RESET, FREEZE,ALUSrc1_EXEM,ALUSrc1_IDEXE,Instr1_IDREN,Instr1_EXEM
 	wire 		 	wEXE_MEM_RegDest;
 	wire 		 	wEXE_MEM_Branch_flag;
 	wire [31: 0]	wEXE_MEM_Dest_Value1;
-    wire 			wEXE_MEM_readDataB1;
+    wire [31: 0]	wEXE_MEM_readDataB1;
 	wire 			wEXE_MEM_MemRead1;
 	wire			wEXE_MEM_MemWrite1;
 	wire			wEXE_MEM_Hazard;
