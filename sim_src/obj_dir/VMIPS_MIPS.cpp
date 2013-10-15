@@ -834,7 +834,7 @@ void VMIPS_MIPS::_initial__TOP__v(VMIPS__Syms* __restrict vlSymsp) {
     vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer[0xf][2] = 0;
     vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer[0xf][3] = 0;
     vlSymsp->TOP__v.__PVT__issue__DOT__LSQ__DOT__buffer[0xf][4] = 0;
-    // INITIAL at COMMIT.v:200
+    // INITIAL at COMMIT.v:219
     vlSymsp->TOP__v.retrat[1] = (0x3f & ((IData)(1) 
 					 + (IData)(vlSymsp->TOP__v.retrat)
 					 [0]));
@@ -4419,7 +4419,7 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
 	vlSymsp->TOP__v.__PVT__wtROB_pushData[4] = 0;
 	vlSymsp->TOP__v.__PVT__wtROB_pushData[5] = 0;
     }
-    // ALWAYS at COMMIT.v:206
+    // ALWAYS at COMMIT.v:225
     if (vlTOPp->RESET) {
 	if ((1 & (~ (IData)(vlSymsp->TOP__v.__PVT__wCommitFreeze)))) {
 	    if (vlSymsp->TOP__v.__PVT__wMEM_ROB_Valid_Instruction) {
@@ -4557,7 +4557,7 @@ void VMIPS_MIPS::_sequent__TOP__v__2(VMIPS__Syms* __restrict vlSymsp) {
 	= ((0xfeff & (IData)(vlSymsp->TOP__v.__PVT__issue__DOT__request_bus)) 
 	   | (0x100 & vlSymsp->TOP__v.__PVT__issue__DOT__IQ
 	      [8][3]));
-    // ALWAYSPOST at COMMIT.v:219
+    // ALWAYSPOST at COMMIT.v:238
     if (vlSymsp->TOP__v.__Vdlyvset__retrat__v0) {
 	vlSymsp->TOP__v.retrat[(IData)(vlSymsp->TOP__v.__Vdlyvdim0__retrat__v0)] 
 	    = vlSymsp->TOP__v.__Vdlyvval__retrat__v0;
