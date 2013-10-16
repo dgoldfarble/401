@@ -4,131 +4,148 @@
 TO DO:
 
 	SETUP DATA STRUCTURES:
-		Retirement Rat									- done
-		ROB												- done
+		Retirement Rat					- done
+		ROB                                             - done
 
 	UPDATE ROB ENTRIES (finished bit, branch Misprediction etc)
-		has to be done externally. 						- Interfaces in place
+		has to be done externally. 			- Interfaces in place
+			- Assign Ex = MEM_EX || Branch_Mispred
 		
 	MONITOR ROB HEAD ENTRY
-		READ ENTRY, DECIDE WHETHER FIT FOR POPPING 		- done
-
+		READ ENTRY, DECIDE WHETHER FIT FOR POPPING 	- done
 		
 	HANDLE SUCCESSFUL ROB POP
-		DECODE ROB ENTRY								- not done
-		UPDATE RETRAT									- not done
-		UPDATE FREELIST									- not done
+		DECODE ROB ENTRY				- not done
+			- Set set_PC_OUT
+			- Set target_PC
+			- Flush_EM_OUT
+			- Check If Register instruction
+				- Set RetRat
+				- Check if ready for freelist pop
+
+		UPDATE RETRAT					- not done
+		UPDATE FREELIST					- not done
 	
 	HANDLE MISPREDICTION
-		COPY RETRAT										- Connections in place
-		Flush everything								- Connections in place
+		COPY RETRAT                                     - Connections in place
+		Flush everything				- Connections in place
 */
-module COMMIT ( CLK, RESET, FREEZE,
+module COMMIT (
+	CLK, 
+	RESET,
+	FREEZE,
+    		
+	//-------------------------------------------------------------
+	// ROB
+	//-------------------------------------------------------------
+	fROB_full_OUT,	
+	tROB_pushReq_IN,
+	tROB_pushData_IN,
+	fROB_curTail_OUT,
+	fROB_curHead_OUT,
+	tROB_probeIdx_IN,
+	//fROB_probeData_OUT,
+	//tROB_probePushReq_IN,
+	//tROB_probePushData_IN,
+			
+	tROB_probeSetFinBit_IN,
+	tROB_probeSetExpBit_IN,
+	tROB_probe_taken_branch,
+	tROB_probe_target_PC,
 				
-				//-------------------------------------------------------------
-				// ROB
-				//-------------------------------------------------------------
-				fROB_full_OUT,	
-				tROB_pushReq_IN,
-				tROB_pushData_IN,
-				fROB_curTail_OUT,
-				fROB_curHead_OUT,
-				tROB_probeIdx_IN,
-				//fROB_probeData_OUT,
-				//tROB_probePushReq_IN,
-				//tROB_probePushData_IN,
+	flushEm_OUT,
 				
-				tROB_probeSetFinBit_IN,
-				tROB_probeSetExpBit_IN,
-				tROB_probe_taken_branch,
-				tROB_probe_target_PC,
+	copyRetRat_OUT,
+	retRat_OUT,
 				
-				flushEm_OUT,
+	tROB_reg_dest,
+	fROB_free_register_flag_OUT,
+	fROB_free_register_Id_OUT,
 				
-				copyRetRat_OUT,
-				retRat_OUT,
+	fROB_target_PC_OUT,
+	fROB_set_PC_OUT,
 				
-				tROB_reg_dest,
-				fROB_free_register_flag_OUT,
-				fROB_free_register_Id_OUT,
-				
-				fROB_target_PC_OUT,
-				fROB_set_PC_OUT,
-				
-				retrat
-				);
-				parameter comment = 0;
-				
-				input CLK, RESET, FREEZE;
-				
-				//-------------------------------------------------------------
-				// ROB input/output from others Rename
-				//-------------------------------------------------------------
-				parameter RENROB_DATAWIDTH = 0;
-				parameter ROB_ADDRWIDTH = 0;
-				
-				input							tROB_pushReq_IN;//, tROB_probePushReq_IN
-				input 							tROB_probeSetFinBit_IN, tROB_probeSetExpBit_IN;
-				input 	[RENROB_DATAWIDTH-1:0] 	tROB_pushData_IN;//, tROB_probePushData_IN;
-				input	[ROB_ADDRWIDTH-1:0]		tROB_probeIdx_IN;
-				input 	[31:0]					tROB_probe_target_PC;
-				input							tROB_probe_taken_branch;
-				
-				//output 	[RENROB_DATAWIDTH-1:0] 	fROB_probeData_OUT;
-				output  reg 					fROB_full_OUT;
-				output	[ROB_ADDRWIDTH-1:0]		fROB_curTail_OUT, fROB_curHead_OUT;
-				output	flushEm_OUT;
-				
-				input							tROB_reg_dest;
-				output reg 					fROB_free_register_flag_OUT;
-				output reg [5:0]				fROB_free_register_Id_OUT;
-				
-				output reg [31:0]				fROB_target_PC_OUT;
-				output reg						fROB_set_PC_OUT;
-				
-				//-------------------------------------------------------------
-				// Retirement RAT
-				//-------------------------------------------------------------
-				parameter RETRAT_WIDTH = 0;
-				parameter RETRAT_DEPTH = 0;
+	retrat
+	);
 
-				output reg		[RETRAT_WIDTH*RETRAT_DEPTH-1:0] 	retRat_OUT;// 	[1<<RETRAT_DEPTH-1:0];
-				output reg						copyRetRat_OUT;
-				output reg 			[RETRAT_WIDTH-1:0] 	retrat 		[RETRAT_DEPTH-1:0];
-				reg [RETRAT_DEPTH-1:0] retrat_valid;
-				assign retRat_OUT = {	retrat[0],
-										retrat[1],
-										retrat[2],
-										retrat[3],
-										retrat[4],
-										retrat[5],
-										retrat[6],
-										retrat[7],
-										retrat[8],
-										retrat[9],
-										retrat[10],
-										retrat[11],
-										retrat[12],
-										retrat[13],
-										retrat[14],
-										retrat[15],
-										retrat[16],
-										retrat[17],
-										retrat[18],
-										retrat[19],
-										retrat[20],
-										retrat[21],
-										retrat[22],
-										retrat[23],
-										retrat[24],
-										retrat[25],
-										retrat[26],
-										retrat[27],
-										retrat[28],
-										retrat[29],
-										retrat[30],
-										retrat[31]
-										};
+	//-------------------------------------------------------------
+   	// Global parameters and inputs
+    	//-------------------------------------------------------------
+	parameter comment = 0;
+				
+	input CLK, RESET, FREEZE;
+
+	//-------------------------------------------------------------
+	// ROB input/output from others Rename
+	//-------------------------------------------------------------
+	parameter RENROB_DATAWIDTH = 0;
+	parameter ROB_ADDRWIDTH = 0;
+				
+	input					tROB_pushReq_IN;//, tROB_probePushReq_IN
+	input 					tROB_probeSetFinBit_IN;
+	input 	           	             	tROB_probeSetExpBit_IN;
+	input 		[RENROB_DATAWIDTH-1:0] 	tROB_pushData_IN;//, tROB_probePushData_IN;
+	input		[ROB_ADDRWIDTH-1:0]	tROB_probeIdx_IN;
+	input 		[31:0]			tROB_probe_target_PC;
+	input					tROB_probe_taken_branch;
+				
+	//output 	[RENROB_DATAWIDTH-1:0] 	fROB_probeData_OUT;
+	output  reg 				fROB_full_OUT;
+	output		[ROB_ADDRWIDTH-1:0]	fROB_curTail_OUT;
+	output		[ROB_ADDRWIDTH-1:0]	fROB_curHead_OUT;
+	output					flushEm_OUT;
+				
+	input					tROB_reg_dest;
+	output reg               	      	fROB_free_register_flag_OUT;
+	output reg	[5:0]			fROB_free_register_Id_OUT;
+				
+	output reg	[31:0]			fROB_target_PC_OUT;
+	output reg				fROB_set_PC_OUT;
+				
+	//-------------------------------------------------------------
+	// Retirement RAT
+	//-------------------------------------------------------------
+	parameter RETRAT_WIDTH = 0;
+	parameter RETRAT_DEPTH = 0;
+
+	output reg	[RETRAT_WIDTH*RETRAT_DEPTH-1:0] 	retRat_OUT;// 	[1<<RETRAT_DEPTH-1:0];
+	output reg				copyRetRat_OUT;
+	output reg 	[RETRAT_WIDTH-1:0] 	retrat [RETRAT_DEPTH-1:0];
+	reg 		[RETRAT_DEPTH-1:0]	retrat_valid;
+   	assign retRat_OUT = {
+	        retrat[0],
+        	retrat[1],
+        	retrat[2],
+        	retrat[3],
+        	retrat[4],
+        	retrat[5],
+        	retrat[6],
+        	retrat[7],
+        	retrat[8],
+        	retrat[9],
+        	retrat[10],
+        	retrat[11],
+        	retrat[12],
+        	retrat[13],
+        	retrat[14],
+        	retrat[15],
+        	retrat[16],
+        	retrat[17],
+        	retrat[18],
+        	retrat[19],                                    
+        	retrat[20],
+        	retrat[21],
+        	retrat[22],
+        	retrat[23],
+        	retrat[24],
+        	retrat[25],
+        	retrat[26],
+        	retrat[27],
+        	retrat[28],
+        	retrat[29],
+        	retrat[30],
+        	retrat[31]
+    	};
 				
 				
 	//-------------------------------------------------------------------------
@@ -143,8 +160,10 @@ module COMMIT ( CLK, RESET, FREEZE,
 	parameter pFINISH_DEFAULT = 1'b0; parameter pEXCEPT_DEFAULT = 1'b0;
 	integer i;
 	
-	/*							//  182:151 target PC placeholder
-	fQ_IDREN_popData_IN [125],	// 	150:150 1 ALU Src (Imm flag)
+	/*					
+						//	183:183 branch taken	
+    	tROB_probe_taken_branch     		//  	182:151 target PC placeholder
+	fQ_IDREN_popData_IN [125],		// 	150:150 1 ALU Src (Imm flag)
 	wDestRegReqd,				// 	149:149 1 Dest reg reqd
 	fQ_IDREN_popData_IN [124:93]// 148:117 32 signExt Imm
 	fQ_IDREN_popData_IN [92:87],// 116:111 6 ALU control
@@ -163,7 +182,8 @@ module COMMIT ( CLK, RESET, FREEZE,
 	fQ_IDREN_popData_IN [39:39],// 039:039	1 MemRead1_IDEXE
 	fQ_IDREN_popData_IN [38:34],// 038:034	5 wWrRegID_IDREN
 	fQ_IDREN_popData_IN [33:32],// 033:032	2 isRegWrInstr_IDREN
-	fQ_IDREN_popData_IN [31:00]}// 031:000	32 Instr1_IDREN	*/
+	fQ_IDREN_popData_IN [31:00]}// 031:000	32 Instr1_IDREN
+    	*/
 	
 	wire [ROB_DATAWIDTH-1:0] wROB_pushData, wROB_popData, wROB_probeDataOut, wROB_probeDataIn;
 	wire wROB_popReq, wROB_empty;
