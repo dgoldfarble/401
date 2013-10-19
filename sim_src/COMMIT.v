@@ -9,20 +9,12 @@ TO DO:
 
 	UPDATE ROB ENTRIES (finished bit, branch Misprediction etc)
 		has to be done externally. 			- Interfaces in place
-			- Assign Ex = MEM_EX || Branch_Mispred
 		
 	MONITOR ROB HEAD ENTRY
 		READ ENTRY, DECIDE WHETHER FIT FOR POPPING 	- done
 		
 	HANDLE SUCCESSFUL ROB POP
 		DECODE ROB ENTRY				- not done
-			- Set set_PC_OUT
-			- Set target_PC
-			- Flush_EM_OUT
-			- Check If Register instruction
-				- Set RetRat
-				- Check if ready for freelist pop
-
 		UPDATE RETRAT					- not done
 		UPDATE FREELIST					- not done
 	
@@ -156,14 +148,14 @@ module COMMIT (
 			(stuff added by ren.v):	RENROB_DATAWIDTH-1:0
 	*/
 	//-------------------------------------------------------------------------	
-	parameter ROB_DATAWIDTH = RENROB_DATAWIDTH + 2;
+	parameter ROB_DATAWIDTH = RENROB_DATAWIDTH + 3;
 	parameter pFINISH_DEFAULT = 1'b0; parameter pEXCEPT_DEFAULT = 1'b0;
+	parameter pBRANCH_DEFAULT = 1'b0;
 	integer i;
 	
-	/*					
-						//	183:183 branch taken	
-    	tROB_probe_taken_branch     		//  	182:151 target PC placeholder
-	fQ_IDREN_popData_IN [125],		// 	150:150 1 ALU Src (Imm flag)
+	/*				
+    wTarget			     		// 182:151 target PC placeholder
+	fQ_IDREN_popData_IN [125],	// 	150:150 1 ALU Src (Imm flag)
 	wDestRegReqd,				// 	149:149 1 Dest reg reqd
 	fQ_IDREN_popData_IN [124:93]// 148:117 32 signExt Imm
 	fQ_IDREN_popData_IN [92:87],// 116:111 6 ALU control
@@ -183,12 +175,12 @@ module COMMIT (
 	fQ_IDREN_popData_IN [38:34],// 038:034	5 wWrRegID_IDREN
 	fQ_IDREN_popData_IN [33:32],// 033:032	2 isRegWrInstr_IDREN
 	fQ_IDREN_popData_IN [31:00]}// 031:000	32 Instr1_IDREN
-    	*/
+    */
 	
 	wire [ROB_DATAWIDTH-1:0] wROB_pushData, wROB_popData, wROB_probeDataOut, wROB_probeDataIn;
 	wire wROB_popReq, wROB_empty;
 	
-	assign wROB_pushData 		= {pFINISH_DEFAULT, pEXCEPT_DEFAULT, tROB_pushData_IN};
+	assign wROB_pushData 		= {pFINISH_DEFAULT, pEXCEPT_DEFAULT, pBRANCH_DEFAULT, tROB_pushData_IN};
 	//assign fROB_probeData_OUT 	= wROB_probeDataOut[RENROB_DATAWIDTH-1:0];
 	
 	queue #(.DATA_WIDTH(ROB_DATAWIDTH), .ADDR_WIDTH(ROB_ADDRWIDTH), 

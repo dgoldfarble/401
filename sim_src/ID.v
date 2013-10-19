@@ -62,7 +62,7 @@ module ID ( 	CLK,
 	output reg      [31: 0] Operand_B1_PR;
 	output reg      [31: 0] Dest_Value1_PR;
 	output reg      [31: 0] nextInstruction_address_PR;
-	output reg      [31: 0] Reg [0:31];
+	output reg      [31: 0] Reg [31:0];
 	output reg      [31: 0] readDataB1_PR;
 	output reg      [31: 0] Instr1_PR;
 	output reg      [ 5: 0] ALU_control1_PR;

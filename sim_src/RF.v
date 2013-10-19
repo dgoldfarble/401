@@ -43,6 +43,7 @@ module RF	(	FREEZE,
 	parameter RENISS_WIDTH = 0; // Width of the incoming data from Rename
 	parameter IDREN_WIDTH = 0;
 	parameter ROBINDEX = 6;
+	parameter RF_DEBUG = 0;
 	
 	input [RENISS_WIDTH-1:0]	IQLSQ_popData_IN;
 	input 						Valid_Instruction_IN;
@@ -179,5 +180,13 @@ module RF	(	FREEZE,
 		if (write_register_flag) 
 			Reg[write_register_index] = write_register_data;
 	end
+	
+	always @ (posedge CLK)
+	begin
+		if (RF_DEBUG)
+		begin
+			$display("==RF===================================================");
+		end
+	end	
 
 endmodule

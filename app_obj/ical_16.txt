@@ -1,2 +1,0 @@
-
-Section '.sbss' has no data to dump.

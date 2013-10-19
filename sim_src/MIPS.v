@@ -48,7 +48,7 @@ module MIPS (	R2_output,
    //connecting wires (signals passing through more than 1 stage)
    wire [31: 0]   R2_output_ID/*verilator public*/;
    wire [31: 0]   Instr_fMEM/*verilator public*/;
-   wire [31: 0]   Reg_ID [0:31]/*verilator public*/;  
+   wire [31: 0]   Reg_ID [31:0]/*verilator public*/;  
    wire [31: 0]   Instr_address_2IM/*verilator public*/;
    wire [31: 0]   CIA_IFID/*verilator public*/;
    wire [31: 0]   PCA_IFID/*verilator public*/;
@@ -576,9 +576,10 @@ EXE EXE1( CLK, RESET, FREEZE,ALUSrc1_EXEM,ALUSrc1_IDEXE,Instr1_IDREN,Instr1_EXEM
 	wire			wRF_RW_EXE_Valid_Instruction;
 	wire [31: 0]	Reg_RF [63:0] /*verilator public*/;
 		
-	RF #(.RENISS_WIDTH(IQLSQ_WIDTH),
+	RF #(	.RENISS_WIDTH(IQLSQ_WIDTH),
 			.IDREN_WIDTH(Q_IDREN_DATAWIDTH),
-			.ROBINDEX(ROB_ADDRWIDTH))
+			.ROBINDEX(ROB_ADDRWIDTH),
+			.RF_DEBUG(0))
 	RF_ReadWrite	(	.FREEZE(DMISS),
                         .CLK(CLK),
                         .RESET(RESET),
@@ -790,7 +791,7 @@ EXE EXE1( CLK, RESET, FREEZE,ALUSrc1_EXEM,ALUSrc1_IDEXE,Instr1_IDREN,Instr1_EXEM
 				.ROB_ADDRWIDTH(ROB_ADDRWIDTH),
 				.RETRAT_WIDTH(PHYSREGS_DEPTH),
 				.RETRAT_DEPTH(RETRAT_DEPTH),
-				.comment(0))
+				.comment(1))
 	commit (CLK, RESET, .FREEZE(wCommitFreeze),
 	
 			.fROB_full_OUT(wfROB_full),

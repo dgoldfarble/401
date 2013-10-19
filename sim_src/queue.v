@@ -157,7 +157,7 @@ integer	idx;
 reg [ADDR_WIDTH-1:0]	shortIdx;
 
 always /*@(posedge clk) */begin
-	if (SHOW_DEBUG)
+	if (SHOW_DEBUG == 1)
 	begin
 		$display("----------------Q: %s------------------",QUEUE_NAME);
 		// $display("INITCODE:%x",INIT_CODE);
@@ -186,6 +186,40 @@ always /*@(posedge clk) */begin
 			end
 
 			if (shortIdx != tail && shortIdx!= head)
+				$display ("BUF[%d]: %x %s", idx, buffer[idx], "");		
+		end
+	
+	end // if (SHOW_DEBUG)
+	if (SHOW_DEBUG == 2)
+		begin
+		$display("----------------Q: %s------------------",QUEUE_NAME);
+		// $display("INITCODE:%x",INIT_CODE);
+		if (flush_IN) $display("\n----------------FLUSH!!!!!!-----------------\n");
+		$display("Count: %d %s%s"/* %s"*/, count, (emptyFlag_OUT)?"EMPTY!":" ", (fullFlag_OUT)?"FULL!":" ");//, (doBypassBuf)?"<---BYPASS!":" ");
+		$display("Push: %s(%x) Pop: %s(%x) %s", (pushReq_IN)?"Y":"N", data_IN, (popReq_IN)?"Y":"N", data_OUT, (validPush&&validPop)?"<---PUSHPOP":"       ");
+		
+		
+		$display("curTail:     %x, ", curTail_OUT);
+		$display("ProbeIdxIN:  %x, ProbeDataOUT: %x", probeIdx_IN, probeData_OUT);
+		$display("ProbePushIN: %x, ProbeDataIN:  %x", probePushReq_IN, probeData_IN);
+		
+		
+		for (idx = 0; idx < `MAX_BUF; idx = idx + 1)
+		begin
+			shortIdx = idx[ADDR_WIDTH-1:0];
+			
+			if (shortIdx == tail && shortIdx== head)
+				$display ("BUF[%d]: %x %s", idx, buffer[idx], 		"<--HEAD <--TAIL");
+			else begin
+				if (shortIdx == head)
+					$display ("BUF[%d]: %x %s", idx, buffer[idx], 	"<--HEAD");
+				
+				if (shortIdx == tail)
+					$display ("BUF[%d]: %x %s", idx, buffer[idx], 	"        <--TAIL");
+			end
+
+			if (shortIdx != tail && shortIdx!= head)
+				if ()
 				$display ("BUF[%d]: %x %s", idx, buffer[idx], "");		
 		end
 	

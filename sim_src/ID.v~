@@ -198,12 +198,6 @@ module ID ( 	CLK,
 	parameter comment2 = 0;  
 	parameter comment3 = 0;
  	// reg			single_fetch_PR;
-	
-	initial begin
-		comment1 = 0; //show isntruction type for core 1
-		comment2 = 0; //show isntruction type for core 2
-		comment3 = 0; //show ID displays
-	end
 
 	assign fetchNull2_OUT = taken_branch1;
 

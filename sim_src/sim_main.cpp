@@ -657,17 +657,20 @@ int main(int argc, char **argv)
 				cout << "*-------------------------------------";
 				cout << HEX_MAIN_MEMORY[4127448456]<<HEX_MAIN_MEMORY[4127448456+1]<<HEX_MAIN_MEMORY[4127448456+2]<<HEX_MAIN_MEMORY[4127448456+3] << endl;
 				printf("MemoryAddress:%x MemoryElement:%x",top->v->Instr_address_2IM,(MAIN_MEMORY[top->v->Instr_address_2IM+0]<<24) + (MAIN_MEMORY[top->v->Instr_address_2IM+1]<<16) + (MAIN_MEMORY[top->v->Instr_address_2IM+2]<<8) + (MAIN_MEMORY[top->v->Instr_address_2IM+3]));
+				int showRegisters = 0;
 				
-				for (int j=START_REG; j < NUMBER_OF_REGS; j++) {
-					//if (j%2 == 0)
-					cout<<endl;
-					if ( ( top->v->Reg_RF[j] ) == 3735928559 ) printf("REG[%*d]:%*x   |   ",2,j,8,top->v->Reg_RF[j]);
-					else if ( ( RF_FPRF_BOTH == 0 ) | ( RF_FPRF_BOTH == 2 ) ) {
-						if(j < 32) {
-							printf("R%*d|r%*d|%*x|\t", 2, j, 2, top->v->renrat[j], 8, top->v->Reg_RF[top->v->renrat[j]]);
-							printf("r%*d|%*x|r%*d|%*x", 2, 2*j, 8, top->v->Reg_RF[2*j], 2, 2*j+1, 8, top->v->Reg_RF[2*j+1]); 
-							printf("|R%*d|r%*d|%*x|",2, j, 2, top->v->retrat[j], 8, top->v->Reg_RF[top->v->retrat[j]]);}
-						else printf("\t\t\tr%*d|%*x|   ",2,j,8,top->v->Reg_RF[j]);}
+				if (showRegisters) {
+					for (int j=START_REG; j < NUMBER_OF_REGS; j++) {
+						//if (j%2 == 0)
+						cout<<endl;
+						if ( ( top->v->Reg_RF[j] ) == 3735928559 ) printf("REG[%*d]:%*x   |   ",2,j,8,top->v->Reg_RF[j]);
+						else if ( ( RF_FPRF_BOTH == 0 ) | ( RF_FPRF_BOTH == 2 ) ) {
+							if(j < 32) {
+								printf("R%*d|r%*d|%*x|\t", 2, j, 2, top->v->renrat[j], 8, top->v->Reg_RF[top->v->renrat[j]]);
+								printf("r%*d|%*x|r%*d|%*x", 2, 2*j, 8, top->v->Reg_RF[2*j], 2, 2*j+1, 8, top->v->Reg_RF[2*j+1]); 
+								printf("|R%*d|r%*d|%*x|",2, j, 2, top->v->retrat[j], 8, top->v->Reg_RF[top->v->retrat[j]]);}
+							else printf("\t\t\tr%*d|%*x|   ",2,j,8,top->v->Reg_RF[j]);}
+					}
 				}
 				printf("	Time:%d\n",CLOCK_COUNTER);				//displays current "time" (current cycle #)
 			}

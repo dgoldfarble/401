@@ -1,2 +1,0 @@
-
-Section '.bss' has no data to dump.
