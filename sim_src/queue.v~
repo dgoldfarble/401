@@ -13,7 +13,7 @@ RULES:
 		
 	Probe:
 		curTail_OUT 	- Current value of the tail ptr
-		probeIdx_IN	- Index that is to be read/written from/to
+		probeIdx_IN		- Index that is to be read/written from/to
 		probeData_OUT	- Data read out from buffer[probeIdx_IN]
 		probePusheq_IN	- Push enable for probeData_IN to be written to buffer[probeIdx_IN]
 		probeData_IN	- Data written to buffer[probeIdx_IN] when probePusheq_IN is high
@@ -23,7 +23,7 @@ PUSH: Buffer is written at the next clock edge.
 POP : Buffer is read from in the same cycle. (continuous assignment)
 */
 
-module queue (			clk,
+module queue (	clk,
 				reset,
 				pushReq_IN,		// Push	requested
 				data_IN,		// Pushed data
@@ -45,8 +45,8 @@ module queue (			clk,
 	
 
 // SUPPLY DURING INSTANTIATION:
-	parameter	DATA_WIDTH 	= 8; 	// in bits
-	parameter	ADDR_WIDTH 	= 4;	// in bits
+	parameter	DATA_WIDTH 	= 0; 	// in bits
+	parameter	ADDR_WIDTH 	= 0;	// in bits
 	parameter 	SHOW_DEBUG 	= 1; 	// True/False. Show debugging comments or not
 	parameter	INIT_CODE	= 0;	// 0: init with 0. 1: init with 0 to MAX_BUF
 	parameter	QUEUE_NAME	= "Q";	// Name of queue. Useful in debugging
@@ -142,7 +142,7 @@ end
 			buffer[tail] <= rData2Buf;
 			
 		if (probePushReq_IN)
-			buffer[probeIdx_IN] <= probeData_IN;
+			buffer[probeIdx_IN] = probeData_IN;
 	end
  end
 
@@ -157,41 +157,8 @@ integer	idx;
 reg [ADDR_WIDTH-1:0]	shortIdx;
 
 always /*@(posedge clk) */begin
-	if (SHOW_DEBUG == 1)
+	if (SHOW_DEBUG)
 	begin
-		$display("----------------Q: %s------------------",QUEUE_NAME);
-		// $display("INITCODE:%x",INIT_CODE);
-		if (flush_IN) $display("\n----------------FLUSH!!!!!!-----------------\n");
-		$display("Count: %d %s%s"/* %s"*/, count, (emptyFlag_OUT)?"EMPTY!":" ", (fullFlag_OUT)?"FULL!":" ");//, (doBypassBuf)?"<---BYPASS!":" ");
-		$display("Push: %s(%x) Pop: %s(%x) %s", (pushReq_IN)?"Y":"N", data_IN, (popReq_IN)?"Y":"N", data_OUT, (validPush&&validPop)?"<---PUSHPOP":"       ");
-		
-		
-		$display("curTail:     %x, ", curTail_OUT);
-		$display("ProbeIdxIN:  %x, ProbeDataOUT: %x", probeIdx_IN, probeData_OUT);
-		$display("ProbePushIN: %x, ProbeDataIN:  %x", probePushReq_IN, probeData_IN);
-		
-		
-		for (idx = 0; idx < `MAX_BUF; idx = idx + 1)
-		begin
-			shortIdx = idx[ADDR_WIDTH-1:0];
-			
-			if (shortIdx == tail && shortIdx== head)
-				$display ("BUF[%d]: %x %s", idx, buffer[idx], 		"<--HEAD <--TAIL");
-			else begin
-				if (shortIdx == head)
-					$display ("BUF[%d]: %x %s", idx, buffer[idx], 	"<--HEAD");
-				
-				if (shortIdx == tail)
-					$display ("BUF[%d]: %x %s", idx, buffer[idx], 	"        <--TAIL");
-			end
-
-			if (shortIdx != tail && shortIdx!= head)
-				$display ("BUF[%d]: %x %s", idx, buffer[idx], "");		
-		end
-	
-	end // if (SHOW_DEBUG)
-	if (SHOW_DEBUG == 2)
-		begin
 		$display("----------------Q: %s------------------",QUEUE_NAME);
 		// $display("INITCODE:%x",INIT_CODE);
 		if (flush_IN) $display("\n----------------FLUSH!!!!!!-----------------\n");

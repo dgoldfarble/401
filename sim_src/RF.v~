@@ -35,8 +35,7 @@ module RF	(	FREEZE,
 				//write back
 				write_register_data,
 				write_register_index,
-				write_register_flag,
-				Reg
+				write_register_flag
 			);
 
 			
@@ -85,8 +84,6 @@ module RF	(	FREEZE,
     input			[ 5: 0]			write_register_index;
     input							write_register_flag;
     
-	output reg		[31: 0] Reg [63:0];
-    
     wire							wmem_or_not_mem;
     assign wmem_or_not_mem = Mem_Instruction_IN;
     
@@ -121,6 +118,7 @@ module RF	(	FREEZE,
 	assign Immediate = IQLSQ_popData_IN[075:044];
     assign ALU_control1 = IQLSQ_popData_IN[043:038];
 	
+	output reg		[31: 0] Reg [63:0];
 	
 	always @ (posedge CLK or negedge RESET) begin
 		if(!RESET)

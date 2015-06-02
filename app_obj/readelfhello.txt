@@ -1,0 +1,42 @@
+There are 34 section headers, starting at offset 0x3620b4:
+
+Section Headers:
+  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
+  [ 0]                   NULL            00000000 000000 000000 00      0   0  0
+  [ 1] .reginfo          MIPS_REGINFO    004000d4 0000d4 000018 18   A  0   0  4
+  [ 2] .init             PROGBITS        10000000 010000 0000a8 00  AX  0   0  4
+  [ 3] .text             PROGBITS        100000b0 0100b0 0f5928 00  AX  0   0 16
+  [ 4] __libc_freeres_fn PROGBITS        100f59d8 1059d8 000cf4 00  AX  0   0  4
+  [ 5] .fini             PROGBITS        100f66cc 1066cc 000058 00  AX  0   0  4
+  [ 6] .rodata           PROGBITS        100f6730 106730 015c82 00   A  0   0 16
+  [ 7] .data             PROGBITS        1010c3c0 11c3c0 0052d0 00  WA  0   0 16
+  [ 8] __libc_subfreeres PROGBITS        10111690 121690 000024 00  WA  0   0  4
+  [ 9] __libc_atexit     PROGBITS        101116b4 1216b4 000004 00  WA  0   0  4
+  [10] .eh_frame         PROGBITS        101116b8 1216b8 00d0b8 00  WA  0   0  4
+  [11] .gcc_except_table PROGBITS        1011e770 12e770 004194 00  WA  0   0  4
+  [12] .ctors            PROGBITS        10122904 132904 00001c 00  WA  0   0  4
+  [13] .dtors            PROGBITS        10122920 132920 00000c 00  WA  0   0  4
+  [14] .jcr              PROGBITS        1012292c 13292c 000004 00  WA  0   0  4
+  [15] .got              PROGBITS        10122930 132930 0020e8 04 WAp  0   0 16
+  [16] .sbss             NOBITS          10124a18 134a18 0000b0 00 WAp  0   0  8
+  [17] .bss              NOBITS          10124ad0 134a20 00666c 00  WA  0   0 16
+  [18] __libc_freeres_pt NOBITS          1012b13c 134a20 000018 00  WA  0   0  4
+  [19] .comment          PROGBITS        00000000 134a20 001aca 00      0   0  1
+  [20] .debug_aranges    MIPS_DWARF      00000000 1364f0 004238 00      0   0  8
+  [21] .debug_pubnames   MIPS_DWARF      00000000 13a728 023599 00      0   0  1
+  [22] .debug_info       MIPS_DWARF      00000000 15dcc1 154f27 00      0   0  1
+  [23] .debug_abbrev     MIPS_DWARF      00000000 2b2be8 01023b 00      0   0  1
+  [24] .debug_line       MIPS_DWARF      00000000 2c2e23 03a691 00      0   0  1
+  [25] .debug_frame      MIPS_DWARF      00000000 2fd4b4 00e470 00      0   0  4
+  [26] .debug_str        MIPS_DWARF      00000000 30b924 02e950 01  MS  0   0  1
+  [27] .pdr              PROGBITS        00000000 33a274 0160e0 00      0   0  4
+  [28] .note.ABI-tag     NOTE            004000b4 0000b4 000020 00   A  0   0  4
+  [29] .mdebug.abi32     PROGBITS        00000000 350354 000000 00      0   0  1
+  [30] .debug_ranges     MIPS_DWARF      00000000 350354 011c00 00      0   0  1
+  [31] .shstrtab         STRTAB          00000000 361f54 00015e 00      0   0  1
+  [32] .symtab           SYMTAB          00000000 362604 014700 10     33 63e  4
+  [33] .strtab           STRTAB          00000000 376d04 0246f3 00      0   0  1
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings)
+  I (info), L (link order), G (group), x (unknown)
+  O (extra OS processing required) o (OS specific), p (processor specific)
