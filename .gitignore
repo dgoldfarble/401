@@ -1,2 +1,5 @@
 TAGS
 sim_src/obj_dir/
+app_obj/
+memoryWrites.txt
+*~

@@ -1,4 +1,4 @@
-#export VERILATOR_ROOT=  #ADD VERILATOR PATH HERE
+export VERILATOR_ROOT=/Users/dgoldfarb/bin/verilator-3.872/  #ADD VERILATOR PATH HERE
 
 cd sim_src
 
