@@ -18,7 +18,7 @@ module ISS	(
 				LSQ_pushReq_IN,
 				LSQ_pushData_IN,
 
-			// outputs
+				// outputs
 				IQLSQ_popData_OUT,
 				Valid_Instruction,
 				Mem_Instruction,
@@ -37,7 +37,7 @@ parameter RENISS_WIDTH = 0; // Width of the incoming data from Rename
 parameter IDREN_WIDTH = 0;
 
 parameter IQLSQ_WIDTH = 0; // Change this in MIPS.v
-parameter IQLSQ_DEPTH = 4;
+parameter IQLSQ_DEPTH = 5;
 
 input CLK;
 input RESET;
@@ -277,7 +277,7 @@ assign LSQ_full_OUT = wLSQ_full;
 				// Update busy bits
 				//Did it NEED a dest reg?
 				if (IQ[pos][96]) begin
-					wbusy_temp = IQ[pos[3:0]][095:090];
+					wbusy_temp = IQ[pos[4:0]][095:090];
 					busy_bits[wbusy_temp] = 0; // Clear dest busy bit
 				end
 
@@ -358,7 +358,7 @@ integer shortIdx;
 		/*$display("curTail:     %x, ", curTail_OUT);
 		$display("ProbeIdxIN:  %x, ProbeDataOUT: %x", probeIdx_IN, probeData_OUT);
 		$display("ProbePushIN: %x, ProbeDataIN:  %x", probePushReq_IN, probeData_IN);*/
-		
+
 
 		for (idx = 0; idx <= 15; idx = idx + 1)
 		begin
