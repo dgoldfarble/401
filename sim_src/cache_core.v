@@ -39,7 +39,7 @@ module cache_core (	CLK,
 	parameter bsize = 8<<bbits;
 	parameter isize = 1<<ibits;
 
-	// input/output ports	
+	// input/output ports
 	input               CLK;
 	input               RESET;
 	input               SYS;

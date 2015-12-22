@@ -2,12 +2,12 @@
 module REN (	CLK,
 				RESET,
 				FREEZE,
-				
+
 				// to/from decode-rename queue
 				tQ_IDREN_popReq_OUT,
 				fQ_IDREN_popData_IN,
 				fQ_IDREN_empty_IN,
-				
+
 				// IQ/LSQ
 				tIQ_pushReq_OUT,
 				tIQ_pushData_OUT,
@@ -15,7 +15,7 @@ module REN (	CLK,
 				tLSQ_pushReq_OUT,
 				tLSQ_pushData_OUT,
 				fLSQ_full_IN,
-				
+
 				// ROB push interfaces
 				fROB_full_IN,
 				tROB_pushReq_OUT,
@@ -25,20 +25,20 @@ module REN (	CLK,
 				// fROB_probeData_IN,
 				// tROB_probePushReq_OUT,
 				// tROB_probePushData_OUT,
-				
+
 				// Rename RAT
 				tRenRatOverwrite_IN,
 				tRenRatOverwriteData_IN,
-				
+
 				// freelist
 				tFreeL_pushReq_IN,
 				tFreeL_pushData_IN,
 				fFreeL_full_OUT,
-				
+
 				renrat
 				);
-	
-		
+
+
 	// PARAMETERS
 	// Change these in the instantiation. Not here.
 	parameter IDREN_POP_WIDTH 	= 0;
@@ -47,45 +47,45 @@ module REN (	CLK,
 	parameter RENISSUE_WIDTH 	= 0;
 	parameter RENROB_DATAWIDTH 	= 0;
 	parameter ROB_ADDRWIDTH		= 0;
-	
+
 	parameter RENRAT_WIDTH 		= PHYSREGS_DEPTH;
 	parameter RENRAT_DEPTH 		= 32;
-	
+
 	integer i;
-	
+
 	// OUTPUTS
-	
+
 	output reg							tQ_IDREN_popReq_OUT;
 	output reg							fFreeL_full_OUT;
 	output reg							tIQ_pushReq_OUT;
 	output reg							tLSQ_pushReq_OUT;
 	output reg							tROB_pushReq_OUT;
 	// output 								tROB_probePushReq_OUT;
-	
+
 	output reg [RENISSUE_WIDTH - 1:0] 	tIQ_pushData_OUT;
 	output reg [RENISSUE_WIDTH - 1:0] 	tLSQ_pushData_OUT;
-	
+
 	output reg [RENROB_DATAWIDTH - 1:0] tROB_pushData_OUT;
 	// output reg [ROB_ADDRWIDTH-1:0]		tROB_probeIdx_OUT;
 	// output reg [RENROB_DATAWIDTH-1:0] 	tROB_probePushData_OUT;
-	
+
 	// INPUTS
 	input CLK, RESET, FREEZE;
-	
+
 	input								tRenRatOverwrite_IN;
-	input								tFreeL_pushReq_IN;	
-	input								fQ_IDREN_empty_IN;	
+	input								tFreeL_pushReq_IN;
+	input								fQ_IDREN_empty_IN;
 	input 								fIQ_full_IN;
 	input 								fLSQ_full_IN;
 	input 								fROB_full_IN;
-	
+
 	input [PHYSREGS_DEPTH-1:0]			tFreeL_pushData_IN;
 	input [RENRAT_WIDTH*RENRAT_DEPTH-1:0] 			tRenRatOverwriteData_IN;// [(1<<RENRAT_DEPTH)-1:0];
 	input [IDREN_POP_WIDTH -1:0]		fQ_IDREN_popData_IN;
 	input [ROB_ADDRWIDTH-1:0] 			fROB_curTail_IN;
 	// input [RENROB_DATAWIDTH-1:0] 		fROB_probeData_IN;
 
-	reg rIQoverflow, rLSQoverflow;	
+	reg rIQoverflow, rLSQoverflow;
 	reg [RENRAT_DEPTH-1:0] renratctr;
 	output reg [RENRAT_WIDTH-1:0] renrat [RENRAT_DEPTH-1:0];
 
@@ -94,8 +94,8 @@ module REN (	CLK,
 	reg [RENRAT_WIDTH-1:0] rPhysSrc2Reg;
 	reg rFreeLUnderflow;
 
-	
-		
+
+
 	// // // // // // // // // // // // // // // // // // // // // // // // //
 	// FREEZE/CarryON logic
 	// 		RENAME connected to Q_IDREN, IQ, LSQ, ROB externally
@@ -103,11 +103,11 @@ module REN (	CLK,
 	//		FREEZE is connected to Q_IDREN and ROB only. The rest are connected
 	//		to wCarryOn
 	// // // // // // // // // // // // // // // // // // // // // // // // //
-	
+
 	wire wCarryOn;
 	assign wCarryOn = RESET && !FREEZE && !rFreeLUnderflow && !rIQoverflow && !rLSQoverflow;
-	
-	
+
+
 	// // // // // // // // // // // // // // // // // // // // // // // // //
 	// FROM DECODE QUEUE
 	// // // // // // // // // // // // // // // // // // // // // // // // //
@@ -115,7 +115,7 @@ module REN (	CLK,
 	wire [1:0] 	wIsRegWrite;
 	wire [4:0] 	wWrRegID;
 	wire  		wIsMemRead, wIsMemWrite;
-	
+
 	assign wInstr 		= (tQ_IDREN_popReq_OUT)?fQ_IDREN_popData_IN[31:0]:0;
 	assign wIsRegWrite 	= (tQ_IDREN_popReq_OUT)?(fQ_IDREN_popData_IN[33:32]):0;
 	assign wWrRegID 	= (tQ_IDREN_popReq_OUT)?fQ_IDREN_popData_IN[38:34]:0;
@@ -124,21 +124,21 @@ module REN (	CLK,
 	// there are more things in the popped data. Use as required.
 
 	assign tQ_IDREN_popReq_OUT = wCarryOn;
-		
-	
+
+
 	// // // // // // // // // // // // // // // // // // // // // // // // //
 	// IQ/LSQ
 	// // // // // // // // // // // // // // // // // // // // // // // // //
-	
-	wire [RENISSUE_WIDTH-1:0] 	wPushDataIQLSQ;	
+
+	wire [RENISSUE_WIDTH-1:0] 	wPushDataIQLSQ;
 	wire [31: 0]				wtarget;
-	
+
 	assign wPushDataIQLSQ = {	wtarget,					//  182:151 target PC placeholder
 								fQ_IDREN_popData_IN [125],	// 	150:150 1 ALU Src (Imm flag)
 								wDestRegReqd,				// 	149:149 1 Dest reg reqd
 								fQ_IDREN_popData_IN [124:93],// 148:117 32 signExt Imm
 								fQ_IDREN_popData_IN [92:87], // 116:111 6 ALU control
-								fROB_curTail_IN,			//	110:105	6								
+								fROB_curTail_IN,			//	110:105	6
 								rPhysSrc2Reg, 				//	104:099	6
 								rPhysSrc1Reg, 				//	098:093	6
 								rPhysDestReg,				//	092:087	6
@@ -153,23 +153,23 @@ module REN (	CLK,
 								fQ_IDREN_popData_IN [39:39], // 039:039	1 MemRead1_IDEXE
 								fQ_IDREN_popData_IN [38:34], // 038:034	5 wWrRegID_IDREN
 								fQ_IDREN_popData_IN [33:32], // 033:032	2 isRegWrInstr_IDREN
-								fQ_IDREN_popData_IN [31:00]};// 031:000	32 Instr1_IDREN	
-								
-	
+								fQ_IDREN_popData_IN [31:00]};// 031:000	32 Instr1_IDREN
+
+
 	// Overflow flags for LSQ and IQ
-	
+
 	initial begin
 		for(i = 1; i < RENRAT_DEPTH; i=i+1) begin
 			renrat[i] = renrat[i-1] +1;
 		end
 	end
-	
+
 	always @(posedge CLK) begin
 		if (!RESET) begin
-			rIQoverflow <= 0;	
+			rIQoverflow <= 0;
 			rLSQoverflow <= 0;
 		end else begin
-		
+
 			if (!rIQoverflow) begin
 				rIQoverflow <= (!wIsMemRead && !wIsMemWrite) && fIQ_full_IN;
 			end else begin
@@ -180,67 +180,67 @@ module REN (	CLK,
 				rLSQoverflow <= (wIsMemRead || wIsMemWrite) && fLSQ_full_IN;
 			end else begin
 				rLSQoverflow <= fLSQ_full_IN;
-			end			
+			end
 		end
 	end
-	
+
 	wire wIQpushable, wLSQpushable;
 	assign wIQpushable = !fIQ_full_IN && (!wIsMemRead && !wIsMemWrite);
 	assign wLSQpushable = !fLSQ_full_IN && (wIsMemRead || wIsMemWrite);
-	
+
 	// Put data at the output of LSQ/IQ
 	always @(posedge CLK) begin
 		if (wCarryOn) begin
 			tIQ_pushReq_OUT <= wIQpushable;
 			tIQ_pushData_OUT <= wPushDataIQLSQ;
-			
+
 			tLSQ_pushReq_OUT <= wLSQpushable;
 			tLSQ_pushData_OUT <= wPushDataIQLSQ;
 		end else begin
-			tIQ_pushReq_OUT <= 0;			
+			tIQ_pushReq_OUT <= 0;
 			tLSQ_pushReq_OUT <= 0;
 		end
 	end
-	
+
 	// // // // // // // // // // // // // // // // // // // // // // // // //
 	// ROB
 	// // // // // // // // // // // // // // // // // // // // // // // // //
 	wire [RENROB_DATAWIDTH - 1:0] wROB_pushData;
-	
+
 	assign wROB_pushData = {wPushDataIQLSQ};
-	
+
 	always @(posedge CLK) begin
 		if (wCarryOn) begin
-			
+
 			// Whether or not ROB is full is being checked in wCarryOn(FREEZE)
-			// may need to add more interfaces			
-			
+			// may need to add more interfaces
+
 			tROB_pushReq_OUT <= (wIQpushable || wLSQpushable);
 			tROB_pushData_OUT <= wROB_pushData;
-			
+
 		end else begin
 			tROB_pushReq_OUT <= 0;
 			tROB_pushData_OUT <= 0;
 		end
 	end
-	
+
 	// // // // // // // // // // // // // // // // // // // // // // // // //
 	// RENAME RAT
 	// // // // // // // // // // // // // // // // // // // // // // // // //
-	
+
 	wire	wDestRegReqd;
 	assign wDestRegReqd = (|wIsRegWrite) || fQ_IDREN_popData_IN[44];// 44: link flag
-	
-	assign rPhysDestReg = wDestRegReqd?wQ_FreeL_popData:0;	
-	assign rPhysSrc1Reg = renrat[fQ_IDREN_popData_IN[50:46]];	
+
+	assign rPhysDestReg = wDestRegReqd?wQ_FreeL_popData:0;
+	assign rPhysSrc1Reg = renrat[fQ_IDREN_popData_IN[50:46]];
 	assign rPhysSrc2Reg = renrat[fQ_IDREN_popData_IN[45:41]];
-	
+
 	// write to rename rat
 	always @(posedge CLK) begin
 		if (!RESET) begin
-			
+
 			renrat [0] = 0;
-			
+
 		end else if(wCarryOn) begin
 			if (tRenRatOverwrite_IN) begin
 
@@ -282,28 +282,28 @@ module REN (	CLK,
 				renrat[30] <= tRenRatOverwriteData_IN[185:180];
 				renrat[31] <= tRenRatOverwriteData_IN[191:186];
 
-			end else begin	
+			end else begin
 				if (wDestRegReqd && wQ_FreeL_popReq) begin
-				 	renrat[wWrRegID] <= rPhysDestReg;	
-				end			
+				 	renrat[wWrRegID] <= rPhysDestReg;
+				end
 			end
-		end	
+		end
 	end
 
 	// // // // // // // // // // // // // // // // // // // // // // // // //
 	// FREE LIST
 	// // // // // // // // // // // // // // // // // // // // // // // // //
-	
+
 	wire 	wQ_FreeL_pushReq, wQ_FreeL_popReq, wQ_FreeL_empty, wQ_FreeL_full;
 	wire 	[PHYSREGS_DEPTH-1:0] wQ_FreeL_pushData, wQ_FreeL_popData;
-		
+
     wire    [PHYSREGS_DEPTH-1:0]    wCurTail_OUT;
     wire    [PHYSREGS_DEPTH-1:0]    wCurHead_IN;
     wire    [PHYSREGS_DEPTH-1:0]    wProbeIdx_IN;
     wire    [PHYSREGS_DEPTH-1:0]    wProbeData_OUT;
     wire                            wProbePushReq_IN;
     wire    [PHYSREGS_DEPTH-1:0]    wProbeData;
-	
+
 	assign wQ_FreeL_popReq = !wQ_FreeL_empty && wDestRegReqd;
 
 	queue #(.DATA_WIDTH(PHYSREGS_DEPTH),
@@ -321,16 +321,16 @@ module REN (	CLK,
 			.emptyFlag_OUT(wQ_FreeL_empty),
 			.fullFlag_OUT(wQ_FreeL_full),
 			.flush_IN(0),
-            
+
             .curTail_OUT(wCurTail_OUT),
             .curHead_OUT(wCurHead_IN),
-            
+
             .probeIdx_IN(wProbeIdx_IN),
             .probeData_OUT(wProbeData_OUT),
             .probePushReq_IN(wProbePushReq_IN),
             .probeData_IN(wProbeData)
             );
-			
+
 	// Free list underflow. Instr needs free reg, but we don't have any.
 	// It should be used to stall everything in this stage.
 	// Should be unstalled only if the freelist is no longer empty.
@@ -338,21 +338,21 @@ module REN (	CLK,
 	// comes along.
 	always @(posedge CLK) begin
 		if (!RESET) begin
-			rFreeLUnderflow <= 0;		
+			rFreeLUnderflow <= 0;
 		end else /* if (!FREEZE) */ begin
 			if (!rFreeLUnderflow) begin
 				rFreeLUnderflow <= wDestRegReqd && wQ_FreeL_empty;
 			end else begin
 				rFreeLUnderflow <= wQ_FreeL_empty;
-			end			
+			end
 		end
 	end
-	
-	
+
+
 	// COMMENTS//////////////////////////////////////////////////////////////
 	parameter comment = 0;
 	parameter SHOW_FREELIST = 0;
-	
+
 	always  @ (posedge CLK) begin
 	if (comment) begin
 		$display("==RENAME==========================");
@@ -361,5 +361,5 @@ module REN (	CLK,
 		//$display(" rPhysDestReg: %x fQ_IDREN_popData_IN: %x\n", rPhysDestReg, fQ_IDREN_popData_IN);
 	end
 	end
-	
+
 endmodule

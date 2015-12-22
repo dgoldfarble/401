@@ -1,8 +1,8 @@
 //-----------------------------------------
 //           Instruction Fetch Stage
 //-----------------------------------------
-module IF(	CLK, 
-		RESET, 
+module IF(	CLK,
+		RESET,
 		FREEZE,
 		fetchNull2,
 		PCA_PR,
@@ -10,11 +10,11 @@ module IF(	CLK,
         no_new_fetch,
 		// single_fetch,
 		taken_branch1,
-		nextInstruction_address, 
-		PC_init, 
-		Instr1_fIM, 
+		nextInstruction_address,
+		PC_init,
+		Instr1_fIM,
 		Instr1_PR,  		// to Q_IFID
-		Instr2_PR, 
+		Instr2_PR,
 		Instr_address_2IM,
 		tQ_IFID_pushReq,		// to Q_IFID
 		tQ_IFID_full			// from Q_IFID
@@ -26,7 +26,7 @@ module IF(	CLK,
   output reg     [31: 0] PCA_PR;
   output reg     [31: 0] CIA_PR;
   output reg			 tQ_IFID_pushReq;
-  
+
   input          [31: 0] nextInstruction_address;
   input          [31: 0] PC_init;
   input          [31: 0] Instr1_fIM;
@@ -46,18 +46,18 @@ module IF(	CLK,
 
   reg            [31: 0] PC;
   reg            [31: 0] FPC;
-  
+
   parameter comment = 0;
 
   assign Instr_address_2IM   = (taken_branch1)? nextInstruction_address: PC;
-  assign PCA                 = PC; 
-  assign CIA                 = FPC; 
+  assign PCA                 = PC;
+  assign CIA                 = FPC;
   assign Instr1              = Instr2_PR;
   assign Instr2              = (fetchNull2)? 32'h00000000:Instr1_fIM;
-  
+
   wire wCarryOn;
   assign wCarryOn = !no_new_fetch && !FREEZE;
-  
+
   // Pipeline Register (IF/ID)
   always @ (posedge CLK or negedge RESET)
   begin
@@ -73,11 +73,11 @@ module IF(	CLK,
     else if(wCarryOn)
       begin
         Instr1_PR            <= Instr1;
-        Instr2_PR            <= Instr2;		
+        Instr2_PR            <= Instr2;
 		PCA_PR               <= PCA;
 		CIA_PR               <= CIA;
 		FPC                  <= Instr_address_2IM;
-		PC                   <= Instr_address_2IM + 32'h00000004;        
+		PC                   <= Instr_address_2IM + 32'h00000004;
       end
   end
 

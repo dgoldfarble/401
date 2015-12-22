@@ -22,7 +22,7 @@ module dCache (	CLK,
 	parameter blck = 8<<ofst;
 	parameter plty = 10;
 
-	// input/output ports	
+	// input/output ports
 	input              CLK;
 	input              RESET;
 	input              SYS;

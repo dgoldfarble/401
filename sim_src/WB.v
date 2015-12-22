@@ -25,23 +25,23 @@ module WB (	CLK,
    output reg      [ 4: 0] writeRegister1_OUT;
    output reg              do_writeback1_OUT;
    output reg              do_writeback1_PR;
-     
+
    input           [31: 0] aluResult1;
    input           [31: 0] Data_input1;
    input           [ 4: 0] writeRegister1;
    input   	           MemtoReg1;
    input  	           CLK;
    input   	           RESET;
-   input            	   do_writeback1;     
+   input            	   do_writeback1;
    input		   FREEZE;
 
-   wire                    do_writeback1;     
-   
+   wire                    do_writeback1;
+
    reg                     comment;
 
    initial comment = 0; //show WB displays
 
-   assign writeRegister1_OUT = writeRegister1; 
+   assign writeRegister1_OUT = writeRegister1;
    assign do_writeback1_OUT = do_writeback1;
    assign aluResult1_OUT = aluResult1;
    assign writeData1_OUT = (MemtoReg1)?Data_input1:aluResult1;
@@ -74,9 +74,9 @@ module WB (	CLK,
 		$display ("[WB]:do_writeback1_OUT:%x\t|do_writeback2_OUT:%x",do_writeback1_OUT,do_writeback2_OUT);
 		$display ("[WB]:writeRegister1_OUT:%x\t|writeRegister2_OUT:%x",writeRegister1_OUT,writeRegister2_OUT);
 		$display ("[WB]:writeData1_OUT:%x\t|writeData2_OUT:%x",writeData1_OUT,writeData2_OUT);
-		/**/ 
+		/**/
       end
-    end   
+    end
 
 
 

@@ -4,10 +4,10 @@
 module ALU( HI, LO, aluResult, A, B, ALU_control, shiftAmount, CLK );
    output reg [31: 0] aluResult;
    output reg [31: 0] HI;
-   output reg [31: 0] LO; 
+   output reg [31: 0] LO;
 
    input      [31: 0] A;
-   input      [31: 0] B; 
+   input      [31: 0] B;
    input      [ 5: 0] ALU_control;
    input      [ 4: 0] shiftAmount;
    input              CLK;
@@ -16,7 +16,7 @@ module ALU( HI, LO, aluResult, A, B, ALU_control, shiftAmount, CLK );
    wire       [ 4: 0] i;
 
    always begin
-      case( ALU_control ) 
+      case( ALU_control )
                     6'b000000,6'b000010,6'b000001,6'b110111,6'b110101:aluResult = A+B;//add,addi,addiu,addu,lwc
                     6'b111101,6'b100001,6'b101010,6'b101011,6'b101100,6'b101101,6'b101110,6'b101111,6'b110000,6'b110001,6'b110010,6'b110011,6'b111001:begin
 			aluResult = A+{{16{B[15]}},B[15:0]};

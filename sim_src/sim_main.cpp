@@ -6,17 +6,17 @@
 |           the processor.                                                                       |
 |        Written by Dan Snyder                                                                   |
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
-  
+
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <sys/types.h>
-#include <sys/uio.h> 
-#include <sys/socket.h>   
+#include <sys/uio.h>
+#include <sys/socket.h>
 #include <sys/time.h>
 #include <sys/times.h>
 #include <sys/mman.h>
-#include <sys/resource.h> 
-#include <sys/ioctl.h> 
+#include <sys/resource.h>
+#include <sys/ioctl.h>
 #include <sys/uio.h>
 #include <sys/stat.h>
 #include <time.h>
@@ -28,7 +28,7 @@
 #include <ulimit.h>
 #include <dirent.h>
 #include <sys/syscall.h>
-#include <cstdio> 
+#include <cstdio>
 #include <cmath>
 #include <iostream>
 #include <fstream>
@@ -114,7 +114,7 @@ void allocateHeapBlock(int addr, int size){
 	while ((unsigned)addr%4!=0) addr++;					//align block
 	BLOCKBASE=addr;								//return aligned block start address
 	for(int i=addr; i<=addr+size-1; i++){
-		HEAP_STATUS[i] = BLOCKNUM;		//set heap word state variable	
+		HEAP_STATUS[i] = BLOCKNUM;		//set heap word state variable
 	}
 }
 //CLEAR HEAP BLOCKS WHEN MALLOC IS CALLED
@@ -132,9 +132,9 @@ void getSegmentOffsets(string str, string str2){
   int flag = 0;
   vector<string> words;
   if ( !readFile1 ) cerr << "File couldn't be opened" << endl;
-  if (readFile1.is_open()) 
+  if (readFile1.is_open())
   {
-	  while (!readFile1.eof() ) 
+	  while (!readFile1.eof() )
 	  {
 		  getline (readFile1,word);
 		  if( word.find("[19]")!=string::npos){offset[19] = word.substr(52,4);}
@@ -152,7 +152,7 @@ void getSegmentOffsets(string str, string str2){
 		  else if( word.find("[32]")!=string::npos){offset[32] = word.substr(52,4);}
 		  else if( word.find("[33]")!=string::npos){offset[33] = word.substr(52,4);}
 	  }
-  }	
+  }
   readFile1.close();
   int counter=0;
   for(int i=0; i<=33; i++)
@@ -162,9 +162,9 @@ void getSegmentOffsets(string str, string str2){
       string a = str2.substr(0,6)+ "_" + s.str() + ".txt";
       string newline = "\n";
       ifstream readFile2(a.c_str() );
-      if (readFile2.is_open()) 
+      if (readFile2.is_open())
 	{
-	  while (!readFile2.eof() ) 
+	  while (!readFile2.eof() )
 	    {
 	      getline (readFile2,word);
 	      if ( word.find("has no data to dump.")!=string::npos ) remove(a.c_str());
@@ -201,7 +201,7 @@ void functionBypass(string str){
 	ifstream readFile1( str.c_str() );					//open the elf header file
 	string word;								//variable for streaming file
 	int flag = 0;								//prevents multiple tag detection
-	vector<string> words;							
+	vector<string> words;
 	if ( !readFile1 ) cerr << "File couldn't be opened" << endl;		//error if the file doesn't exist
 	if (readFile1.is_open()) { 						//traverse file
 		while (!readFile1.eof() ) { 						//until the end of the file is reached...
@@ -220,8 +220,8 @@ void functionBypass(string str){
 			else if( word.find("<__libc_write>")!=string::npos){ LIBC_WRITE_ADDRESS=word.substr(0,8); flag = 1;}
 			else if( word.find("<__munmap>")!=string::npos){ MUNMAP_ADDRESS=word.substr(0,8); flag = 1;}
 			else if( word.find("<_exit>")!=string::npos){ EXIT_ADDRESS=word.substr(0,8); flag = 1;}
-			else if( word.find("<__libc_read>")!=string::npos){ LIBC_READ_ADDRESS=word.substr(0,8); flag = 1;}	
-			else if( word.find("<__libc_open>")!=string::npos){ LIBC_OPEN_ADDRESS=word.substr(0,8); flag = 1;}	
+			else if( word.find("<__libc_read>")!=string::npos){ LIBC_READ_ADDRESS=word.substr(0,8); flag = 1;}
+			else if( word.find("<__libc_open>")!=string::npos){ LIBC_OPEN_ADDRESS=word.substr(0,8); flag = 1;}
 		}
     	}
 	readFile1.close();
@@ -249,7 +249,7 @@ static inline int hexCharValue(char ch){
 //STORES VALUE IN MEMORY (STRING ARGUMENT)
 void loadSingleHEX(string newValue, int location, int comment, int bh_word){
 	switch (bh_word) {
-		case 0:{												//store word	
+		case 0:{												//store word
 			HEX_MAIN_MEMORY[location+0] = newValue.substr(0,2);							//msb
 			HEX_MAIN_MEMORY[location+1] = newValue.substr(2,2);
 			HEX_MAIN_MEMORY[location+2] = newValue.substr(4,2);
@@ -271,22 +271,22 @@ void loadSingleHEX(string newValue, int location, int comment, int bh_word){
 			break;}
 		default:{break;}
 	}
-} 
+}
 //STORES VALUE IN MEMORY (INTEGER ARGUMENT)
 void loadSingleHEX(int newValue, int location, int comment, int bh_word){
 	string newBinValue = itob(newValue);										//convert integer value to its (string) binary equivalent
 	stringstream s;													//for binary conversion
 	switch (bh_word) {
-		case 0:	{												//store word	
+		case 0:	{												//store word
 			stringstream temp;
 			string binary_str(newBinValue.substr(0,32));								//convert binary string to bitset
-			bitset<32> set(binary_str);										
+			bitset<32> set(binary_str);
 			temp << hex << set.to_ulong();
 			while((temp.str()).size() < 8) {									//every byte, dump contents into stream
 				s << "0";
 				temp << "0";
 			}
-			s << hex << set.to_ulong();										//convert set 
+			s << hex << set.to_ulong();										//convert set
 			HEX_MAIN_MEMORY[ location + 3 ] = s.str().substr(6,2);							//lsb
 			HEX_MAIN_MEMORY[ location + 2 ] = s.str().substr(4,2);
 			HEX_MAIN_MEMORY[ location + 1 ] = s.str().substr(2,2);
@@ -340,9 +340,9 @@ void LoadMemory(string str){
 	string word;
 	int offset=0;
 	ifstream getFile( str.c_str(),ios::in ); 						//open the file and cut out anything unwanted if neccessary
-		if (getFile.is_open()) 
+		if (getFile.is_open())
 		{
-			while (!getFile.eof() ) 
+			while (!getFile.eof() )
 			{
 				getline (getFile,word);
 				if(word.find("Hex")==string::npos) tempVect.push_back(word.substr(0,48));
@@ -352,14 +352,14 @@ void LoadMemory(string str){
 		ofstream putFile( str.c_str(),ios::trunc );						//reopen the file to be written to (truncating old contents)
 		for(int f=0; f<tempVect.size(); f++) putFile << tempVect[f] << endl;
 		putFile.close();
-	
+
 	//open the file to be read into memory
 	ifstream inClientFile( str.c_str(),ios::in );
 		if ( !inClientFile ) cerr << "File couldn't be opened" << endl;			//test if instruction file can be opened
 		while (inClientFile >> word){words.push_back(word);}				//capture raw code from file
 		const int wordCount=words.size();						//determine most efficient sizing for vectors
 		tempV.reserve(wordCount);							//size vector
-		for(int i=0; i<wordCount; i++) {	
+		for(int i=0; i<wordCount; i++) {
 			if (i==0 && words[i].length()==10){ tempV.push_back(words[i]);}		//include first word to obtain data offset (memory insertion point)
 			if (words[i].length()==8 && words[i].find(".")==string::npos && words[i].find(".")==string::npos ){ tempV.push_back(words[i]);}//cut out undesired strings from vector
 		}
@@ -379,7 +379,7 @@ void uname(int sp){
 		"2.4.18"
 		"#1 SMP Tue Jun 4 16:05:29 CDT 2002"
 		"mips"*/
-	
+
 	loadSingleHEX("6d697073",sp +348,0,0);
 	loadSingleHEX("32000000",sp +316,0,0);
 	loadSingleHEX("20323030",sp +312,0,0);
@@ -429,7 +429,7 @@ void getArguments(string str){
 			string c = local_argument_vector[i].substr(j,1);
 			char *cs = new char[c.size() + 1];
 			std::strcpy ( cs, c.c_str() );
-			char a = *cs; 
+			char a = *cs;
 			int as = a;
 			tempInt = (tempInt + (as<<(24-j*8)));
 		}
@@ -451,18 +451,18 @@ void fxstat64(int sp)
 	loadSingleHEX("00000000",sp +92,0,0);
 	loadSingleHEX("00000400",sp +120,0,0);
 	loadSingleHEX("00000000",sp +128,0,0);
-	loadSingleHEX("00000000",sp +132,0,0);	
+	loadSingleHEX("00000000",sp +132,0,0);
 }
 /************************************/
 /*********** MAIN PROGRAM ***********/
 /************************************/
 int main(int argc, char **argv)
-{	
+{
 	Verilated::commandArgs(argc, argv);
 	ofstream memWrite ("memoryWrites.txt");
 	VMIPS *top = new VMIPS;
 	vector<string> FDT_filename;
-	vector<int> FDT_state;//1 = open, 0 = closed 
+	vector<int> FDT_state;//1 = open, 0 = closed
 	time_t seconds;
 	stringstream temps;
 	stringstream s;
@@ -482,21 +482,21 @@ int main(int argc, char **argv)
 	int SWC_tmp=0;
 
 	top->CLK = 0;
-	//first 3 positions reserved for stdin, stdout, and stderr    
+	//first 3 positions reserved for stdin, stdout, and stderr
 	FDT_filename.push_back("stdin");FDT_state.push_back(0);		//reserve fildes 0 for stdin
 	FDT_filename.push_back("stdout");FDT_state.push_back(0);	//reserve fildes 1 for stdout
 	FDT_filename.push_back("stderr");FDT_state.push_back(0);	//reserve fildes 2 for stderr
-	if(argc>3 || argc <2) { 
-		cout << "USAGE: VMIPS [APP_NAME] <DURATION>" << endl; 
+	if(argc>3 || argc <2) {
+		cout << "USAGE: VMIPS [APP_NAME] <DURATION>" << endl;
 		exit(1);
 	}
-	FILE_ARG = argv[1];	
+	FILE_ARG = argv[1];
 	temps<<argv[2];
 	if(argc==3) {
 		temps>>duration;
 		temps.str("");
 	}
-	cout << "		*** ELF LOADING, PLEASE WAIT ***\n";	
+	cout << "		*** ELF LOADING, PLEASE WAIT ***\n";
 //////////////////////////////////////////////////////////////////////////////////////////////
 	//top->Instr1_fIM = 0;
 	//top->Instr2_fIM = 0;
@@ -542,12 +542,12 @@ int main(int argc, char **argv)
 		top->v->Reg_RF[31] = GRA;					//return address
 		top->PC_init = GPC_START;
 	}
-	/*------------------------------------------------------------------------------------------------  
+	/*------------------------------------------------------------------------------------------------
 	|        This section contains									 |
 	|	    -MIPS object and all of the run-time displays			   		 |
 	|           -Syscall interface									 |
 	|           -Low level test interface (load instructions manually)				 |
-	------------------------------------------------------------------------------------------------*/ 
+	------------------------------------------------------------------------------------------------*/
 	cout << "		      *** PROGRAM EXECUTING ***\n";
 	seconds  = time (NULL);
 	top->RESET = 1;
@@ -558,7 +558,7 @@ int main(int argc, char **argv)
 	top->eval();
 	while (!Verilated::gotFinish()){
 		top->CLK=!(top->CLK);									//generate a clock that pulses on eval()
-		MAINTIME++;										//increment time	
+		MAINTIME++;										//increment time
 		s.str("");									//for instruction processing
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////fakeSyscal_EX///////
 		if(top->iBlkRead) {
@@ -618,7 +618,7 @@ int main(int argc, char **argv)
 /*		if(top->MemRead) {									//read from memory
 			temp_address = top->data_address_2DM;						//ready variable for word alignment
 			while ((unsigned)temp_address%4!=0)temp_address--;				//align address
-			top->data_read_fDM = ((MAIN_MEMORY[temp_address+0]<<24)+(MAIN_MEMORY[temp_address+1]<<16)+(MAIN_MEMORY[temp_address+2]<<8)+(MAIN_MEMORY[temp_address+3]<<0));						
+			top->data_read_fDM = ((MAIN_MEMORY[temp_address+0]<<24)+(MAIN_MEMORY[temp_address+1]<<16)+(MAIN_MEMORY[temp_address+2]<<8)+(MAIN_MEMORY[temp_address+3]<<0));
                         top->eval();
 			if((MAINTIME%2==0)){//&&(top->data_address_2DM==268967176)){
 				/*cout << "Loading word:" << top->data_read_fDM << " from Address:" << top->data_address_2DM << endl;
@@ -639,12 +639,12 @@ int main(int argc, char **argv)
 		}
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		s << hex << top->v->Instr_address_2IM << endl;							//gets the next instruction ready for processing
-		
+
 		if(MAINTIME%2==0) {									//when the clock is positive do the following
-			CLOCK_COUNTER ++;			
-			/*------------------------------------------------------------------------------------------------  
+			CLOCK_COUNTER ++;
+			/*------------------------------------------------------------------------------------------------
 			|				       DISPLAYS		  				          |
-			------------------------------------------------------------------------------------------------*/ 
+			------------------------------------------------------------------------------------------------*/
 			if(CLOCK_COUNTER>=duration) {
 				printf("##################################################### sp = 0x%x\n",top->v->Reg_RF[29]);
 				cout << "-------------------------------------" << endl;
@@ -657,7 +657,7 @@ int main(int argc, char **argv)
 				cout << "*-------------------------------------";
 				cout << HEX_MAIN_MEMORY[4127448456]<<HEX_MAIN_MEMORY[4127448456+1]<<HEX_MAIN_MEMORY[4127448456+2]<<HEX_MAIN_MEMORY[4127448456+3] << endl;
 				printf("MemoryAddress:%x MemoryElement:%x",top->v->Instr_address_2IM,(MAIN_MEMORY[top->v->Instr_address_2IM+0]<<24) + (MAIN_MEMORY[top->v->Instr_address_2IM+1]<<16) + (MAIN_MEMORY[top->v->Instr_address_2IM+2]<<8) + (MAIN_MEMORY[top->v->Instr_address_2IM+3]));
-				
+
 				for (int j=START_REG; j < NUMBER_OF_REGS; j++) {
 					//if (j%2 == 0)
 					cout<<endl;
@@ -665,43 +665,43 @@ int main(int argc, char **argv)
 					else if ( ( RF_FPRF_BOTH == 0 ) | ( RF_FPRF_BOTH == 2 ) ) {
 						if(j < 32) {
 							printf("R%*d|r%*d|%*x|\t", 2, j, 2, top->v->renrat[j], 8, top->v->Reg_RF[top->v->renrat[j]]);
-							printf("r%*d|%*x|r%*d|%*x", 2, 2*j, 8, top->v->Reg_RF[2*j], 2, 2*j+1, 8, top->v->Reg_RF[2*j+1]); 
+							printf("r%*d|%*x|r%*d|%*x", 2, 2*j, 8, top->v->Reg_RF[2*j], 2, 2*j+1, 8, top->v->Reg_RF[2*j+1]);
 							printf("|R%*d|r%*d|%*x|",2, j, 2, top->v->retrat[j], 8, top->v->Reg_RF[top->v->retrat[j]]);}
 						else printf("\t\t\tr%*d|%*x|   ",2,j,8,top->v->Reg_RF[j]);}
 				}
 				printf("	Time:%d\n",CLOCK_COUNTER);				//displays current "time" (current cycle #)
 			}
-			
-			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////			
+
+			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			//function substitutions
 			if (s.str().find(UNAME_ADDRESS)!=string::npos) {				//uname
-				sysFunc = 4122;	
+				sysFunc = 4122;
 				FUNCTION_FLAG=4;
 			}
 			else if (s.str().find(LIBC_MALLOC_ADDRESS)!=string::npos) {			//libc_malloc
-				sysFunc = 4555;				
+				sysFunc = 4555;
 				FUNCTION_FLAG=4;
 				fakeSyscal = 1;
 			}
 			else if (s.str().find(MMAP_ADDRESS)!=string::npos) {				//mmap
-				sysFunc = 4090;				
+				sysFunc = 4090;
 				FUNCTION_FLAG=4;
 			}
 			else if (s.str().find(CFREE_ADDRESS)!=string::npos) {				//cfree
-				sysFunc = 4091;				
+				sysFunc = 4091;
 				FUNCTION_FLAG=4;
 				fakeSyscal = 1;
 			}
 			else if (s.str().find(FXSTAT64_ADDRESS)!=string::npos) {			//fxstat64
-				sysFunc = 4028;	
+				sysFunc = 4028;
 				FUNCTION_FLAG=4;
 			}
 			else if (s.str().find(LIBC_WRITE_ADDRESS)!=string::npos) {			//libc_write
-				sysFunc = 4004;	
+				sysFunc = 4004;
 				FUNCTION_FLAG=4;
 			}
 			else if (s.str().find(MUNMAP_ADDRESS)!=string::npos) {				//munmap
-				sysFunc = 4091;				
+				sysFunc = 4091;
 				FUNCTION_FLAG=4;
 			}
 			else if (s.str().find(EXIT_ADDRESS)!=string::npos) {				//exit
@@ -717,7 +717,7 @@ int main(int argc, char **argv)
 				FUNCTION_FLAG=4;
 			}
 
-			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
+			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			//function sub FSM
 			if(top->v->FREEZE){
 				;// FSM needs to freeze as well
@@ -751,13 +751,13 @@ int main(int argc, char **argv)
 				if(MAINTIME%2==0) CLOCK_COUNTER--;
 				FUNCTION_FLAG = 3;
 			}
-			else {//normal instruction supply (no function call or special instruction call)	
+			else {//normal instruction supply (no function call or special instruction call)
 
 				//top->Instr1_fIM = (MAIN_MEMORY[top->v->Instr_address_2IM+3]) + (MAIN_MEMORY[top->v->Instr_address_2IM+2]<<8) + (MAIN_MEMORY[top->v->Instr_address_2IM+1]<<16) + (MAIN_MEMORY[top->v->Instr_address_2IM+0]<<24);
 				//top->Instr2_fIM = (MAIN_MEMORY[top->v->Instr_address_2IM+7]) + (MAIN_MEMORY[top->v->Instr_address_2IM+6]<<8) + (MAIN_MEMORY[top->v->Instr_address_2IM+5]<<16) + (MAIN_MEMORY[top->v->Instr_address_2IM+4]<<24);
 
 				//cout << hex << "top->Instr1_fIM:" << top->Instr1_fIM << endl;
-				//cout << hex << "top->Instr2_fIM:" << top->Instr2_fIM << endl;	
+				//cout << hex << "top->Instr2_fIM:" << top->Instr2_fIM << endl;
 
 				if(top->v->Instr1_fIC == 0xc0820000) {
 					if(fakeSyscal){
@@ -767,7 +767,7 @@ int main(int argc, char **argv)
 					else{
 						sysFunc    = 4556;
 						fakeSyscal = 1;
-					}	
+					}
 					top->v->Instr1_fIC = 0xc;
 				}
 				else if(top->v->Instr1_fIC == 0xe0820000) {
@@ -778,7 +778,7 @@ int main(int argc, char **argv)
 					else{
 						sysFunc    = 4557;
 						fakeSyscal = 1;
-					}	
+					}
 					top->v->Instr1_fIC = 0xc;
 					SWC_tmp=0x82;
 				}
@@ -790,7 +790,7 @@ int main(int argc, char **argv)
 					else{
 						sysFunc    = 4557;
 						fakeSyscal = 1;
-					}	
+					}
 					top->v->Instr1_fIC = 0xc;
 					SWC_tmp=0x83;
 				}
@@ -804,7 +804,7 @@ int main(int argc, char **argv)
 					else{
 						sysFunc    = 4556;
 						fakeSyscal = 1;
-					}	
+					}
 					top->Instr1_fIM = 0xc;
 				}
 				else if(top->Instr1_fIM == 0xe0820000) {
@@ -815,7 +815,7 @@ int main(int argc, char **argv)
 					else{
 						sysFunc    = 4557;
 						fakeSyscal = 1;
-					}	
+					}
 					top->Instr1_fIM = 0xc;
 					SWC_tmp=0x82;
 				}
@@ -827,16 +827,16 @@ int main(int argc, char **argv)
 					else{
 						sysFunc    = 4557;
 						fakeSyscal = 1;
-					}	
+					}
 					top->Instr1_fIM = 0xc;
 					SWC_tmp=0x83;
 				}/**/
 				INSTR_COUNT+=1;
 			}
 
-			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////			
+			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-			/*------------------------------------------------------------------------------------------------  
+			/*------------------------------------------------------------------------------------------------
 			|						SYSCALLS													 |
 			------------------------------------------------------------------------------------------------*/
 			syscallIndex = (fakeSyscal==1)? sysFunc: ((fakeSyscal_Ex==1)? sysFunc_Ex: top->v->Reg_RF[2]);	//get syscall number from register 2
@@ -857,19 +857,19 @@ int main(int argc, char **argv)
 							IPC = (float)INSTR_COUNT/((float)CLOCK_COUNTER);
 							cout << "IPC: " << IPC << endl;
 						}
-						 
+
 						syscall(SYS_exit);
-					break;}								
+					break;}
 					case 4003:{cout << "ReadFile at time:" << CLOCK_COUNTER << endl;										//read
 						string input1;
 						string input;
 						int addr,i;
 						addr = top->v->Reg_RF[5];						//memory entry pointed to by argument
-						if(top->v->Reg_RF[4]==0) cin >> input;					//if STDIN use stdio					
+						if(top->v->Reg_RF[4]==0) cin >> input;					//if STDIN use stdio
 						else {												//otherwise must be a file
 							ifstream indata(FDT_filename[top->v->Reg_RF[4]].c_str());	//stream in contents of file
 							while(!indata.eof()){									//until eof
-								getline (indata,input1);						
+								getline (indata,input1);
 								input = input + input1;								//accumulate string
 							}
 						}
@@ -887,7 +887,7 @@ int main(int argc, char **argv)
 								top->v->Reg_RF[2] = i-addr;									//return number of chars read
 								FDT_state[top->v->Reg_RF[4]]=0;					//set state bit
 							}else top->v->Reg_RF[2] = 0;									//if fildes > 2 && closed
-						}						
+						}
 					break;}
 					case 4004:{	cout << "WriteToFile at time:" << CLOCK_COUNTER << endl;										//write
 						int convert;											//accumulator for filename char convert
@@ -909,7 +909,7 @@ int main(int argc, char **argv)
 								length--; cout<<(char)MAIN_MEMORY[i];
 								i++; if(length == 0)break;
 							}
-						}							
+						}
 						i++;
 						top->v->Reg_RF[2] = i-k-1;
 					break;}
@@ -968,7 +968,7 @@ int main(int argc, char **argv)
 						clearHeapBlock(top->v->Reg_RF[4]);
 					break;}
 					case 4122:{cout << "Uname at time:" << CLOCK_COUNTER << endl;
-						uname(top->v->Reg_RF[29]);		
+						uname(top->v->Reg_RF[29]);
 						top->v->Reg_RF[2] = 0;
 					break;}
 					case 4132:{cout << "Getpid at time:" << CLOCK_COUNTER << endl;top->v->Reg_RF[2] = syscall(SYS_getpgid);break;}		//getpgid
@@ -990,9 +990,9 @@ int main(int argc, char **argv)
 						top->v->Reg_RF[2] = BLOCKBASE;
 					break;}
 					case 4556:{//cout << "LWC0 at time:" << CLOCK_COUNTER << endl;
-							instruction = ((MAIN_MEMORY[top->v->Instr_address_2IM+3]) + 
-								   (MAIN_MEMORY[top->v->Instr_address_2IM+2]<<8) + 
-								   (MAIN_MEMORY[top->v->Instr_address_2IM+1]<<16) + 
+							instruction = ((MAIN_MEMORY[top->v->Instr_address_2IM+3]) +
+								   (MAIN_MEMORY[top->v->Instr_address_2IM+2]<<8) +
+								   (MAIN_MEMORY[top->v->Instr_address_2IM+1]<<16) +
 								   (MAIN_MEMORY[top->v->Instr_address_2IM+0]<<24));
 							source = (instruction << 12)>>28;
 							immediate = (instruction << 16)>>16;
@@ -1003,9 +1003,9 @@ int main(int argc, char **argv)
 								(MAIN_MEMORY[top->v->Reg_RF[4]+immediate+0]<<24));
 					break;}
 					case 4557:{//cout << "SWC0 at time:" << CLOCK_COUNTER << endl;
-							instruction = ((MAIN_MEMORY[top->v->Instr_address_2IM+3]) + 
-								   (MAIN_MEMORY[top->v->Instr_address_2IM+2]<<8) + 
-								   (MAIN_MEMORY[top->v->Instr_address_2IM+1]<<16) + 
+							instruction = ((MAIN_MEMORY[top->v->Instr_address_2IM+3]) +
+								   (MAIN_MEMORY[top->v->Instr_address_2IM+2]<<8) +
+								   (MAIN_MEMORY[top->v->Instr_address_2IM+1]<<16) +
 								   (MAIN_MEMORY[top->v->Instr_address_2IM+0]<<24));
 							base = (instruction << 6)>>26;
 							immediate = (instruction << 16)>>16;
@@ -1017,15 +1017,15 @@ int main(int argc, char **argv)
 							if(HEX_MAIN_MEMORY[top->v->Instr_address_2IM+1] == "82")top->v->Reg_RF[2]=1;
 							else if(HEX_MAIN_MEMORY[top->v->Instr_address_2IM+1] == "83")top->v->Reg_RF[3]=1;
 					break;}
-					
+
 					default: { cout << "Sorry, syscall " << syscallIndex << " has not been implemented. Process terminated at cycle " << MAINTIME/2 << "..." << endl; return 0; }
 				}
-			}			
+			}
 			if(CLOCK_COUNTER >= duration) cin.get(); 		//prevents next instruction traversal until user input (any key pressed)
 		}
 		top->eval();							//assert c++ to verilog modules
 	}
-	
-	
+
+
 	memWrite.close();							//closes memory tracking file
 }

@@ -39,24 +39,24 @@ module RF	(	FREEZE,
 				Reg
 			);
 
-			
+
 	parameter RENISS_WIDTH = 0; // Width of the incoming data from Rename
 	parameter IDREN_WIDTH = 0;
 	parameter ROBINDEX = 6;
-	
+
 	input [RENISS_WIDTH-1:0]	IQLSQ_popData_IN;
 	input 						Valid_Instruction_IN;
 	input						Mem_Instruction_IN;
-	
+
 	output reg					IQ_LSQ_pop;
 	output reg					Valid_Instruction_OUT;
 	output reg					Mem_Instruction_OUT;
-	
+
 	// other
 	input                  FREEZE;
 	input                  CLK;
 	input                  RESET;
-	
+
 	// COMMON SIGNALS
 	output reg		[ROBINDEX-1:0]	ROBPointer;
 	output reg		[31: 0] 		PCA;
@@ -80,23 +80,23 @@ module RF	(	FREEZE,
 	// LS output
     output reg						MemRead1;
     output reg						MemWrite1;
-    
+
     input			[31: 0]			write_register_data;
     input			[ 5: 0]			write_register_index;
     input							write_register_flag;
-    
+
 	output reg		[31: 0] Reg [63:0];
-    
+
     wire							wmem_or_not_mem;
     assign wmem_or_not_mem = Mem_Instruction_IN;
-    
-    
+
+
 		// 103:103	1 link
 		// 102:102	1 jumpReg
 		// 101:101	1 jump
 		// 100:100	1 branch
 		// 099:099	1 MemWrite
-		// 098:098	1 MemRead							
+		// 098:098	1 MemRead
 		// 097:097 Imm src			- LSQ & IQ
 		// 096:096 Need Dest Reg?	- LSQ & IQ
 		// 095:090 dest reg			- LSQ & IQ
@@ -107,7 +107,7 @@ module RF	(	FREEZE,
 		// 075:044 32b signExt Imm	- LSQ & IQ
 		// 043:038 ALU control		- LSQ & IQ
 		// 031:000 Instr			- LSQ & IQ
-	
+
 	wire	[ 5: 0] wROBPointer;
     wire	[31: 0] wInstr;
     wire	[ 5: 0] wwriteRegister1;
@@ -120,8 +120,8 @@ module RF	(	FREEZE,
     assign readRegisterA1 = IQLSQ_popData_IN[081:076];
 	assign Immediate = IQLSQ_popData_IN[075:044];
     assign ALU_control1 = IQLSQ_popData_IN[043:038];
-	
-	
+
+
 	always @ (posedge CLK or negedge RESET) begin
 		if(!RESET)
 		begin
@@ -173,10 +173,10 @@ module RF	(	FREEZE,
 			Valid_Instruction_OUT <= Valid_Instruction_IN;
 		end
 	end
-	
+
 	always @ (posedge CLK)
 	begin
-		if (write_register_flag) 
+		if (write_register_flag)
 			Reg[write_register_index] = write_register_data;
 	end
 

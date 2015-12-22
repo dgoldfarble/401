@@ -20,7 +20,7 @@ assign wPopBit = (|((popOrder<<counter) & (1<<63)));
 
 parameter comment = 1;
 always /*@(posedge clk)*/ begin
-	if (comment) 
+	if (comment)
 	begin
 		$display("");
 		$display("POPCHECK: Ctr:%d   Empty:%s\tdataIn:%s(%x)", counter, (emptyIn)?"Y":"N", (popOut)?"POPOUT":"      ", dataIn);
@@ -29,12 +29,12 @@ end
 
 
 always @(posedge clk) begin
-	if (reset) 
+	if (reset)
 	begin
 		//if (!emptyIn) begin
 			counter <= counter + 1;
 		//end
-		
+
 	end
 end
 
@@ -50,8 +50,8 @@ end
 		// counter <= 0;
 	// end
 	// else begin
-	
-	
+
+
 	// end
 // end
 

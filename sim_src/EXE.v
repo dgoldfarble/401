@@ -44,7 +44,7 @@ module EXE(	// outputs
 				MemWrite1_IN,
 				Valid_Instruction_IN,
 				Valid_Instruction_OUT,
-					
+
 				   // forward data
 				fwd_data_1_COM,
 				fwd_reg_1_COM,
@@ -55,7 +55,7 @@ module EXE(	// outputs
 
 				FREEZE, CLK, RESET
 				);
-				
+
 	parameter ROBWIDTH = 6;
 
    	// COMMON SIGNALS
@@ -99,7 +99,7 @@ module EXE(	// outputs
 	// LS output
     input						MemRead1_IN;
     input						MemWrite1_IN;
-    
+
    // forward data
    input          [31: 0] fwd_data_1_COM;
    input          [ 5: 0] fwd_reg_1_COM;
@@ -107,16 +107,16 @@ module EXE(	// outputs
    input          [31: 0] LS_fwd_data_COM;
    input          [ 5: 0] LS_fwd_reg_COM;
    input                  LS_fwd_data_COM_flag;
-   
-   
+
+
    input 					Valid_Instruction_IN;
    output reg 				Valid_Instruction_OUT;
-   
+
    // other
    input                  FREEZE;
    input                  CLK;
    input                  RESET;
-        
+
    wire           [31: 0] aluResult1;
    wire           [31: 0] address_out;
    wire           [31: 0] OpA1, Operand1;
@@ -129,7 +129,7 @@ module EXE(	// outputs
    reg            [31: 0] HI1, HI2;
    reg            [31: 0] LO1, LO2;
    reg                    comment;
-   
+
 
 
    	initial comment = 0;  //show EXE displays
@@ -137,7 +137,7 @@ module EXE(	// outputs
 
 	always begin
 		Hazard_flag = 0;
-	// Forwarding for Instr 1	
+	// Forwarding for Instr 1
 		// Operand A1
 		if(RegDest_OUT && (writeRegister1_OUT == readRegisterA1_IN)) // if the last instruction is an execute and writing back
 			OpA1 = aluresult_OUT;
@@ -148,8 +148,8 @@ module EXE(	// outputs
 		else if(LS_fwd_data_COM_flag && (LS_fwd_reg_COM == readRegisterA1_IN)) // if two instructions past is a load and writing back
 			OpA1 = LS_fwd_data_COM;
 		else OpA1 = Operand_A1_IN;
-		
-		
+
+
 		// Operand B1
 		if(!ALUSrc1_IN) begin
 			if(RegDest_OUT && (writeRegister1_OUT == readRegisterB1_IN))
@@ -162,8 +162,8 @@ module EXE(	// outputs
 				OpB1 = LS_fwd_data_COM;
 			else OpB1 = Operand_B1_IN;
 		end
-		
-		
+
+
 		// LSQ register operand
 		/*if(RegDest_OUT && (writeRegister1_OUT == readRegisterA1_IN))
 			OpB1 = aluresult_OUT;
@@ -174,7 +174,7 @@ module EXE(	// outputs
 		else if(LS_fwd_data_COM_flag && (LS_fwd_reg_COM == readRegisterA1_IN))
 			OpB1 = LS_fwd_data_COM;
 		else OpB1 = ;*/
-		
+
 		if(Branch_flag_IN) begin
 			Operand1 = PCA_IN;
 			Operand2 = (Immediate_IN<<2);
@@ -190,7 +190,7 @@ module EXE(	// outputs
 	ALU ALU1(HI1, LO1, aluResult1, Operand1, Operand2, ALU_control1_IN, Instr1_10_6_IN, CLK);
 	ALU AGU(HI2, LO2, address_out, OpLS1, OpLS2, ALU_control1_IN, 0, CLK);
 	compare compare1(0,OpA1,OpB1,Instr1_IN,taken_branch1);
-		
+
 
 	//Pipeline Stage 1
 	always @ (posedge CLK or negedge RESET) begin
@@ -231,8 +231,8 @@ module EXE(	// outputs
 			Valid_Instruction_OUT <= Valid_Instruction_IN;
 		end
 	end
- 
-      
+
+
   always begin
 	if(comment) begin
 		$display("=============================================================");
@@ -256,8 +256,8 @@ module EXE(	// outputs
 		$display("[EXE]:writeRegister1_WB:%x\t|writeRegister2_WB:%x",writeRegister1_WB,writeRegister2_WB);
 		$display("[EXE]:Data1_WB:%x\t\t|Data2_WB:%x",Data1_WB,Data2_WB);
 		$display("[EXE]:readDataB1_PR:%x\t|readDataB2_PR:%x",readDataB1_PR,readDataB2_PR);
-		/**/				
-	end	
+		/**/
+	end
    end
 
 endmodule

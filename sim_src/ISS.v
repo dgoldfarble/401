@@ -1,31 +1,31 @@
-/*	
-	/// COMMON 
+/*
+	/// COMMON
 	// I'm making a common buffer for both LSQ and IQ
-	
-	
-Todo: 
-	
-*/		
 
-module ISS	(	
+
+Todo:
+
+*/
+
+module ISS	(
 			// inputs
 			CLK, RESET, FREEZE,
 				// IQ inputs
 				IQ_pushReq_IN,
 				IQ_pushData_IN,
-				
+
 				// LSQ inputs
 				LSQ_pushReq_IN,
 				LSQ_pushData_IN,
-				
+
 			// outputs
 				IQLSQ_popData_OUT,
 				Valid_Instruction,
 				Mem_Instruction,
-			
+
 				// IQ outputs
 				IQ_full_OUT,
-				
+
 				// LSQ outputs
 				LSQ_full_OUT
 			);
@@ -92,7 +92,7 @@ assign wIQLSQ_pushData = {	wRENISS_pushData[086:055],	// 136:105 PCA
 							wRENISS_pushData [42], 		// 101:101 jump
 							wRENISS_pushData [41], 		// 100:100 branch
 							wRENISS_pushData [40], 		// 099:099 MemWrite
-							wRENISS_pushData [39], 		// 098:098 MemRead							
+							wRENISS_pushData [39], 		// 098:098 MemRead
 							wImmSrc,					// 097:097 Imm src			- LSQ & IQ
 							wNeedDestReg,				// 096:096 Need Dest Reg?	- LSQ & IQ
 							wRENISS_pushData[92:87],	// 095:090 dest reg			- LSQ & IQ
@@ -134,16 +134,16 @@ assign LSQ_full_OUT = wLSQ_full;
 
 //==============================================================================
 // IQ AND LSQ - wires and stuff
-//==============================================================================	
-	
+//==============================================================================
+
 	reg [IQLSQ_WIDTH-1:0]	IQ [1<<IQLSQ_DEPTH-1:0];
-	
+
 	wire [3:0] PE_Request, PE_Grant;
 	wire [15:0] request_bus, grant_bus;
 	wire instruction_ready;
-		 
+
 	wire [IQLSQ_WIDTH-1:0] wIQ_popData, wLSQ_popData;
-	
+
 	assign request_bus[0] = IQ[0][104]; // Ready bit
 	assign request_bus[1] = IQ[1][104]; // Ready bit
 	assign request_bus[2] = IQ[2][104]; // Ready bit
@@ -166,32 +166,32 @@ assign LSQ_full_OUT = wLSQ_full;
 	PE PE1 (PE_Grant[1], request_bus[7:4], grant_bus[7:4], PE_Request[1]);
 	PE PE2 (PE_Grant[2], request_bus[11:8], grant_bus[11:8], PE_Request[2]);
 	PE PE3 (PE_Grant[3], request_bus[15:12], grant_bus[15:12], PE_Request[3]);
-	
+
 	integer counter, pos;
 	reg	[5:0] pos1;
-			
+
 	integer IQcount;
-	
+
 	wire wIQ_empty, wIQ_full;
 	assign wIQ_empty = IQcount == 0;
 	assign wIQ_full = IQcount == 16;
-			
+
 	// LSQ
 	wire wLSQ_pushReq, wLSQ_popReq, wLSQ_empty, wLSQ_full;
 	wire [5:0] wLSQ_srcReg, wLSQ_destReg_IN;
 //	wire [IQLSQ_WIDTH-1:0] wLSQ_headData, wLSQ_tailData;
-    		
+
     wire    [IQLSQ_DEPTH-1:0]   wCurTail_OUT;
     wire    [IQLSQ_DEPTH-1:0]   wCurHead_IN;
     wire    [IQLSQ_DEPTH-1:0]   wProbeIdx_IN;
     wire    [IQLSQ_WIDTH-1:0]   wProbeData_OUT;
     wire                        wProbePushReq_IN;
     wire    [IQLSQ_WIDTH-1:0]   wProbeData;
-	
+
 	assign LSQ_full_OUT 	= wLSQ_full;
 	assign wLSQ_srcReg 		= wRENISS_pushData[98:93];
 	assign wLSQ_destReg_IN 	= wRENISS_pushData[92:87];
-	
+
 	queue #(.DATA_WIDTH(IQLSQ_WIDTH),
 			.ADDR_WIDTH(IQLSQ_DEPTH),
 			.SHOW_DEBUG(0),
@@ -207,56 +207,56 @@ assign LSQ_full_OUT = wLSQ_full;
 			.emptyFlag_OUT(wLSQ_empty),
 			.fullFlag_OUT(wLSQ_full),
 			.flush_IN(0),
-            
+
             .curTail_OUT(wCurTail_OUT),
             .curHead_OUT(wCurHead_IN),
-            
+
             .probeIdx_IN(wProbeIdx_IN),
             .probeData_OUT(wProbeData_OUT),
             .probePushReq_IN(wProbePushReq_IN),
             .probeData_IN(wProbeData)
             );
-		
+
 
 //==============================================================================
 // BusyBits/IQ/LSQ operations
 //==============================================================================
 	wire [5:0] wbusy_temp;
 	always @(posedge CLK) begin
-	
+
 		if (!RESET) begin
-		
+
 			IQcount = 0;
-			
+
 		end else if (!FREEZE) begin
-		
+
 		wIQselected <= (wIQrdy && (!rPr || (rPr && !wLSQrdy)));
 		wLSQselected <= (wLSQrdy && (rPr || (!rPr && !wIQrdy)));
-		
+
 			// -----------------------------
 			// IQ: UPDATE READY FLAG(s) ACC TO BUSY_BITS
 			// -----------------------------
 			for (pos = 0; pos < IQcount; pos = pos + 1) begin
-		
-				
-				
+
+
+
 				// is srcReg1 ready? Update
 				IQ[pos][082] = IQ[pos][082] || !busy_bits[IQ[pos][081:076]];
-				
+
 				// is srcReg2 ready? Update
 				IQ[pos][089] = IQ[pos][089] || !busy_bits[IQ[pos][088:083]];
-				
+
 				// Overall ready bit
 				IQ[pos][104] = IQ[pos][104] || (IQ[pos][082] && IQ[pos][089]);
 			end
-			
+
 			// -----------------------------
 			// IQ: POP
 			// -----------------------------
 			if (wIQselected) begin
-				
+
 				// Guaranteed to find an instruction that has woken up
-				
+
 				// Loop until we find the correct instruction
 				for(pos = 0; (!grant_bus[pos]) && (pos < IQcount); pos = pos + 1);
 
@@ -273,73 +273,73 @@ assign LSQ_full_OUT = wLSQ_full;
 				for(counter = pos; counter < IQcount - 1; counter = counter + 1) begin
 					IQ[counter] = IQ[counter + 1];
 				end
-				
+
 				// Update busy bits
 				//Did it NEED a dest reg?
 				if (IQ[pos][96]) begin
 					wbusy_temp = IQ[pos[3:0]][095:090];
 					busy_bits[wbusy_temp] = 0; // Clear dest busy bit
 				end
-				
+
 				// update counter
 				if(IQcount != 0)
 				IQcount = IQcount - 1;
 			end
-			
+
 			// -----------------------------
 			// IQ: PUSH
 			// -----------------------------
 			if (!wIQ_full && IQ_pushReq_IN) begin
-				
+
 				IQ[IQcount] = wIQLSQ_pushData;
-				
+
 				// Update busy bits
 				if (wIQLSQ_pushData[96] /* Did it NEED a dest reg? */)
 					busy_bits[wIQLSQ_pushData[095:090]] = 1; // Clear dest busy bit
-				
+
 				// update counter
 				IQcount = IQcount + 1;
 			end
-		
-	
+
+
 	// -----------------------------------------------------------------------
-			
+
 			// -----------------------------
 			// LSQ pop
 			// -----------------------------
 			if (wLSQselected) begin
-			
+
 				// We are ready to pop. Should we?
-				wLSQ_popReq <= 1;			
-				
+				wLSQ_popReq <= 1;
+
 				// Modify src ready bit and go ahead
 				wLSQ_popData <= {wLSQ_headData[IQLSQ_WIDTH-1:83], 1'b1, wLSQ_headData[81:0]};
-				
+
 				if (wLSQ_headData[96] /* Did it NEED a dest reg? */)
 					busy_bits[wLSQ_headData[095:090]] = 0; // Clear dest busy bit
-					
+
 			end else begin
 				wLSQ_popReq <= 0;
 			end
-			
+
 			// -----------------------------
 			// LSQ push
 			// -----------------------------
 			if (!wLSQ_full && LSQ_pushReq_IN) begin
 				wLSQ_pushReq <= LSQ_pushReq_IN;
 				wLSQ_tailData <= wIQLSQ_pushData;
-				
+
 				if (wNeedDestReg)
 					busy_bits[wIQLSQ_pushData[095:090]] = 1; // Set dest busy bit
-					
-			end else begin		
+
+			end else begin
 				wLSQ_pushReq <= 0;
 			end
-			
-			
+
+
 		end
 	end
-	
+
 parameter comment = 0;
 integer idx;
 integer shortIdx;
@@ -354,34 +354,31 @@ integer shortIdx;
 		$display("wIQselected = %d = (%d && (!%d || (%d && !%d)));", wIQselected, wIQrdy, rPr, rPr, wLSQrdy);
 		$display("!wIQ_empty:!%d && instruction_ready:%d PE_Request:%x, request_bus:%x, wIQ_popData:%x", wIQ_empty, instruction_ready, PE_Request, request_bus, wIQ_popData);
 		$display("POS:%x", pos);
-		
+
 		/*$display("curTail:     %x, ", curTail_OUT);
 		$display("ProbeIdxIN:  %x, ProbeDataOUT: %x", probeIdx_IN, probeData_OUT);
 		$display("ProbePushIN: %x, ProbeDataIN:  %x", probePushReq_IN, probeData_IN);*/
 		
-		
+
 		for (idx = 0; idx <= 15; idx = idx + 1)
 		begin
 			shortIdx = idx;
-			
+
 			if (shortIdx == IQcount && shortIdx== 0)
 				$display ("BUF[%d]: %x %s", idx, IQ[idx], 		"<--HEAD <--TAIL");
 			else begin
 				if (shortIdx == 0)
 					$display ("BUF[%d]: %x %s", idx, IQ[idx], 	"<--HEAD");
-				
+
 				if (shortIdx == IQcount)
 					$display ("BUF[%d]: %x %s", idx, IQ[idx], 	"        <--TAIL");
 			end
 
 			if (shortIdx != IQcount && shortIdx!= 0)
-				$display ("BUF[%d]: %x %s", idx, IQ[idx], "");		
+				$display ("BUF[%d]: %x %s", idx, IQ[idx], "");
 		end
-	
+
 	end // if (SHOW_DEBUG)
 end
-		
-endmodule
-	
 
-	
+endmodule

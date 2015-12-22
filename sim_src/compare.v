@@ -12,11 +12,11 @@ module compare(	Jump,
 
 	input      [31: 0] OpA;
 	input      [31: 0] OpB;
-	input      [31: 0] Instr_input;	
+	input      [31: 0] Instr_input;
 	input	           Jump;
 
 	wire               br_taken;
-	
+
 	assign taken=br_taken|Jump;
 
 	always begin
@@ -27,7 +27,7 @@ module compare(	Jump,
 					5'b00001,5'b10001:br_taken=(OpA[31]==0)?1'b1:1'b0;	//BGEZ,BGEZAL
 					default: br_taken=1'b0;
 				endcase
-			end			
+			end
 			6'b000100:br_taken=(OpA==OpB)?1'b1:1'b0;						//BEQ
 			6'b000101:br_taken=(OpA!=OpB)?1'b1:1'b0;						//BNE
 			6'b000110:br_taken=((OpA[31]==1)||(OpA==0))?1'b1:1'b0;				//BLEZ
