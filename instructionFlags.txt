@@ -1,0 +1,81 @@
+instructionFlags.tsv
+SLL,NOP RegDst1 RegWrite1 010011
+SRL RegDst1 RegWrite1 011011
+SRA RegDst1 RegWrite1 011001
+SLLV RegDst1 RegWrite1 010100
+SRLV RegDst1 RegWrite1 011100
+SRAV RegDst1 RegWrite1 011010
+JR jump1 branch1 111110
+JALR link1 jump1 branch1 RegWrite1 sign_or_zero_Flag1 000001
+syscal1* ALUSrc1 RegWrite1 syscal1 000001
+BREAK* RegDst1 ALUSrc1 RegWrite1 010011
+MFHI RegDst1 RegWrite1 001001
+MTHI 001011
+MFLO RegDst1 RegWrite1 001010
+MTLO 001100
+mult 001101
+multu 001101
+div 000101
+divu 000110
+add RegDst1 RegWrite1 jumpRegister_Flag1 000000
+addu RegDst1 RegWrite1 jumpRegister_Flag1 110111
+sub RegDst1 RegWrite1 jumpRegister_Flag1 011101
+subu RegDst1 RegWrite1 jumpRegister_Flag1 011110
+and RegDst1 RegWrite1 jumpRegister_Flag1 000100
+or RegDst1 RegWrite1 jumpRegister_Flag1 010000
+Xor RegDst1 RegWrite1 jumpRegister_Flag1 011111
+nor RegDst1 RegWrite1 jumpRegister_Flag1 001111
+slt RegDst1 RegWrite1 jumpRegister_Flag1 010101
+sltu RegDst1 RegWrite1 111111
+BLTZ branch1 100111
+BGEZ branch1 100011
+BLTZAL link1 branch1 ALUSrc1 RegWrite1 sign_or_zero_Flag1 000001
+BGEZAL link1 branch1 ALUSrc1 RegWrite1 sign_or_zero_Flag1 000001
+J jump1 branch1 jumpRegister_Flag1 001110
+JAL link1 jump1 ALUSrc1 RegWrite1 sign_or_zero_Flag1 000001
+BEQ branch1 100010
+BNE branch1 101001
+BLEZ branch1 100110
+BGTZ branch1 100101
+ADDI ALUSrc1 RegWrite1 000001
+ADDIU ALUSrc1 RegWrite1 000010
+SLTI ALUSrc1 RegWrite1 010101
+SLTIU ALUSrc1 RegWrite1 010101
+ANDI ALUSrc1 RegWrite1 000100
+ORI ALUSrc1 RegWrite1 010000
+XorI ALUSrc1 RegWrite1 100000
+LUI ALUSrc1 RegWrite1 001000
+MFC1 RegWrite1 011100
+CFC1 RegWrite1 011010
+MTC1 RegDst1 111000
+CTC1 RegDst1 110100
+BC1T branch1 011101
+BC1F branch1 001111
+fpc.cond 011111
+fpadd RegDst1 011011
+fpsub RegDst1 000000
+fpmul RegDst1 001101
+fpdiv RegDst1 000101
+fpabs RegDst1 110111
+MOV.FMT RegDst1 000100
+fpneg RegDst1 010000
+CVT.S.FMT RegDst1 001000
+LB MemRead1 MemtoReg1 ALUSrc1 RegWrite1 jumpRegister_Flag1 100001
+LH MemRead1 MemtoReg1 ALUSrc1 RegWrite1 jumpRegister_Flag1 101011
+LWL MemRead1 MemtoReg1 ALUSrc1 RegWrite1 jumpRegister_Flag1 101101
+LW MemRead1 MemtoReg1 ALUSrc1 RegWrite1 jumpRegister_Flag1 111101
+LWC0 MemRead1 MemtoReg1 ALUSrc1 RegWrite1 jumpRegister_Flag1 111101
+LBU MemRead1 MemtoReg1 ALUSrc1 RegWrite1 jumpRegister_Flag1 101010
+LHU MemRead1 MemtoReg1 ALUSrc1 RegWrite1 jumpRegister_Flag1 101100
+LWR MemRead1 MemtoReg1 ALUSrc1 RegWrite1 jumpRegister_Flag1 101110
+SB MemWrite1 ALUSrc1 jumpRegister_Flag1 101111
+SH MemWrite1 ALUSrc1 jumpRegister_Flag1 110000
+SWL MemWrite1 ALUSrc1 jumpRegister_Flag1 110010
+SW MemWrite1 ALUSrc1 jumpRegister_Flag1 110001
+SWC0 MemWrite1 ALUSrc1 jumpRegister_Flag1 110001
+SWR MemWrite1 ALUSrc1 jumpRegister_Flag1 110011
+LWC1 MemRead1 MemtoReg1 ALUSrc1 110101
+SWC1 MemWrite1 ALUSrc1 111001
+BEQL branch1 111010
+BLEZL branch1 111011
+BNEL branch1 111100
