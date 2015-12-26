@@ -643,7 +643,10 @@ EXE EXE1( CLK, RESET, FREEZE,ALUSrc1_EXEM,ALUSrc1_IDEXE,Instr1_IDREN,Instr1_EXEM
 	wire			wEXE_MEM_Hazard;
 	wire			wEXE_MEM_Valid_Instruction;
 
-	EXE EXE1(	// outputs
+	EXE #(
+        .comment(1)
+      )
+      EXE1(	// outputs
 				.ROBPointer_OUT(wEXE_MEM_ROBPointer),
 				.PCA_OUT(wEXE_MEM_PCA),
 				.target_PC_OUT(wEXE_MEM_target_PC),
@@ -790,7 +793,7 @@ EXE EXE1( CLK, RESET, FREEZE,ALUSrc1_EXEM,ALUSrc1_IDEXE,Instr1_IDREN,Instr1_EXEM
 				.ROB_ADDRWIDTH(ROB_ADDRWIDTH),
 				.RETRAT_WIDTH(PHYSREGS_DEPTH),
 				.RETRAT_DEPTH(RETRAT_DEPTH),
-				.comment(0))
+				.comment(1))
 	commit (CLK, RESET, .FREEZE(wCommitFreeze),
 
 			.fROB_full_OUT(wfROB_full),

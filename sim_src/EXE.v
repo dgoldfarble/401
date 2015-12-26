@@ -56,6 +56,7 @@ module EXE(	// outputs
 				FREEZE, CLK, RESET
 				);
 
+				parameter comment = 0;
 	parameter ROBWIDTH = 6;
 
    	// COMMON SIGNALS
@@ -128,11 +129,13 @@ module EXE(	// outputs
    wire						taken_branch1;
    reg            [31: 0] HI1, HI2;
    reg            [31: 0] LO1, LO2;
-   reg                    comment;
 
+	 /* strictly for comments */
+	 wire            [ 5: 0] opcode1;
+	 wire            [ 5: 0] funct1;
+	 wire            [ 4: 0] format1;
+	 wire            [ 4: 0] rt1;
 
-
-   	initial comment = 0;  //show EXE displays
 
 
 	always begin
@@ -257,7 +260,127 @@ module EXE(	// outputs
 		$display("[EXE]:Data1_WB:%x\t\t|Data2_WB:%x",Data1_WB,Data2_WB);
 		$display("[EXE]:readDataB1_PR:%x\t|readDataB2_PR:%x",readDataB1_PR,readDataB2_PR);
 		/**/
+
+
 	end
    end
+
+	 //CONTROLLER1
+	 //*note, syscall, and all link instructions have been assigned alucontrol of addi
+	 always begin
+	       opcode1 = Instr1_OUT[31:26];
+	       format1 = Instr1_OUT[25:21];
+	       rt1     = Instr1_OUT[20:16];
+	       funct1  = Instr1_OUT[5:0];
+	   case ( opcode1 )
+	        6'b000000: begin //SPECIAL
+	                     case ( funct1 )
+	                   6'b000000: begin if(comment)$display("[EXE]sll,nop\n");end//SLL,NOP
+	         6'b000010: begin  if(comment)$display("[EXE]srl\n");end//SRL
+	         6'b000011: begin  if(comment)$display("[EXE]sra\n");end//SRA
+	         6'b000100: begin  if(comment)$display("[EXE]sllv\n");end//SLLV
+	         6'b000110: begin  if(comment)$display("[EXE]srlv\n");end//SRLV
+	         6'b000111: begin  if(comment)$display("[EXE]srav\n");end//SRAV
+	         6'b001000: begin  if(comment)$display("[EXE]jr\n");end//JR
+	         6'b001001: begin  if(comment)$display("[EXE]jalr\n");end//JALR
+	         6'b001100: begin  if(comment)$display("[EXE]syscal1\n");end//syscal1*
+	         6'b001101: begin  if(comment)$display("[EXE]break\n");end//BREAK*
+	         6'b010000: begin  if(comment)$display("[EXE]mfhi\n");end//MFHI
+	         6'b010001: begin  if(comment)$display("[EXE]mthi\n");end//MTHI
+	         6'b010010: begin  if(comment)$display("[EXE]mflo\n");end//MFLO
+	         6'b010011: begin  if(comment)$display("[EXE]mtlo\n");end//MTLO
+	         6'b011000: begin  if(comment)$display("[EXE]mult\n");end//mult
+	         6'b011001: begin  if(comment)$display("[EXE]multu\n");end//multu
+	         6'b011010: begin  if(comment)$display("[EXE]div\n");end//div
+	         6'b011011: begin  if(comment)$display("[EXE]divu\n");end//divu
+	         6'b100000: begin  if(comment)$display("[EXE]add\n");end//add
+	         6'b100001: begin  if(comment)$display("[EXE]addu\n");end//addu
+	         6'b100010: begin  if(comment)$display("[EXE]sub\n");end//sub
+	         6'b100011: begin  if(comment)$display("[EXE]subu\n");end//subu
+	         6'b100100: begin  if(comment)$display("[EXE]and\n");end//and
+	         6'b100101: begin  if(comment)$display("[EXE]or\n");end//or
+	         6'b100110: begin  if(comment)$display("[EXE]xor\n");end//Xor
+	         6'b100111: begin  if(comment)$display("[EXE]nor\n");end//nor
+	         6'b101010: begin  if(comment)$display("[EXE]slt\n");end//slt
+	         6'b101011: begin  if(comment)$display("[EXE]sltu\n");end//sltu
+	                           default: $display("Not an Instruction!");
+	                       endcase
+	                 end
+	     6'b000001: begin
+	                   case ( rt1 )
+	                         5'b00000: begin  if(comment)$display("[EXE]bltz\n");end//BLTZ
+	         5'b00001: begin  if(comment)$display("[EXE]bgez\n");end//BGEZ
+	         5'b10000: begin  if(comment)$display("[EXE]bltzal\n");end//BLTZAL
+	         5'b10001: begin  if(comment)$display("[EXE]bgezal\n");end//BGEZAL
+	                           default: $display("Not an Instruction!");
+	                       endcase
+	                 end
+	     6'b000010: begin  if(comment)$display("[EXE]jump\n");end//J
+	     6'b000011: begin  if(comment)$display("[EXE]jal\n");end//JAL
+	     6'b000100: begin  if(comment)$display("[EXE]beq\n");end//BEQ
+	     6'b000101: begin  if(comment)$display("[EXE]bne\n");end//BNE
+	     6'b000110: begin  if(comment)$display("[EXE]blez\n");end//BLEZ
+	     6'b000111: begin  if(comment)$display("[EXE]bgtz\n");end//BGTZ
+	     6'b001000: begin  if(comment)$display("[EXE]addi\n");end//ADDI
+	     6'b001001: begin  if(comment)$display("[EXE]addiu\n");end//ADDIU
+	     6'b001010: begin  if(comment)$display("[EXE]slti\n");end//SLTI
+	     6'b001011: begin  if(comment)$display("[EXE]sltiu\n");end//SLTIU
+	     6'b001100: begin  if(comment)$display("[EXE]andi\n");end//ANDI
+	     6'b001101: begin  if(comment)$display("[EXE]ori\n");end//ORI
+	     6'b001110: begin  if(comment)$display("[EXE]xori\n");end//XorI
+	     6'b001111: begin  if(comment)$display("[EXE]lui\n");end//LUI
+	           6'b010001: begin //COP1
+	           case( format1 )
+	                 5'b00000: begin  if(comment)$display("[EXE]mfc1\n");end//MFC1
+	           5'b00010: begin  if(comment)$display("[EXE]cfc1\n");end//CFC1
+	           5'b00100: begin  if(comment)$display("[EXE]mtc1\n");end//MTC1
+	           5'b00110: begin  if(comment)$display("[EXE]ctc1\n");end//CTC1
+	           5'b01000:begin
+	                 case( Instr1_OUT[16] )
+	                       1'b1: begin  if(comment)$display("[EXE]bc1t\n");end//BC1T
+	                 1'b0: begin  if(comment)$display("[EXE]bc1f\n");end//BC1F
+	                 endcase
+	           end
+	           5'b10000:begin
+	           if( Instr1_OUT[7:4] == 4'b0011 ) begin  if(comment)$display("[EXE]fp c.cond\n");end//fp c.cond
+	                 else begin
+	                   case( funct1 )
+	                     6'b000000: begin  if(comment)$display("[EXE]fp add\n");end//fp add
+	                           6'b000001:  begin  if(comment)$display("[EXE]fp sub\n");end//fp sub
+	                                           6'b000010: begin  if(comment)$display("[EXE]fp mul\n");end//fp mul
+	                                           6'b000011: begin  if(comment)$display("[EXE]fp div\n");end//fp div
+	                                           6'b000101: begin  if(comment)$display("[EXE]fp abs\n");end//fp abs
+	                                           6'b000110: begin  if(comment)$display("[EXE]fp mov\n");end//MOV.FMT
+	                                         6'b000111: begin  if(comment)$display("[EXE]fp neg\n");end//fp neg
+	                     default: $display("Not an Instruction!");
+	                       endcase
+	                 end
+	         end
+	             5'b10001: begin  if(comment)$display("[EXE]fp cvt.s\n");end//CVT.S.FMT
+	                 default: $display("Not an Instruction!");
+	       endcase
+	     end
+	     6'b100000: begin if(comment)$display("[EXE]lb\n");end//LB
+	     6'b100001: begin if(comment)$display("[EXE]lh\n");end//LH
+	     6'b100010: begin if(comment)$display("[EXE]lwl\n");end//LWL
+	     6'b100011: begin if(comment)$display("[EXE]lw\n");end//LW
+	           6'b110000: begin if(comment)$display("[EXE]lwc0\n");end//LWC0
+	     6'b100100: begin if(comment)$display("[EXE]lbu\n");end//LBU
+	     6'b100101: begin if(comment)$display("[EXE]lhu\n");end//LHU
+	     6'b100110: begin if(comment)$display("[EXE]lwr\n");end//LWR
+	     6'b101000: begin if(comment)$display("[EXE]sb\n");end//SB
+	     6'b101001: begin if(comment)$display("[EXE]sh\n");end//SH
+	     6'b101010: begin if(comment)$display("[EXE]swl\n");end//SWL
+	     6'b101011: begin if(comment)$display("[EXE]sw\n");end//SW
+	           6'b111000: begin if(comment)$display("[EXE]swc0\n");end//SWC0
+	     6'b101110: begin if(comment)$display("[EXE]swr\n");end//SWR
+	     6'b110001: begin if(comment)$display("[EXE]lwc1\n");end//LWC1
+	     6'b111001: begin if(comment)$display("[EXE]swc1\n");end//SWC1
+	     6'b010100: begin if(comment)$display("[EXE]beql\n");end//BEQL
+	     6'b010110: begin if(comment)$display("[EXE]blezl\n");end//BLEZL
+	     6'b010101: begin if(comment)$display("[EXE]bnel\n");end//BNEL
+	     default: $display("Not an Instruction!");
+	   endcase
+	 end
 
 endmodule
