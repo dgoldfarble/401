@@ -454,18 +454,18 @@ void fxstat64(int sp)
 	loadSingleHEX("00000000",sp +132,0,0);
 }
 void dumpRegs(VMIPS *top) {
-	printf("MemoryAddress:%x MemoryElement:%x",top->v->Instr_address_2IM,(MAIN_MEMORY[top->v->Instr_address_2IM+0]<<24) + (MAIN_MEMORY[top->v->Instr_address_2IM+1]<<16) + (MAIN_MEMORY[top->v->Instr_address_2IM+2]<<8) + (MAIN_MEMORY[top->v->Instr_address_2IM+3]));
+	printf("MemoryAddress:%x MemoryElement:%x",top->MIPS->Instr_address_2IM,(MAIN_MEMORY[top->MIPS->Instr_address_2IM+0]<<24) + (MAIN_MEMORY[top->MIPS->Instr_address_2IM+1]<<16) + (MAIN_MEMORY[top->MIPS->Instr_address_2IM+2]<<8) + (MAIN_MEMORY[top->MIPS->Instr_address_2IM+3]));
 
 	for (int j=START_REG; j < NUMBER_OF_REGS; j++) {
 		//if (j%2 == 0)
 		cout<<endl;
-		if ( ( top->v->Reg_RF[j] ) == 3735928559 ) printf("REG[%*d]:%*x   |   ",2,j,8,top->v->Reg_RF[j]);
+		if ( ( top->MIPS->Reg_RF[j] ) == 3735928559 ) printf("REG[%*d]:%*x   |   ",2,j,8,top->MIPS->Reg_RF[j]);
 		else if ( ( RF_FPRF_BOTH == 0 ) | ( RF_FPRF_BOTH == 2 ) ) {
 			if(j < 32) {
-				printf("R%*d|r%*d|%*x|\t", 2, j, 2, top->v->renrat[j], 8, top->v->Reg_RF[top->v->renrat[j]]);
-				printf("r%*d|%*x|r%*d|%*x", 2, 2*j, 8, top->v->Reg_RF[2*j], 2, 2*j+1, 8, top->v->Reg_RF[2*j+1]);
-				printf("|R%*d|r%*d|%*x|",2, j, 2, top->v->retrat[j], 8, top->v->Reg_RF[top->v->retrat[j]]);}
-			else printf("\t\t\tr%*d|%*x|   ",2,j,8,top->v->Reg_RF[j]);}
+				printf("R%*d|r%*d|%*x|\t", 2, j, 2, top->MIPS->renrat[j], 8, top->MIPS->Reg_RF[top->MIPS->renrat[j]]);
+				printf("r%*d|%*x|r%*d|%*x", 2, 2*j, 8, top->MIPS->Reg_RF[2*j], 2, 2*j+1, 8, top->MIPS->Reg_RF[2*j+1]);
+				printf("|R%*d|r%*d|%*x|",2, j, 2, top->MIPS->retrat[j], 8, top->MIPS->Reg_RF[top->MIPS->retrat[j]]);}
+			else printf("\t\t\tr%*d|%*x|   ",2,j,8,top->MIPS->Reg_RF[j]);}
 	}
 }
 /************************************/
@@ -553,8 +553,8 @@ int main(int argc, char **argv)
 		if (FILE_ARG.find("noio")==string::npos)LoadMemory("app_obj/"+FILE_ARG+"_30.txt");		//debug_ranges
 		if (FILE_ARG.find("noio")==string::npos)LoadMemory("app_obj/"+FILE_ARG+"_31.txt");		//shstrtab
 		if (FILE_ARG.find("noio")==string::npos)LoadMemory("app_obj/"+FILE_ARG+"_32.txt");		//symtab
-		top->v->Reg_RF[29] = GSP;					//stack pointer
-		top->v->Reg_RF[31] = GRA;					//return address
+		top->MIPS->Reg_RF[29] = GSP;					//stack pointer
+		top->MIPS->Reg_RF[31] = GRA;					//return address
 		top->PC_init = GPC_START;
 	}
 	/*------------------------------------------------------------------------------------------------
@@ -577,10 +577,10 @@ int main(int argc, char **argv)
 		s.str("");									//for instruction processing
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////fakeSyscal_EX///////
 		if(top->iBlkRead) {
-			if(top->v->MVECT & 0x1)
-				temp_address = top->v->Instr_address_2IM & 0xFFFFFFE0;
+			if(top->MIPS->MVECT & 0x1)
+				temp_address = top->MIPS->Instr_address_2IM & 0xFFFFFFE0;
 			else
-				temp_address = (top->v->Instr_address_2IM + 4) & 0xFFFFFFE0;
+				temp_address = (top->MIPS->Instr_address_2IM + 4) & 0xFFFFFFE0;
 
 			top->block_read_fIM[7] = ((MAIN_MEMORY[temp_address+ 0]<<24)+(MAIN_MEMORY[temp_address+ 1]<<16)+(MAIN_MEMORY[temp_address+ 2]<<8)+(MAIN_MEMORY[temp_address+ 3]<<0));
 			top->block_read_fIM[6] = ((MAIN_MEMORY[temp_address+ 4]<<24)+(MAIN_MEMORY[temp_address+ 5]<<16)+(MAIN_MEMORY[temp_address+ 6]<<8)+(MAIN_MEMORY[temp_address+ 7]<<0));
@@ -642,8 +642,8 @@ int main(int argc, char **argv)
 		}/**/
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		if(top->MemWrite) {									//write to memory
-			if (top->v->Instr_fMEM>>26 == 40) loadSingleHEX(top->data_write_2DM,top->data_address_2DM,0,1);	//sb
-			else if (top->v->Instr_fMEM>>26 == 41) loadSingleHEX(top->data_write_2DM,top->data_address_2DM,0,2);	//sh
+			if (top->MIPS->Instr_fMEM>>26 == 40) loadSingleHEX(top->data_write_2DM,top->data_address_2DM,0,1);	//sb
+			else if (top->MIPS->Instr_fMEM>>26 == 41) loadSingleHEX(top->data_write_2DM,top->data_address_2DM,0,2);	//sh
 			else loadSingleHEX(top->data_write_2DM,top->data_address_2DM,0,0);					//sw
 			memWrite << CLOCK_COUNTER << endl;								//store memory access in file
 			memWrite << top->data_write_2DM << " " << top->data_address_2DM << endl;				//store memory access in file
@@ -653,7 +653,7 @@ int main(int argc, char **argv)
 			}/**/
 		}
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		s << hex << top->v->Instr_address_2IM << endl;							//gets the next instruction ready for processing
+		s << hex << top->MIPS->Instr_address_2IM << endl;							//gets the next instruction ready for processing
 
 		if(MAINTIME%2==0) {									//when the clock is positive do the following
 			CLOCK_COUNTER ++;
@@ -661,11 +661,11 @@ int main(int argc, char **argv)
 			|				       DISPLAYS		  				          |
 			------------------------------------------------------------------------------------------------*/
 			if(CLOCK_COUNTER>=duration) {
-				printf("##################################################### sp = 0x%x\n",top->v->Reg_RF[29]);
+				printf("##################################################### sp = 0x%x\n",top->MIPS->Reg_RF[29]);
 				cout << "-------------------------------------" << endl;
-				// for (int i=top->v->Reg_RF[29]+32768; i>=(top->v->Reg_RF[29]); i-=4) {
+				// for (int i=top->MIPS->Reg_RF[29]+32768; i>=(top->MIPS->Reg_RF[29]); i-=4) {
 	 				// // int temp = (MAIN_MEMORY[i+0]<<0) + (MAIN_MEMORY[i+1]<<8) + (MAIN_MEMORY[i+2]<<16) + (MAIN_MEMORY[i+3]<<24);
-					// // if (temp!=0) printf("Stack: 0x%x (+%u): 0x%x\n", i,i-(top->v->Reg_RF[29]),temp);
+					// // if (temp!=0) printf("Stack: 0x%x (+%u): 0x%x\n", i,i-(top->MIPS->Reg_RF[29]),temp);
 				// // }/**/
 				cout << "*-------------------------------------" << endl;
 				heapDump();
@@ -722,47 +722,47 @@ int main(int argc, char **argv)
 
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			//function sub FSM
-			if(top->v->FREEZE){
+			if(top->MIPS->FREEZE){
 				;// FSM needs to freeze as well
 			}
 			else if (FUNCTION_FLAG == 2) {//nop
 				//top->Instr1_fIM = 0;
-				top->v->Instr1_fIC = 0;
+				top->MIPS->Instr1_fIC = 0;
 				INSTR_COUNT++;
 				FUNCTION_FLAG = 0;
 			}
 			else if (FUNCTION_FLAG == 5) {//nop
 				//top->Instr1_fIM = 0;
-				top->v->Instr1_fIC = 0;
+				top->MIPS->Instr1_fIC = 0;
 				INSTR_COUNT++;
-				if (top->v->SYS==1){
+				if (top->MIPS->SYS==1){
 					//top->Instr1_fIM = 65011720;//jr
-					top->v->Instr1_fIC = 65011720;//jr
+					top->MIPS->Instr1_fIC = 65011720;//jr
 					FUNCTION_FLAG = 2;
 				}
 			}
 			else if (FUNCTION_FLAG == 3) {//syscall
 				//top->Instr1_fIM = 12;
-				top->v->Instr1_fIC = 12;
+				top->MIPS->Instr1_fIC = 12;
 				if(MAINTIME%2==0) CLOCK_COUNTER--;
 				FUNCTION_FLAG=5;
 			}
 			else if (FUNCTION_FLAG == 4) {//addi (load arg register)
-				top->v->Instr2_IFID = 0;
+				top->MIPS->Instr2_IFID = 0;
 				//top->Instr1_fIM = (fakeSyscal==1)? 0: 537001984 + sysFunc;
-				top->v->Instr1_fIC = (fakeSyscal==1)? 0: 537001984 + sysFunc;
+				top->MIPS->Instr1_fIC = (fakeSyscal==1)? 0: 537001984 + sysFunc;
 				if(MAINTIME%2==0) CLOCK_COUNTER--;
 				FUNCTION_FLAG = 3;
 			}
 			else {//normal instruction supply (no function call or special instruction call)
 
-				//top->Instr1_fIM = (MAIN_MEMORY[top->v->Instr_address_2IM+3]) + (MAIN_MEMORY[top->v->Instr_address_2IM+2]<<8) + (MAIN_MEMORY[top->v->Instr_address_2IM+1]<<16) + (MAIN_MEMORY[top->v->Instr_address_2IM+0]<<24);
-				//top->Instr2_fIM = (MAIN_MEMORY[top->v->Instr_address_2IM+7]) + (MAIN_MEMORY[top->v->Instr_address_2IM+6]<<8) + (MAIN_MEMORY[top->v->Instr_address_2IM+5]<<16) + (MAIN_MEMORY[top->v->Instr_address_2IM+4]<<24);
+				//top->Instr1_fIM = (MAIN_MEMORY[top->MIPS->Instr_address_2IM+3]) + (MAIN_MEMORY[top->MIPS->Instr_address_2IM+2]<<8) + (MAIN_MEMORY[top->MIPS->Instr_address_2IM+1]<<16) + (MAIN_MEMORY[top->MIPS->Instr_address_2IM+0]<<24);
+				//top->Instr2_fIM = (MAIN_MEMORY[top->MIPS->Instr_address_2IM+7]) + (MAIN_MEMORY[top->MIPS->Instr_address_2IM+6]<<8) + (MAIN_MEMORY[top->MIPS->Instr_address_2IM+5]<<16) + (MAIN_MEMORY[top->MIPS->Instr_address_2IM+4]<<24);
 
 				//cout << hex << "top->Instr1_fIM:" << top->Instr1_fIM << endl;
 				//cout << hex << "top->Instr2_fIM:" << top->Instr2_fIM << endl;
 
-				if(top->v->Instr1_fIC == 0xc0820000) {
+				if(top->MIPS->Instr1_fIC == 0xc0820000) {
 					if(fakeSyscal){
 						sysFunc_Ex    = 4556;
 						fakeSyscal_Ex = 1;
@@ -771,9 +771,9 @@ int main(int argc, char **argv)
 						sysFunc    = 4556;
 						fakeSyscal = 1;
 					}
-					top->v->Instr1_fIC = 0xc;
+					top->MIPS->Instr1_fIC = 0xc;
 				}
-				else if(top->v->Instr1_fIC == 0xe0820000) {
+				else if(top->MIPS->Instr1_fIC == 0xe0820000) {
 					if(fakeSyscal){
 						sysFunc_Ex    = 4557;
 						fakeSyscal_Ex = 1;
@@ -782,10 +782,10 @@ int main(int argc, char **argv)
 						sysFunc    = 4557;
 						fakeSyscal = 1;
 					}
-					top->v->Instr1_fIC = 0xc;
+					top->MIPS->Instr1_fIC = 0xc;
 					SWC_tmp=0x82;
 				}
-				else if (top->v->Instr1_fIC == 0xe0830000) {
+				else if (top->MIPS->Instr1_fIC == 0xe0830000) {
 					if(fakeSyscal){
 						sysFunc_Ex    = 4557;
 						fakeSyscal_Ex = 1;
@@ -794,10 +794,10 @@ int main(int argc, char **argv)
 						sysFunc    = 4557;
 						fakeSyscal = 1;
 					}
-					top->v->Instr1_fIC = 0xc;
+					top->MIPS->Instr1_fIC = 0xc;
 					SWC_tmp=0x83;
 				}
-				//top->Instr1_fIM = top->v->Instr1_fIC;
+				//top->Instr1_fIM = top->MIPS->Instr1_fIC;
 
 /*				if(top->Instr1_fIM == 0xc0820000) {
 					if(fakeSyscal){
@@ -842,8 +842,8 @@ int main(int argc, char **argv)
 			/*------------------------------------------------------------------------------------------------
 			|						SYSCALLS													 |
 			------------------------------------------------------------------------------------------------*/
-			syscallIndex = (fakeSyscal==1)? sysFunc: ((fakeSyscal_Ex==1)? sysFunc_Ex: top->v->Reg_RF[2]);	//get syscall number from register 2
-			if (top->v->Instr1_IFID==12 && top->v->SYS==1) {											//if a syscall is detected
+			syscallIndex = (fakeSyscal==1)? sysFunc: ((fakeSyscal_Ex==1)? sysFunc_Ex: top->MIPS->Reg_RF[2]);	//get syscall number from register 2
+			if (top->MIPS->Instr1_IFID==12 && top->MIPS->SYS==1) {											//if a syscall is detected
 				if(fakeSyscal==1)
 					fakeSyscal = 0;
 				else
@@ -867,10 +867,10 @@ int main(int argc, char **argv)
 						string input1;
 						string input;
 						int addr,i;
-						addr = top->v->Reg_RF[5];						//memory entry pointed to by argument
-						if(top->v->Reg_RF[4]==0) cin >> input;					//if STDIN use stdio
+						addr = top->MIPS->Reg_RF[5];						//memory entry pointed to by argument
+						if(top->MIPS->Reg_RF[4]==0) cin >> input;					//if STDIN use stdio
 						else {												//otherwise must be a file
-							ifstream indata(FDT_filename[top->v->Reg_RF[4]].c_str());	//stream in contents of file
+							ifstream indata(FDT_filename[top->MIPS->Reg_RF[4]].c_str());	//stream in contents of file
 							while(!indata.eof()){									//until eof
 								getline (indata,input1);
 								input = input + input1;								//accumulate string
@@ -879,28 +879,28 @@ int main(int argc, char **argv)
 						if (input.size()>70)input.insert(70,"\n");							//syscall reads 70 chars at a time
 						for (i=addr;i<=addr+input.size();i++) loadSingleHEX(input[i-addr],i,0,1);			//load content to memory
 						loadSingleHEX("0a",i-1,0,1);									//end block with "0a"
-						if (top->v->Reg_RF[4]==0) {						//if STDIN && open
-							if (FDT_state[top->v->Reg_RF[4]]!=0){					//close file when done
-								top->v->Reg_RF[2] = i-addr;									//return number of chars read
-								FDT_state[top->v->Reg_RF[4]]=0;					//set state bit
-							}else top->v->Reg_RF[2] = i-addr;									//if STDIN && closed
+						if (top->MIPS->Reg_RF[4]==0) {						//if STDIN && open
+							if (FDT_state[top->MIPS->Reg_RF[4]]!=0){					//close file when done
+								top->MIPS->Reg_RF[2] = i-addr;									//return number of chars read
+								FDT_state[top->MIPS->Reg_RF[4]]=0;					//set state bit
+							}else top->MIPS->Reg_RF[2] = i-addr;									//if STDIN && closed
 						}
 						else {												//if fildes > 2 ( !(STD(IN,OUT,ERR) )
-							if (FDT_state[top->v->Reg_RF[4]]!=0){					//close file when done
-								top->v->Reg_RF[2] = i-addr;									//return number of chars read
-								FDT_state[top->v->Reg_RF[4]]=0;					//set state bit
-							}else top->v->Reg_RF[2] = 0;									//if fildes > 2 && closed
+							if (FDT_state[top->MIPS->Reg_RF[4]]!=0){					//close file when done
+								top->MIPS->Reg_RF[2] = i-addr;									//return number of chars read
+								FDT_state[top->MIPS->Reg_RF[4]]=0;					//set state bit
+							}else top->MIPS->Reg_RF[2] = 0;									//if fildes > 2 && closed
 						}
 					break;}
 					case 4004:{	cout << "WriteToFile at time:" << CLOCK_COUNTER << endl;										//write
 						int convert;											//accumulator for filename char convert
 						int flag = 0;											//loop break flag
 						int byte_offset;
-						unsigned int k=top->v->Reg_RF[5];					//start at specified element
-						unsigned int length=top->v->Reg_RF[6];
+						unsigned int k=top->MIPS->Reg_RF[5];					//start at specified element
+						unsigned int length=top->MIPS->Reg_RF[6];
 						int i = k;
-						if (top->v->Reg_RF[4]!=1) {
-							ofstream _file(FDT_filename[top->v->Reg_RF[4]].c_str());
+						if (top->MIPS->Reg_RF[4]!=1) {
+							ofstream _file(FDT_filename[top->MIPS->Reg_RF[4]].c_str());
 							while (MAIN_MEMORY[i]!=00) {
 								length--; _file << (char)MAIN_MEMORY[i];
 								i++; if(length == 0)break;
@@ -914,48 +914,48 @@ int main(int argc, char **argv)
 							}
 						}
 						i++;
-						top->v->Reg_RF[2] = i-k-1;
+						top->MIPS->Reg_RF[2] = i-k-1;
 					break;}
 					case 4005:{cout << "OpenFile at time:" << CLOCK_COUNTER << endl;		 									//open file
 						string filename;
-						int k=(top->v->Reg_RF[4]);
+						int k=(top->MIPS->Reg_RF[4]);
 						while ( MAIN_MEMORY[k]!=0 ) { filename = filename + (char)MAIN_MEMORY[k]; k++; }
 					 	FDT_filename.push_back(filename);			        					//add new filename to newest location
 						FDT_state.push_back(1);										//add new open indicator to newest location
-						top->v->Reg_RF[2] = FileDescriptorIndex;								//place file descriptor into register
+						top->MIPS->Reg_RF[2] = FileDescriptorIndex;								//place file descriptor into register
 						FileDescriptorIndex++;										//ready the next file descriptor
 					break;}
-					case 4006:{cout << "CloseFile at time:" << CLOCK_COUNTER << endl;FDT_state[top->v->Reg_RF[4]]=0;break;}			//close file
+					case 4006:{cout << "CloseFile at time:" << CLOCK_COUNTER << endl;FDT_state[top->MIPS->Reg_RF[4]]=0;break;}			//close file
 					case 4018:{cout << "Stat at time:" << CLOCK_COUNTER << endl;									//stat
-						top->v->Reg_RF[4] = top->v->Reg_RF[5];
-						top->v->Reg_RF[5] = top->v->Reg_RF[6];
+						top->MIPS->Reg_RF[4] = top->MIPS->Reg_RF[5];
+						top->MIPS->Reg_RF[5] = top->MIPS->Reg_RF[6];
 						struct stat buf;
-						top->v->Reg_RF[2]=stat(FDT_filename[top->v->Reg_RF[4]].c_str(),&buf);
-						fxstat64(top->v->Reg_RF[29]);
+						top->MIPS->Reg_RF[2]=stat(FDT_filename[top->MIPS->Reg_RF[4]].c_str(),&buf);
+						fxstat64(top->MIPS->Reg_RF[29]);
 					break;}
-					case 4020:{cout << "Getpid at time:" << CLOCK_COUNTER << endl;top->v->Reg_RF[2] = syscall(SYS_getpid);break;}		//getpid
-					case 4024:{cout << "Getuid at time:" << CLOCK_COUNTER << endl;top->v->Reg_RF[2] = syscall(SYS_getuid);break;}		//getuid
+					case 4020:{cout << "Getpid at time:" << CLOCK_COUNTER << endl;top->MIPS->Reg_RF[2] = syscall(SYS_getpid);break;}		//getpid
+					case 4024:{cout << "Getuid at time:" << CLOCK_COUNTER << endl;top->MIPS->Reg_RF[2] = syscall(SYS_getuid);break;}		//getuid
 					case 4028:{	cout << "FStat at time:" << CLOCK_COUNTER << endl;										//fstat
-						top->v->Reg_RF[4] = top->v->Reg_RF[5];
-						top->v->Reg_RF[5] = top->v->Reg_RF[6];
+						top->MIPS->Reg_RF[4] = top->MIPS->Reg_RF[5];
+						top->MIPS->Reg_RF[5] = top->MIPS->Reg_RF[6];
 						struct stat buf;
-						top->v->Reg_RF[2]=fstat(top->v->Reg_RF[4],&buf);
-						fxstat64(top->v->Reg_RF[29]);
+						top->MIPS->Reg_RF[2]=fstat(top->MIPS->Reg_RF[4],&buf);
+						fxstat64(top->MIPS->Reg_RF[29]);
 					break;}
-					case 4037:{cout << "Kill at time:" << CLOCK_COUNTER << endl;top->v->Reg_RF[2] = syscall(SYS_kill);break;}			//kill
-					case 4047:{cout << "Getgid at time:" << CLOCK_COUNTER << endl;top->v->Reg_RF[2] = syscall(SYS_getgid);break;}		//getgid
-					case 4049:{cout << "Geteuid at time:" << CLOCK_COUNTER << endl;top->v->Reg_RF[2] = syscall(SYS_geteuid);CLOCK_COUNTER-=3;break;}
-					case 4050:{cout << "Getegid at time:" << CLOCK_COUNTER << endl;top->v->Reg_RF[2] = syscall(SYS_getegid);break;}		//getegid
-					case 4064:{cout << "Getppid at time:" << CLOCK_COUNTER << endl;top->v->Reg_RF[2] = syscall(SYS_getppid);break;}		//getppid
-					case 4065:{cout << "Getpgrp at time:" << CLOCK_COUNTER << endl;top->v->Reg_RF[2] = syscall(SYS_getpgrp);break;}		//getpgrp
-					case 4076:{cout << "Getrlimit at time:" << CLOCK_COUNTER << endl;top->v->Reg_RF[2] = syscall(SYS_getrlimit);break;}		//getrlimit
-					case 4077:{cout << "Getrusage at time:" << CLOCK_COUNTER << endl;top->v->Reg_RF[2] = syscall(SYS_getrusage);break;}		//getrusage
-					case 4078:{cout << "GetTimeofDay at time:" << CLOCK_COUNTER << endl;top->v->Reg_RF[2] = syscall(SYS_gettimeofday);break;}		//gettimeofday
+					case 4037:{cout << "Kill at time:" << CLOCK_COUNTER << endl;top->MIPS->Reg_RF[2] = syscall(SYS_kill);break;}			//kill
+					case 4047:{cout << "Getgid at time:" << CLOCK_COUNTER << endl;top->MIPS->Reg_RF[2] = syscall(SYS_getgid);break;}		//getgid
+					case 4049:{cout << "Geteuid at time:" << CLOCK_COUNTER << endl;top->MIPS->Reg_RF[2] = syscall(SYS_geteuid);CLOCK_COUNTER-=3;break;}
+					case 4050:{cout << "Getegid at time:" << CLOCK_COUNTER << endl;top->MIPS->Reg_RF[2] = syscall(SYS_getegid);break;}		//getegid
+					case 4064:{cout << "Getppid at time:" << CLOCK_COUNTER << endl;top->MIPS->Reg_RF[2] = syscall(SYS_getppid);break;}		//getppid
+					case 4065:{cout << "Getpgrp at time:" << CLOCK_COUNTER << endl;top->MIPS->Reg_RF[2] = syscall(SYS_getpgrp);break;}		//getpgrp
+					case 4076:{cout << "Getrlimit at time:" << CLOCK_COUNTER << endl;top->MIPS->Reg_RF[2] = syscall(SYS_getrlimit);break;}		//getrlimit
+					case 4077:{cout << "Getrusage at time:" << CLOCK_COUNTER << endl;top->MIPS->Reg_RF[2] = syscall(SYS_getrusage);break;}		//getrusage
+					case 4078:{cout << "GetTimeofDay at time:" << CLOCK_COUNTER << endl;top->MIPS->Reg_RF[2] = syscall(SYS_gettimeofday);break;}		//gettimeofday
 					case 4090:{cout << "MMap at time:" << CLOCK_COUNTER << endl;
 						BLOCKNUM++;
 						int blockCounter=0;
 						int blockStart=0;
-						int size = top->v->Reg_RF[5]*(1+top->v->Reg_RF[4]);
+						int size = top->MIPS->Reg_RF[5]*(1+top->MIPS->Reg_RF[4]);
 						if(size < 32)size = 32;
 						for(int i=HEAPSTART; i<=HEAPSTART+HEAP_STATUS.size()+size; i++) {
 							if (HEAP_STATUS[i]==0) blockCounter++;
@@ -965,22 +965,22 @@ int main(int argc, char **argv)
 								break;
 							}
 						}
-						top->v->Reg_RF[2] = BLOCKBASE;
+						top->MIPS->Reg_RF[2] = BLOCKBASE;
 					break;}
 					case 4091:{cout << "Munmap at time:" << CLOCK_COUNTER << endl;
-						clearHeapBlock(top->v->Reg_RF[4]);
+						clearHeapBlock(top->MIPS->Reg_RF[4]);
 					break;}
 					case 4122:{cout << "Uname at time:" << CLOCK_COUNTER << endl;
-						uname(top->v->Reg_RF[29]);
-						top->v->Reg_RF[2] = 0;
+						uname(top->MIPS->Reg_RF[29]);
+						top->MIPS->Reg_RF[2] = 0;
 					break;}
-					case 4132:{cout << "Getpid at time:" << CLOCK_COUNTER << endl;top->v->Reg_RF[2] = syscall(SYS_getpgid);break;}		//getpgid
+					case 4132:{cout << "Getpid at time:" << CLOCK_COUNTER << endl;top->MIPS->Reg_RF[2] = syscall(SYS_getpgid);break;}		//getpgid
 					case 4246:{cout << "Exit at time:" << CLOCK_COUNTER << endl;syscall(SYS_exit);break;}								//exit
 					case 4555:{cout << "Malloc at time:" << CLOCK_COUNTER << endl;
 						BLOCKNUM++;
 						int blockCounter=0;
 						int blockStart=0;
-						int size = top->v->Reg_RF[4];
+						int size = top->MIPS->Reg_RF[4];
 						if(size < 32)size = 32;
 							for(int i=HEAPSTART; i<=HEAPSTART+HEAP_STATUS.size()+size; i++) {
 								if (HEAP_STATUS[i]==0) blockCounter++;
@@ -990,35 +990,35 @@ int main(int argc, char **argv)
 									break;
 								}
 							}
-						top->v->Reg_RF[2] = BLOCKBASE;
+						top->MIPS->Reg_RF[2] = BLOCKBASE;
 					break;}
 					case 4556:{//cout << "LWC0 at time:" << CLOCK_COUNTER << endl;
-							instruction = ((MAIN_MEMORY[top->v->Instr_address_2IM+3]) +
-								   (MAIN_MEMORY[top->v->Instr_address_2IM+2]<<8) +
-								   (MAIN_MEMORY[top->v->Instr_address_2IM+1]<<16) +
-								   (MAIN_MEMORY[top->v->Instr_address_2IM+0]<<24));
+							instruction = ((MAIN_MEMORY[top->MIPS->Instr_address_2IM+3]) +
+								   (MAIN_MEMORY[top->MIPS->Instr_address_2IM+2]<<8) +
+								   (MAIN_MEMORY[top->MIPS->Instr_address_2IM+1]<<16) +
+								   (MAIN_MEMORY[top->MIPS->Instr_address_2IM+0]<<24));
 							source = (instruction << 12)>>28;
 							immediate = (instruction << 16)>>16;
 							base = (instruction << 6)>>26;
-							top->v->Reg_RF[2] = ((MAIN_MEMORY[top->v->Reg_RF[4]+immediate+3])+
-								(MAIN_MEMORY[top->v->Reg_RF[4]+immediate+2]<<8)+
-								(MAIN_MEMORY[top->v->Reg_RF[4]+immediate+1]<<16)+
-								(MAIN_MEMORY[top->v->Reg_RF[4]+immediate+0]<<24));
+							top->MIPS->Reg_RF[2] = ((MAIN_MEMORY[top->MIPS->Reg_RF[4]+immediate+3])+
+								(MAIN_MEMORY[top->MIPS->Reg_RF[4]+immediate+2]<<8)+
+								(MAIN_MEMORY[top->MIPS->Reg_RF[4]+immediate+1]<<16)+
+								(MAIN_MEMORY[top->MIPS->Reg_RF[4]+immediate+0]<<24));
 					break;}
 					case 4557:{//cout << "SWC0 at time:" << CLOCK_COUNTER << endl;
-							instruction = ((MAIN_MEMORY[top->v->Instr_address_2IM+3]) +
-								   (MAIN_MEMORY[top->v->Instr_address_2IM+2]<<8) +
-								   (MAIN_MEMORY[top->v->Instr_address_2IM+1]<<16) +
-								   (MAIN_MEMORY[top->v->Instr_address_2IM+0]<<24));
+							instruction = ((MAIN_MEMORY[top->MIPS->Instr_address_2IM+3]) +
+								   (MAIN_MEMORY[top->MIPS->Instr_address_2IM+2]<<8) +
+								   (MAIN_MEMORY[top->MIPS->Instr_address_2IM+1]<<16) +
+								   (MAIN_MEMORY[top->MIPS->Instr_address_2IM+0]<<24));
 							base = (instruction << 6)>>26;
 							immediate = (instruction << 16)>>16;
 							if(SWC_tmp==0x83)rt = 3;
 							else  if(SWC_tmp==0x82)rt = 2;
-							loadSingleHEX(top->v->Reg_RF[rt],top->v->Reg_RF[4]+immediate,0,0);
+							loadSingleHEX(top->MIPS->Reg_RF[rt],top->MIPS->Reg_RF[4]+immediate,0,0);
 							memWrite << CLOCK_COUNTER << endl;
-							memWrite << top->v->Reg_RF[rt] << " " << top->v->Reg_RF[4]+immediate << endl;
-							if(HEX_MAIN_MEMORY[top->v->Instr_address_2IM+1] == "82")top->v->Reg_RF[2]=1;
-							else if(HEX_MAIN_MEMORY[top->v->Instr_address_2IM+1] == "83")top->v->Reg_RF[3]=1;
+							memWrite << top->MIPS->Reg_RF[rt] << " " << top->MIPS->Reg_RF[4]+immediate << endl;
+							if(HEX_MAIN_MEMORY[top->MIPS->Instr_address_2IM+1] == "82")top->MIPS->Reg_RF[2]=1;
+							else if(HEX_MAIN_MEMORY[top->MIPS->Instr_address_2IM+1] == "83")top->MIPS->Reg_RF[3]=1;
 					break;}
 
 					default: { cout << "Sorry, syscall " << syscallIndex << " has not been implemented. Process terminated at cycle " << MAINTIME/2 << "..." << endl; return 0; }
