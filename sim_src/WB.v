@@ -1,10 +1,13 @@
 //-----------------------------------------
 //           Write Back Stage
 //-----------------------------------------
+
+`timescale 1ns/1ps
+
 module WB (	CLK,
 		RESET,
 		FREEZE,
-                do_writeback1_PR,
+    do_writeback1_PR,
 		writeRegister1_PR,
 		writeData1_PR,
 		do_writeback1,

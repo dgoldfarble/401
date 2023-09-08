@@ -7,6 +7,8 @@ Todo:
 
 */
 
+`timescale 1ns/1ps
+
 module ISS	(
 			// inputs
 			CLK, RESET, FREEZE,
@@ -111,9 +113,9 @@ reg		rPr; /* priority of IQ vs LSQ */ always @(posedge CLK) 	rPr <= rPr + 1;
 
 
 
-	wire [137-1:0] wLSQ_headData, wLSQ_tailData;
+reg [137-1:0] wLSQ_headData, wLSQ_tailData;
 
-wire wIQselected, wLSQselected, wIQrdy, wLSQrdy;
+reg wIQselected, wLSQselected, wIQrdy, wLSQrdy;
 assign IQLSQ_popData_OUT = wIQselected? wIQ_popData: (wLSQselected? wLSQ_popData: 0);
 assign Valid_Instruction = wIQselected || wLSQselected;
 assign Mem_Instruction = wLSQselected;
@@ -121,7 +123,7 @@ assign wIQrdy = !wIQ_empty && instruction_ready;
 assign wLSQrdy = !wLSQ_empty && !busy_bits[wLSQ_headData[081:076]];
 
 assign IQ_full_OUT = wIQ_full;
-assign LSQ_full_OUT = wLSQ_full;
+//assign LSQ_full_OUT = wLSQ_full;
 //==============================================================================
 // BUSY REGISTER
 //==============================================================================
@@ -142,7 +144,7 @@ assign LSQ_full_OUT = wLSQ_full;
 	wire [15:0] request_bus, grant_bus;
 	wire instruction_ready;
 
-	wire [IQLSQ_WIDTH-1:0] wIQ_popData, wLSQ_popData;
+	reg [IQLSQ_WIDTH-1:0] wIQ_popData, wLSQ_popData;
 
 	assign request_bus[0] = IQ[0][104]; // Ready bit
 	assign request_bus[1] = IQ[1][104]; // Ready bit
@@ -177,7 +179,7 @@ assign LSQ_full_OUT = wLSQ_full;
 	assign wIQ_full = IQcount == 16;
 
 	// LSQ
-	wire wLSQ_pushReq, wLSQ_popReq, wLSQ_empty, wLSQ_full;
+	reg wLSQ_pushReq, wLSQ_popReq, wLSQ_empty, wLSQ_full;
 	wire [5:0] wLSQ_srcReg, wLSQ_destReg_IN;
 //	wire [IQLSQ_WIDTH-1:0] wLSQ_headData, wLSQ_tailData;
 
@@ -221,7 +223,7 @@ assign LSQ_full_OUT = wLSQ_full;
 //==============================================================================
 // BusyBits/IQ/LSQ operations
 //==============================================================================
-	wire [5:0] wbusy_temp;
+	reg [5:0] wbusy_temp;
 	always @(posedge CLK) begin
 
 		if (!RESET) begin

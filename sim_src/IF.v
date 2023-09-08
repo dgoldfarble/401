@@ -1,6 +1,9 @@
 //-----------------------------------------
 //           Instruction Fetch Stage
 //-----------------------------------------
+
+`timescale 1ns/1ps
+
 module IF(	CLK,
 		RESET,
 		FREEZE,

@@ -1,4 +1,7 @@
 // Rename stage
+
+`timescale 1ns/1ps
+
 module REN (	CLK,
 				RESET,
 				FREEZE,

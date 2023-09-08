@@ -1,6 +1,9 @@
 //-----------------------------------------
 //           Quick Compare
 //-----------------------------------------
+
+`timescale 1ns/1ps
+
 module compare(	Jump,
 		OpA,
 		OpB,
@@ -15,7 +18,7 @@ module compare(	Jump,
 	input      [31: 0] Instr_input;
 	input	           Jump;
 
-	wire               br_taken;
+	reg               br_taken;
 
 	assign taken=br_taken|Jump;
 

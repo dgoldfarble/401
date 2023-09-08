@@ -54,8 +54,8 @@ module instr_cache_core (	CLK,
 	input  [dsize-1: 0] data_in;
 	input  [bsize-1: 0] block_in;
 	output [bsize-1: 0] block_out;
-	output [dsize-1: 0] data_out1;
-	output [dsize-1: 0] data_out2;
+	output reg [dsize-1: 0] data_out1;
+	output reg [dsize-1: 0] data_out2;
 	output              hit1;
 	output              hit2;
 

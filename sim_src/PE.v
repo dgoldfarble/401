@@ -1,3 +1,6 @@
+
+`timescale 1ns/1ps
+
 module PE	(	// inputs
 				Grant_IN,
 				Request_IN,
@@ -11,8 +14,9 @@ input	Grant_IN;
 input [x_to_one-1:0] Request_IN;
 
 output [x_to_one-1:0] Grant_OUT;
-output	Request_OUT;
+output reg	Request_OUT;
 
+// verilator lint_off LATCH
 always begin
 	if(|Request_IN) // reduction OR
 		Request_OUT = 1;
@@ -26,5 +30,6 @@ always begin
 		Grant_OUT[3] = Request_IN[3]&&(!Request_IN[2])&&(!Request_IN[1])&&(!Request_IN[0]);
 	end
 end
+// verilator lint_on LATCH
 
 endmodule

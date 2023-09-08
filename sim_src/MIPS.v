@@ -1,6 +1,9 @@
 //-----------------------------------------
 //            Pipelined MIPS
 //-----------------------------------------
+
+`timescale 1ns/1ps
+
 module MIPS (	R2_output,
              	MemRead,
              	MemWrite,

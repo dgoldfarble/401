@@ -1,6 +1,9 @@
 //-----------------------------------------
 //         Instruction Decode Stage
 //-----------------------------------------
+
+`timescale 1ns/1ps
+
 module ID ( 	CLK,
 		RESET,
 		FREEZE,
@@ -110,8 +113,8 @@ module ID ( 	CLK,
 	input				fQ_IDREN_full_IN;
 	input				fQ_IFID_empty_IN;
 
-	wire            [31: 0] com_OpA1;
-	wire            [31: 0] com_OpB1;
+	reg            [31: 0] com_OpA1;
+	reg            [31: 0] com_OpB1;
 	wire            [31: 0] signExtended_output1;
 	wire            [31: 0] Shift_addResult1;
 	wire            [31: 0] Jump_address1;
@@ -123,27 +126,27 @@ module ID ( 	CLK,
 	wire            [31: 0] CIAp4;
 	wire            [31: 0] PCAp4;
 	wire            [31: 0] nia1;
-	wire            [ 5: 0] ALU_control1;
-	wire            [ 5: 0] opcode1;
-	wire            [ 5: 0] funct1;
+	reg             [ 5: 0] ALU_control1;
+	reg            [ 5: 0] opcode1;
+	reg            [ 5: 0] funct1;
 	wire            [ 4: 0] readRegisterA1;
 	wire            [ 4: 0] readRegisterB1;
-	wire            [ 4: 0] format1;
-	wire            [ 4: 0] rt1;
+	reg            [ 4: 0] format1;
+	reg            [ 4: 0] rt1;
 	wire            [ 4: 0] writeRegister1;
 	wire                    taken_branch1;
-	wire                    link1;
-	wire                    RegDst1;
-	wire                    jump1;
-	wire                    branch1;
-	wire                    MemRead1;
-	wire                    MemtoReg1;
-	wire                    MemWrite1;
-	wire                    ALUSrc1;
-	wire                    RegWrite1;
-	wire                    jumpRegister_Flag1;
-	wire                    sign_or_zero_Flag1;
-	wire                    syscal1;
+	reg                    link1;
+	reg                    RegDst1;
+	reg                    jump1;
+	reg                    branch1;
+	reg                    MemRead1;
+	reg                    MemtoReg1;
+	reg                    MemWrite1;
+	reg                    ALUSrc1;
+	reg                    RegWrite1;
+	reg                    jumpRegister_Flag1;
+	reg                    sign_or_zero_Flag1;
+	reg                    syscal1;
 	wire			MemHazard;
 	wire			SysHazard;
 	wire			WAWHazard;

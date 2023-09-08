@@ -1,9 +1,9 @@
-export VERILATOR_ROOT=/Users/dgoldfarb/bin/verilator-3.872/  #ADD VERILATOR PATH HERE
+export VERILATOR_ROOT=/usr/share/verilator  #ADD VERILATOR PATH HERE
 
 cd sim_src
 
 #$VERILATOR_ROOT/bin/
-verilator -O4 --cc MIPS.v --exe sim_main.cpp
+verilator --cc MIPS.v --exe sim_main.cpp
 
 cd obj_dir
 

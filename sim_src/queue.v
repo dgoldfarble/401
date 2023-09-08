@@ -23,6 +23,8 @@ PUSH: Buffer is written at the next clock edge.
 POP : Buffer is read from in the same cycle. (continuous assignment)
 */
 
+`timescale 1ns/1ps
+
 module queue (			clk,
 				reset,
 				pushReq_IN,		// Push	requested

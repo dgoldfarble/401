@@ -1,6 +1,9 @@
 //-----------------------------------------
 //           Execute Stage
 //-----------------------------------------
+
+`timescale 1ns/1ps
+
 module EXE(	// outputs
 				ROBPointer_OUT,
 				PCA_OUT,
@@ -120,24 +123,24 @@ module EXE(	// outputs
 
    wire           [31: 0] aluResult1;
    wire           [31: 0] address_out;
-   wire           [31: 0] OpA1, Operand1;
-   wire           [31: 0] OpB1, Operand2;
+   reg           [31: 0] OpA1, Operand1;
+   reg           [31: 0] OpB1, Operand2;
    wire           [31: 0] OpLS1;
    wire           [31: 0] OpLS2;
    wire           [31: 0] Dst1;
-   wire						Hazard_flag;
+   reg						Hazard_flag;
    wire						taken_branch1;
    reg            [31: 0] HI1, HI2;
    reg            [31: 0] LO1, LO2;
 
 	 /* strictly for comments */
-	 wire            [ 5: 0] opcode1;
-	 wire            [ 5: 0] funct1;
-	 wire            [ 4: 0] format1;
-	 wire            [ 4: 0] rt1;
+	 reg            [ 5: 0] opcode1;
+	 reg            [ 5: 0] funct1;
+	 reg            [ 4: 0] format1;
+	 reg            [ 4: 0] rt1;
 
 
-
+  // verilator lint_off LATCH
 	always begin
 		Hazard_flag = 0;
 	// Forwarding for Instr 1
@@ -187,7 +190,7 @@ module EXE(	// outputs
 			Operand2 = OpB1;
 		end
 	end
-
+  // verilator lint_on LATCH
 
 
 	ALU ALU1(HI1, LO1, aluResult1, Operand1, Operand2, ALU_control1_IN, Instr1_10_6_IN, CLK);

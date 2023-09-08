@@ -1,6 +1,9 @@
 //-----------------------------------------
 //           Data Memory Stage
 //-----------------------------------------
+
+`timescale 1ns/1ps
+
 module MEM (	FREEZE, CLK, RESET,
 				result,
 				data_write_2DM, 
@@ -77,13 +80,13 @@ module MEM (	FREEZE, CLK, RESET,
    output reg 				Valid_Instruction_OUT;
    
 
-   wire         [31: 0] data_read_aligned;
+   reg         [31: 0] data_read_aligned;
    wire         [31: 0] Dest_Value;
-   wire         [31: 0] aluResult;
+   reg         [31: 0] aluResult;
    wire         [31: 0] readDataB;
    wire         [31: 0] writeData_WB;
    wire         [31: 0] Instr;
-   wire         [ 5: 0] ALU_control;
+   reg         [ 5: 0] ALU_control;
    wire                 MemRead;
    wire                 MemWrite;
    wire                 select1_WB;
