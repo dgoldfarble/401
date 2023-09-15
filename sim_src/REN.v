@@ -100,8 +100,6 @@ module REN (
   reg [RENRAT_WIDTH-1:0] rPhysSrc2Reg;
   reg rFreeLUnderflow;
 
-
-
   // // // // // // // // // // // // // // // // // // // // // // // // //
   // FREEZE/CarryON logic
   // 		RENAME connected to Q_IDREN, IQ, LSQ, ROB externally
@@ -160,8 +158,8 @@ module REN (
     fQ_IDREN_popData_IN[39:39],  // 039:039	1 MemRead1_IDEXE
     fQ_IDREN_popData_IN[38:34],  // 038:034	5 wWrRegID_IDREN
     fQ_IDREN_popData_IN[33:32],  // 033:032	2 isRegWrInstr_IDREN
-    fQ_IDREN_popData_IN[31:00]
-  };  // 031:000	32 Instr1_IDREN
+    fQ_IDREN_popData_IN[31:00]   // 031:000	32 Instr1_IDREN
+  };
 
 
   // Overflow flags for LSQ and IQ
@@ -361,6 +359,7 @@ module REN (
   parameter comment = 0;
   parameter SHOW_FREELIST = 0;
 
+  /*
   instr_logger #(
       .comment(comment),
       .name(LOGGING_PREFIX)
@@ -368,15 +367,135 @@ module REN (
       CLK,
       wInstr
   );
+  */
+  reg [5:0] opcode1;
+  reg [5:0] funct1;
+  reg [4:0] format1;
+  reg [4:0] rt1;
 
   always @(posedge CLK) begin
     if (comment) begin
+    $display("----------------RENAME------------------");
+      opcode1 = wInstr[31:26];
+      format1 = wInstr[25:21];
+      rt1     = wInstr[20:16];
+      funct1  = wInstr[5:0];
+      case (opcode1)
+        6'b000000: begin  //SPECIAL
+          case (funct1)
+            6'b000000: $write("sll,nop\t");  //SLL,NOP
+            6'b100001: $write("addu\t");  //addu
+            6'b000010: $write("srl\t");  //SRL
+            6'b000011: $write("sra\t");  //SRA
+            6'b000100: $write("sllv\t");  //SLLV
+            6'b000110: $write("srlv\t");  //SRLV
+            6'b000111: $write("srav\t");  //SRAV
+            6'b001000: $write("jr\t");  //JR
+            6'b001001: $write("jalr\t");  //JALR
+            6'b001100: $write("syscal1\t");  //syscal1*
+            6'b001101: $write("break\t");  //BREAK*
+            6'b010000: $write("mfhi\t");  //MFHI
+            6'b010001: $write("mthi\t");  //MTHI
+            6'b010010: $write("mflo\t");  //MFLO
+            6'b010011: $write("mtlo\t");  //MTLO
+            6'b011000: $write("mult\t");  //mult
+            6'b011001: $write("multu\t");  //multu
+            6'b011010: $write("div\t");  //div
+            6'b011011: $write("divu\t");  //divu
+            6'b100000: $write("add\t");  //add
+            6'b100010: $write("sub\t");  //sub
+            6'b100011: $write("subu\t");  //subu
+            6'b100100: $write("and\t");  //and
+            6'b100101: $write("or\t");  //or
+            6'b100110: $write("xor\t");  //Xor
+            6'b100111: $write("nor\t");  //nor
+            6'b101010: $write("slt\t");  //slt
+            6'b101011: $write("sltu\t");  //sltu
+            default:   $write("Not an Instruction!");
+          endcase
+        end
+        6'b000001: begin
+          case (rt1)
+            5'b00000: $write("bltz\n");  //BLTZ
+            5'b00001: $write("bgez\n");  //BGEZ
+            5'b10000: $write("bltzal\n");  //BLTZAL
+            5'b10001: $write("bgezal\n");  //BGEZAL
+            default:  $write("Not an Instruction!");
+          endcase
+        end
+        6'b000010: $write("jump\n");  //J
+        6'b000011: $write("jal\n");  //JAL
+        6'b000100: $write("beq\n");  //BEQ
+        6'b000101: $write("bne\n");  //BNE
+        6'b000110: $write("blez\n");  //BLEZ
+        6'b000111: $write("bgtz\n");  //BGTZ
+        6'b001000: $write("addi\n");  //ADDI
+        6'b001001: $write("addiu\n");  //ADDIU
+        6'b001010: $write("slti\n");  //SLTI
+        6'b001011: $write("sltiu\n");  //SLTIU
+        6'b001100: $write("andi\n");  //ANDI
+        6'b001101: $write("ori\n");  //ORI
+        6'b001110: $write("xori\n");  //XorI
+        6'b001111: $write("lui\n");  //LUI
+        6'b010001: begin  //COP1
+          case (format1)
+            5'b00000: $write("mfc1\n");  //MFC1
+            5'b00010: $write("cfc1\n");  //CFC1
+            5'b00100: $write("mtc1\n");  //MTC1
+            5'b00110: $write("ctc1\n");  //CTC1
+            5'b01000: begin
+              case (wInstr[16])
+                1'b1: $write("bc1t\n");  //BC1T
+                1'b0: $write("bc1f\n");  //BC1F
+              endcase
+            end
+            5'b10000: begin
+              if (wInstr[7:4] == 4'b0011) $write("fp c.cond\n");  //fp c.cond
+              else begin
+                case (funct1)
+                  6'b000000: $write("fp add\n");  //fp add
+                  6'b000001: $write("fp sub\n");  //fp sub
+                  6'b000010: $write("fp mul\n");  //fp mul
+                  6'b000011: $write("fp div\n");  //fp div
+                  6'b000101: $write("fp abs\n");  //fp abs
+                  6'b000110: $write("fp mov\n");  //MOV.FMT
+                  6'b000111: $write("fp neg\n");  //fp neg
+                  default:   $write("Not an Instruction!");
+                endcase
+              end
+            end
+            5'b10001: $write("fp cvt.s\n");  //CVT.S.FMT
+            default:  $write("Not an Instruction!");
+          endcase
+        end
+        6'b100000: $write("lb\n");  //LB
+        6'b100001: $write("lh\n");  //LH
+        6'b100010: $write("lwl\n");  //LWL
+        6'b100011: $write("lw\n");  //LW
+        6'b110000: $write("lwc0\n");  //LWC0
+        6'b100100: $write("lbu\n");  //LBU
+        6'b100101: $write("lhu\n");  //LHU
+        6'b100110: $write("lwr\n");  //LWR
+        6'b101000: $write("sb\n");  //SB
+        6'b101001: $write("sh\n");  //SH
+        6'b101010: $write("swl\n");  //SWL
+        6'b101011: $write("sw\n");  //SW
+        6'b111000: $write("swc0\n");  //SWC0
+        6'b101110: $write("swr\n");  //SWR
+        6'b110001: $write("lwc1\n");  //LWC1
+        6'b111001: $write("swc1\n");  //SWC1
+        6'b010100: $write("beql\n");  //BEQL
+        6'b010110: $write("blezl\n");  //BLEZL
+        6'b010101: $write("bnel\n");  //BNEL
+        default:   $write("Not an Instruction!");
+      endcase
+      $write("\n");
       //$display("%d = %d  && !%d && !%d && !%d && !%d ", wCarryOn, RESET, FREEZE, rFreeLUnderflow, rIQoverflow, rLSQoverflow);
       //$display("fIQ_full_IN: %d",fIQ_full_IN);
-      $display("[%s]rPhysDestReg: %x fQ_IDREN_popData_IN: %x", LOGGING_PREFIX, rPhysDestReg,
-               fQ_IDREN_popData_IN);
-      if (wIQpushable) $display("[%s]tIQ_pushData_OUT: %x", LOGGING_PREFIX, tIQ_pushData_OUT);
-      if (wLSQpushable) $display("[%s]tLSQ_pushData_OUT: %x", LOGGING_PREFIX, tLSQ_pushData_OUT);
+      $display("[ID] tQ_IDREN_popReq_OUT: %x, fQ_IDREN_popData_IN: %x, fQ_IDREN_empty_IN: %x", tQ_IDREN_popReq_OUT, fQ_IDREN_popData_IN, fQ_IDREN_empty_IN);
+      if (wIQpushable) $display("[IQ] tIQ_pushData_OUT: %x, fIQ_full_IN: %x", tIQ_pushData_OUT, fIQ_full_IN);
+      if (wLSQpushable) $display("[LSQ] tLSQ_pushReq_OUT: %x, tLSQ_pushData_OUT: %x, fLSQ_full_IN: %x", tLSQ_pushReq_OUT, tLSQ_pushData_OUT, fLSQ_full_IN);
+      if (wIQpushable || wLSQpushable) $display("[ROB] fROB_full_IN: %x, tROB_pushData_OUT: %x, fROB_curTail_IN: %x", fROB_full_IN, tROB_pushData_OUT, fROB_curTail_IN);
     end
   end
 

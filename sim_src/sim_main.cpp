@@ -468,6 +468,137 @@ void dumpRegs(VMIPS *top) {
 			else printf("\t\t\tr%*d|%*x|   ",2,j,8,top->MIPS->Reg_RF[j]);}
 	}
 }
+string extractInstr(uint32_t instr) {
+  int opcode1 = instr / (1<<26);
+  int format1 = (instr / (1<<21)) % (1<<5);
+  int rt1 = (instr / (1<<16)) % (1<<5);
+  int funct1 = instr % (1<<6);
+//  cout << "instr: " << instr << "\n";
+//  cout << "opcode1: " << opcode1 << " format1: " << format1 << " rt1: " << rt1 << " funct1: " << funct1 << "\n";
+  switch (opcode1) {
+    case 0: // SPECIAL
+      switch (funct1) {
+        case 0: return "ssl,nop";
+        case 2: return "srl";
+        case 3: return "sra";
+        case 4: return "sllv";
+        case 6: return "srlv";
+        case 7: return "srav";
+        case 8: return "jr";
+        case 9: return "jalr";
+        case 12: return "syscal1";
+        case 13: return "break";
+        case 16: return "mfhi";
+        case 17: return "mthi";
+        case 18: return "mflo";
+        case 19: return "mtlo";
+        case 24: return "mult";
+        case 25: return "multu";
+        case 26: return "div";
+        case 27: return "divu";
+        case 32: return "add";
+        case 33: return "addu";
+        case 34: return "sub";
+        case 35: return "subu";
+        case 36: return "and";
+        case 37: return "or";
+        case 38: return "xor";
+        case 39: return "nor";
+        case 42: return "slt";
+        case 43: return "sltu";
+       default: return "not an instruction!";
+      }
+    case 1:
+      switch (rt1) {
+        case 0: return "bltz";
+        case 1: return "bgez";
+        case 16: return "bltzal";
+        case 17: return "bgezal";
+        default: return "Not an instruction!";
+      }
+    case 2: return "jump";
+    case 3: return "jal";
+    case 4: return "beq";
+    case 5: return "bne";
+    case 6: return "blez";
+    case 7: return "bgtz";
+    case 8: return "addi";
+    case 9: return "addiu";
+    case 10: return "slti";
+    case 11: return "sltiu";
+    case 12: return "andi";
+    case 13: return "ori";
+    case 14: return "xori";
+    case 15: return "lui";
+    case 17:  // COP1
+      switch (format1) {
+        case 0: return "mfc1";
+        case 2: return "cfc1";
+        case 4: return "mtc1";
+        case 6: return "ctc1";
+        case 8:
+        {
+          int flag = (instr / 1<<16) % 2;
+          if (flag) return "bc1t";
+          return "bc1f";
+        }
+        case 16:
+        {
+          int flag = (instr / 1<<4) % 1<<4;
+          if (flag == 3) return "fp c.cond";
+          switch (funct1) {
+            case 0: return "fp add";
+            case 1: return "fp sub";
+            case 2: return "fp mul";
+            case 3: return "fp div";
+            case 5: return "fp abs";
+            case 6: return "fp mov";
+            case 7: return "fp neg";
+            default: return "Not an instruction";
+          }
+        }
+        case 17: return "fp cvt.s";
+        default: return "Not an instruction!";
+      }
+    case 20: return "beql";
+    case 21: return "bnel";
+    case 22: return "blezl";
+    case 32: return "lb";
+    case 33: return "lh";
+    case 34: return "lwl";
+    case 35: return "lw";
+    case 36: return "lbu";
+    case 37: return "lhu";
+    case 38: return "lwr";
+    case 40: return "sb";
+    case 41: return "sh";
+    case 42: return "swl";
+    case 43: return "sw";
+    case 46: return "swr";
+    case 48: return "lwc0";
+    case 49: return "lwc1";
+    case 56: return "swc0";
+    case 57: return "swc1";
+    default: return "not an instruction!";
+  }
+  return "not an instruction!";
+}
+void printPipeline(VMIPS *top) {
+//	printf(":%x :%x",top->MIPS->Instr_address_2IM,(MAIN_MEMORY[top->MIPS->Instr_address_2IM+0]<<24) + (MAIN_MEMORY[top->MIPS->Instr_address_2IM+1]<<16) + (MAIN_MEMORY[top->MIPS->Instr_address_2IM+2]<<8) + (MAIN_MEMORY[top->MIPS->Instr_address_2IM+3]));
+
+
+  printf("|\tIF OUT\t|\tID IN\t|\tID OUT\t|\tREN IN|\n");
+  string ifOut = extractInstr(top->MIPS->Instr1_IFID);
+  if (ifOut.length() < 8) ifOut = "\t" + ifOut;
+  WData* ifiqPopData = top->MIPS->wQ_IFID_popData;
+  string idIn = extractInstr(ifiqPopData[0]);
+  if (idIn.length() < 8) idIn = "\t" + idIn;
+  string idOut = extractInstr(top->MIPS->Instr1_IDREN);
+  if (idOut.length() < 8) idOut = "\t" + idOut;
+  WData* idRenPopData = top->MIPS->wQ_IDREN_popData;
+  string renIn = extractInstr(idRenPopData[0]);
+  cout << "|" << ifOut << "\t|" << idIn << "\t|" << idOut << "\t|\n";
+}
 /************************************/
 /*********** MAIN PROGRAM ***********/
 /************************************/
@@ -1034,6 +1165,10 @@ int main(int argc, char **argv)
 						case 'r': {
 							dumpRegs(top);
 							break;
+						}
+						case 'p': {
+						  printPipeline(top);
+						  break;
 						}
 						default:
 							next = true;

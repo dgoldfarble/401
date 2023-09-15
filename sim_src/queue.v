@@ -158,7 +158,7 @@ assign probeData_OUT = buffer [probeIdx_IN];
 integer	idx;
 reg [ADDR_WIDTH-1:0]	shortIdx;
 
-always /*@(posedge clk) */begin
+always @(posedge clk) begin
 	if (SHOW_DEBUG)
 	begin
 		$display("----------------Q: %s------------------",QUEUE_NAME);

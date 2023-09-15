@@ -218,9 +218,11 @@ module MIPS (
 
   wire branch_misprediction;
   wire [31:0] branch_address_COMMIT;
+
+  parameter IF_COMMENT = 0;
   // Pipeline Stages Instantiation
   IF #(
-      .comment(0)
+      .comment(IF_COMMENT)
   ) IF1 (
       CLK,
       RESET,
@@ -310,10 +312,14 @@ module MIPS (
   wire wFreezeID;
   assign wFreezeID = wQ_IFID_empty || wQ_IDREN_full;
 
+  parameter ID_COMMENT_1 = 0;
+  parameter ID_COMMENT_2 = 0;
+  parameter ID_COMMENT_3 = 0;
+
   ID #(
-      .comment1(0),
-      .comment2(0),
-      .comment3(0)
+      .comment1(ID_COMMENT_1),
+      .comment2(ID_COMMENT_2),
+      .comment3(ID_COMMENT_3)
   ) ID1 (
       CLK,
       RESET,
@@ -379,14 +385,15 @@ module MIPS (
 
   parameter Q_IDREN_DATAWIDTH = 126;
   parameter Q_IDREN_ADDRWIDTH = 3;
+  parameter Q_IDREN_COMMENT = 0;
 
   wire wQ_IDREN_empty;
   wire wQ_IDREN_full;
-  wire wQ_IDREN_pushReq /*verilator public*/;
+  wire wQ_IDREN_pushReq;
   wire wQ_IDREN_popReq;
   wire wQ_IDREN_popValid;
   wire [Q_IDREN_DATAWIDTH - 1:0]  wQ_IDREN_pushData;
-  wire [Q_IDREN_DATAWIDTH - 1:0]  wQ_IDREN_popData;
+  wire [Q_IDREN_DATAWIDTH - 1:0]  wQ_IDREN_popData /* verilator public */;
 
   wire [Q_IDREN_ADDRWIDTH-1:0]    wQ_IDREN_curTail_OUT;
   wire [Q_IDREN_ADDRWIDTH-1:0]    wQ_IDREN_curHead_OUT;
@@ -410,13 +417,20 @@ module MIPS (
     MemRead1_IDEXE,  //1		039:039
     wWrRegID_IDREN,  //5		038:034
     isRegWrInstr_IDREN,  //2		033:032
-    Instr1_IDREN
-  };  //32	031:000
+    Instr1_IDREN  //32	031:000
+  };
+
+  always @(posedge CLK) begin
+    if (Q_IDREN_COMMENT) begin
+      $display("Q_IDREN");
+      $display("Instr: %x", Instr1_IDREN);
+    end
+  end
 
   queue #(
       .DATA_WIDTH(Q_IDREN_DATAWIDTH),
       .ADDR_WIDTH(Q_IDREN_ADDRWIDTH),
-      .SHOW_DEBUG(0),
+      .SHOW_DEBUG(Q_IDREN_COMMENT),
       .QUEUE_NAME("IDREN")
   ) Q_IDREN (
       .clk(CLK),
@@ -453,7 +467,7 @@ module MIPS (
   // Rename-ROB data width
   parameter RENROB_DATAWIDTH = RENISSUE_WIDTH;
 
-  parameter REN_COMMENT = 0;
+  parameter REN_COMMENT = 1;
 
   wire wFreezeREN;
   wire wfROB_full;
@@ -880,7 +894,7 @@ module MIPS (
 
 
   always @(posedge CLK) begin
-		$display("CIA:%x\tInstruction OUT:%x", CIA_IFID, Instr1_IFID);
+		// $display("CIA:%x\tInstruction OUT:%x", CIA_IFID, Instr1_IFID);
     /*		$display("==IF================================================");
 		$display("==ID================================================");
 		$display("CIA:%x\tInstruction OUT:%x", CIA_IDREN, Instr1_IDREN);

@@ -258,14 +258,6 @@ module ID (
 	assign single_fetch_OUT =
 	*/
 
-  instr_logger #(
-      .comment(comment1),
-      .name(LOGGING_PREFIX)
-  ) instr_logger1 (
-      CLK,
-      wInstr1
-  );
-
   //CONTROLLER1
   //*note, syscall, and all link instructions have been assigned alucontrol of addi
   always begin
@@ -304,7 +296,7 @@ module ID (
           6'b100111: {link1,RegDst1,jump1,branch1,MemRead1,MemtoReg1,MemWrite1,ALUSrc1,RegWrite1,jumpRegister_Flag1,sign_or_zero_Flag1,syscal1,ALU_control1} = 18'b010000001100001111; //nor
           6'b101010: {link1,RegDst1,jump1,branch1,MemRead1,MemtoReg1,MemWrite1,ALUSrc1,RegWrite1,jumpRegister_Flag1,sign_or_zero_Flag1,syscal1,ALU_control1} = 18'b010000001100010101; //slt
           6'b101011: {link1,RegDst1,jump1,branch1,MemRead1,MemtoReg1,MemWrite1,ALUSrc1,RegWrite1,jumpRegister_Flag1,sign_or_zero_Flag1,syscal1,ALU_control1} = 18'b010000001000111111; //sltu
-          default: $write("Not an Instruction!");
+          default: $display("Not an Instruction!");
         endcase
       end
       6'b000001: begin
@@ -382,23 +374,6 @@ module ID (
       6'b010101: {link1,RegDst1,jump1,branch1,MemRead1,MemtoReg1,MemWrite1,ALUSrc1,RegWrite1,jumpRegister_Flag1,sign_or_zero_Flag1,syscal1,ALU_control1} = 		18'b000100000010111100; //BNEL
       default: $display("Not an Instruction!");
     endcase
-    if (comment1) begin
-      $write("[%s] ", LOGGING_PREFIX);
-      if (link1) $write("link1 ");
-      if (RegDst1) $write("RegDst1 ");
-      if (jump1) $write("jump1 ");
-      if (branch1) $write("branch1 ");
-      if (MemRead1) $write("MemRead1 ");
-      if (MemtoReg1) $write("MemtoReg1 ");
-      if (MemWrite1) $write("MemWrite1 ");
-      if (ALUSrc1) $write("ALUSrc1 ");
-      if (RegWrite1) $write("RegWrite1 ");
-      if (jumpRegister_Flag1) $write("jumpRegister_Flag1 ");
-      if (sign_or_zero_Flag1) $write("sign_or_zero_Flag1 ");
-      if (syscal1) $write("syscal1 ");
-      $write("ALU_control1: %b", ALU_control1);
-      $write("\n");
-    end
   end
 
   // PIPE REGISTERS 0
@@ -460,66 +435,200 @@ module ID (
   end
 
   always @(posedge CLK) begin
+    if (comment1 || comment2 || comment3) $display("---------INSTRUCTION DECODE---------------");
+
+    if (comment1) begin
+      case (opcode1)
+        6'b000000: begin  //SPECIAL
+          case (funct1)
+            6'b000000: $write("sll,nop\t");  //SLL,NOP
+            6'b100001: $write("addu\t");  //addu
+            6'b000010: $write("srl\t");  //SRL
+            6'b000011: $write("sra\t");  //SRA
+            6'b000100: $write("sllv\t");  //SLLV
+            6'b000110: $write("srlv\t");  //SRLV
+            6'b000111: $write("srav\t");  //SRAV
+            6'b001000: $write("jr\t");  //JR
+            6'b001001: $write("jalr\t");  //JALR
+            6'b001100: $write("syscal1\t");  //syscal1*
+            6'b001101: $write("break\t");  //BREAK*
+            6'b010000: $write("mfhi\t");  //MFHI
+            6'b010001: $write("mthi\t");  //MTHI
+            6'b010010: $write("mflo\t");  //MFLO
+            6'b010011: $write("mtlo\t");  //MTLO
+            6'b011000: $write("mult\t");  //mult
+            6'b011001: $write("multu\t");  //multu
+            6'b011010: $write("div\t");  //div
+            6'b011011: $write("divu\t");  //divu
+            6'b100000: $write("add\t");  //add
+            6'b100010: $write("sub\t");  //sub
+            6'b100011: $write("subu\t");  //subu
+            6'b100100: $write("and\t");  //and
+            6'b100101: $write("or\t");  //or
+            6'b100110: $write("xor\t");  //Xor
+            6'b100111: $write("nor\t");  //nor
+            6'b101010: $write("slt\t");  //slt
+            6'b101011: $write("sltu\t");  //sltu
+            default:   $write("Not an Instruction!");
+          endcase
+        end
+        6'b000001: begin
+          case (rt1)
+            5'b00000: $write("bltz\n");  //BLTZ
+            5'b00001: $write("bgez\n");  //BGEZ
+            5'b10000: $write("bltzal\n");  //BLTZAL
+            5'b10001: $write("bgezal\n");  //BGEZAL
+            default:  $write("Not an Instruction!");
+          endcase
+        end
+        6'b000010: $write("jump\n");  //J
+        6'b000011: $write("jal\n");  //JAL
+        6'b000100: $write("beq\n");  //BEQ
+        6'b000101: $write("bne\n");  //BNE
+        6'b000110: $write("blez\n");  //BLEZ
+        6'b000111: $write("bgtz\n");  //BGTZ
+        6'b001000: $write("addi\n");  //ADDI
+        6'b001001: $write("addiu\n");  //ADDIU
+        6'b001010: $write("slti\n");  //SLTI
+        6'b001011: $write("sltiu\n");  //SLTIU
+        6'b001100: $write("andi\n");  //ANDI
+        6'b001101: $write("ori\n");  //ORI
+        6'b001110: $write("xori\n");  //XorI
+        6'b001111: $write("lui\n");  //LUI
+        6'b010001: begin  //COP1
+          case (format1)
+            5'b00000: $write("mfc1\n");  //MFC1
+            5'b00010: $write("cfc1\n");  //CFC1
+            5'b00100: $write("mtc1\n");  //MTC1
+            5'b00110: $write("ctc1\n");  //CTC1
+            5'b01000: begin
+              case (wInstr1[16])
+                1'b1: $write("bc1t\n");  //BC1T
+                1'b0: $write("bc1f\n");  //BC1F
+              endcase
+            end
+            5'b10000: begin
+              if (wInstr1[7:4] == 4'b0011) $write("fp c.cond\n");  //fp c.cond
+              else begin
+                case (funct1)
+                  6'b000000: $write("fp add\n");  //fp add
+                  6'b000001: $write("fp sub\n");  //fp sub
+                  6'b000010: $write("fp mul\n");  //fp mul
+                  6'b000011: $write("fp div\n");  //fp div
+                  6'b000101: $write("fp abs\n");  //fp abs
+                  6'b000110: $write("fp mov\n");  //MOV.FMT
+                  6'b000111: $write("fp neg\n");  //fp neg
+                  default:   $write("Not an Instruction!");
+                endcase
+              end
+            end
+            5'b10001: $write("fp cvt.s\n");  //CVT.S.FMT
+            default:  $write("Not an Instruction!");
+          endcase
+        end
+        6'b100000: $write("lb\n");  //LB
+        6'b100001: $write("lh\n");  //LH
+        6'b100010: $write("lwl\n");  //LWL
+        6'b100011: $write("lw\n");  //LW
+        6'b110000: $write("lwc0\n");  //LWC0
+        6'b100100: $write("lbu\n");  //LBU
+        6'b100101: $write("lhu\n");  //LHU
+        6'b100110: $write("lwr\n");  //LWR
+        6'b101000: $write("sb\n");  //SB
+        6'b101001: $write("sh\n");  //SH
+        6'b101010: $write("swl\n");  //SWL
+        6'b101011: $write("sw\n");  //SW
+        6'b111000: $write("swc0\n");  //SWC0
+        6'b101110: $write("swr\n");  //SWR
+        6'b110001: $write("lwc1\n");  //LWC1
+        6'b111001: $write("swc1\n");  //SWC1
+        6'b010100: $write("beql\n");  //BEQL
+        6'b010110: $write("blezl\n");  //BLEZL
+        6'b010101: $write("bnel\n");  //BNEL
+        default:   $write("Not an Instruction!");
+      endcase
+      $display("");
+      if (link1) $write("link1 ");
+      if (RegDst1) $write("RegDst1 ");
+      if (jump1) $write("jump1 ");
+      if (branch1) $write("branch1 ");
+      if (MemRead1) $write("MemRead1 ");
+      if (MemtoReg1) $write("MemtoReg1 ");
+      if (MemWrite1) $write("MemWrite1 ");
+      if (ALUSrc1) $write("ALUSrc1 ");
+      if (RegWrite1) $write("RegWrite1 ");
+      if (jumpRegister_Flag1) $write("jumpRegister_Flag1 ");
+      if (sign_or_zero_Flag1) $write("sign_or_zero_Flag1 ");
+      if (syscal1) $write("syscal1 ");
+      $write("ALU_control1: %b", ALU_control1);
+      $display("");
+    end
+
     if (comment2) begin
+    /*
       $display(
-          "[%s]link1:%x\tRegDst1:%x\tjump1:%x\tbranch1:%x\tMemRead1:%x\tMemtoReg1:%x\tMemWrite1:%x\tALUSrc1:%x\tRegWrite1:%x\tjumpRegister_Flag1:%x\tsign_or_zero_Flag1:%x\tsyscal1:%x\tALU_control1:%b",
-          LOGGING_PREFIX, link1, RegDst1, jump1, branch1, MemRead1, MemtoReg1, MemWrite1, ALUSrc1,
+          "link1:%x RegDst1:%x jump1:%x branch1:%x MemRead1:%x MemtoReg1:%x MemWrite1:%x ALUSrc1:%x RegWrite1:%x jumpRegister_Flag1:%x sign_or_zero_Flag1:%x syscal1:%x ALU_control1:%b",
+          link1, RegDst1, jump1, branch1, MemRead1, MemtoReg1, MemWrite1, ALUSrc1,
           RegWrite1, jumpRegister_Flag1, sign_or_zero_Flag1, syscal1, ALU_control1);
+          */
     end
 
     if (comment3) begin
-      $display("==ID===========================================================");
-      /*	$display("[ID]:Read Register A1:%d\t\t|Read Register A2:%d",readRegisterA1,readRegisterA2);
-		$display("[ID]:Read Register B1:%d\t\t|Read Register B2:%d",readRegisterB1,readRegisterB2);
-		$display("[ID]:Write Register 1:%d\t\t|Write Register 2:%d",writeRegister1,writeRegister2);
-		$display("[ID]:\tsyscalBubbleCounter:%x",syscalBubbleCounter);
-                $display("[ID]:\tinsertBubble_OUT:%x",insertBubble_OUT);
-		$display("[ID]:\tsingle_fetch_OUT:%x",single_fetch_OUT);
-		$display("[ID]:\tsingle_fetch_PR:%x",single_fetch_PR);
-                $display("[ID]:\tSYS_OUT:%x",SYS_OUT);
-		*/ $display(
-          "[ID]:\tPCA:%x", wPCA);
+      $display("tQ_IDREN_pushReq_OUT: %x", tQ_IDREN_pushReq_OUT);
+      /*
+      $display("[ID]:Read Register A1:%d\t\t|Read Register A2:%d",readRegisterA1,readRegisterA2);
+      $display("[ID]:Read Register B1:%d\t\t|Read Register B2:%d",readRegisterB1,readRegisterB2);
+      $display("[ID]:Write Register 1:%d\t\t|Write Register 2:%d",writeRegister1,writeRegister2);
+      $display("[ID]:\tsyscalBubbleCounter:%x",syscalBubbleCounter);
+      $display("[ID]:\tinsertBubble_OUT:%x",insertBubble_OUT);
+      $display("[ID]:\tsingle_fetch_OUT:%x",single_fetch_OUT);
+      $display("[ID]:\tsingle_fetch_PR:%x",single_fetch_PR);
+      $display("[ID]:\tSYS_OUT:%x",SYS_OUT);
+      */
+      $display("[ID]:\tPCA:%x", wPCA);
       $display("[ID]:\tCIA:%x", wCIA);
-      /*$display("[ID]:\tbranch1:%x\n[ID]:\tbranch2:%x",branch1,branch2);
-		*/ $display(
-          "[ID]:\tInstr1:%x", wInstr1);
-      /*$display("[ID]:\tnextInstruction_address:%x",nextInstruction_address);
-                $display("[ID]:syscal1:%x\t\t\t|syscal2:%x",syscal1,syscal2);
-	 	$display("[ID]:writeRegister1_PR:%x\t|writeRegister2_PR:%x",writeRegister1_PR,writeRegister2_PR);
-		$display("[ID]:com_OpA1:%x\t\t|com_OpA2:%x",com_OpA1,com_OpA2);
-		$display("[ID]:com_OpB1:%x\t\t|com_OpB1:%x",com_OpB1,com_OpB2);
-		$display("[ID]:writeRegister1_WB:%x\t|writeRegister2_WB:%x",writeRegister1_WB,writeRegister2_WB);
-                $display("[ID]:writeRegister1_MEM:%x\t|writeRegister2_MEM:%x",writeRegister1_MEM,writeRegister2_MEM);
-		$display("[ID]:readRegisterA1:%x\t\t|readRegisterA1:%x",readRegisterA1,readRegisterA2);
-		$display("[ID]:readRegisterB1:%x\t\t|readRegisterB1:%x",readRegisterB1,readRegisterB2);
-		$display("[ID]:writeRegister1:%x\t\t|writeRegister2:%x",writeRegister1,writeRegister2);
-		$display("[ID]:do_writeback1_WB:%x\t\t|do_writeback2_WB:%x",do_writeback1_WB,do_writeback2_WB);
-                $display("[ID]:do_writeback1_MEM:%x\t|do_writeback2_MEM:%x",do_writeback1_MEM,do_writeback2_MEM);
-		$display("[ID]:do_writeback1_PR:%x\t\t|do_writeback2_PR:%x",do_writeback1_PR,do_writeback2_PR);
-		$display("[ID]:aluResult1:%x\t|aluResult2:%x",aluResult1,aluResult2);
-		$display("[ID]:aluResult1_WB:%x\t|aluResult2_WB:%x",aluResult1_WB,aluResult2_WB);
-		$display("[ID]:aluResult1:%x\t|aluResult2:%x",aluResult1,aluResult2);
-		$display("[ID]:writeData1_WB:%x\t|writeData2_WB:%x",writeData1_WB,writeData2_WB);
-                $display("[ID]:writeRegister1_WB:%x\t|writeRegister2_WB:%x",writeRegister1_WB,writeRegister2_WB);
-		$display("[ID]:readRegisterA1_PR:%x\t|readRegisterA2_PR:%x",readRegisterA1_PR,readRegisterA2_PR);
-		$display("[ID]:readRegisterB1_PR:%x\t|readRegisterB2_PR:%x",readRegisterB1_PR,readRegisterB2_PR);
-		$display("[ID]:Operand_A1:%x\t|Operand_A2:%x",(link1)?wPCA:((syscal1)?R2_input:readDataA1), (link2)?wPCA:((syscal2)?R2_input:readDataA2));
-		$display("[ID]:readDataA1:%x\t|readDataA2:%x",readDataA1,readDataA2);
-		$display("[ID]:Operand_B1:%x\t|Operand_B2:%x",(link1)?32'h00000008:((syscal1)?32'h00000000:Operand_B1),(link2)?32'h00000008:((syscal2)?32'h00000000:Operand_B2));
-		$display("[ID]:readDataB1:%x\t|readDataB2:%x",readDataB1,readDataB2);
-		$display("[ID]:wInstr1:%x\t\t|Instr2:%x",wInstr1,Instr2);
-		$display("[ID]:Jump_address1:%x\t|Jump_address2:%x",Jump_address1,Jump_address2);
-		$display("[ID]:Shift_addResult1:%x\t|Shift_addResult2:%x",Shift_addResult1,Shift_addResult2);
-		$display("[ID]:Data1_MEM:%x\t\t|Data1_MEM:%x",Data1_MEM,Data2_MEM);
-		$display("[ID]:Data1_WB:%x\t\t|Data2_WB:%x",Data1_WB,Data2_WB);
-		$display("[ID]:taken_branch1:%x\t\t|taken_branch2:%x",taken_branch1,taken_branch2);
-		$display("[ID]:RegDst1:%x\t\t\t|RegDst2:%x",RegDst1,RegDst2);
-		$display("[ID]:link1:%x\t\t\t|link2:%x",link1,link2);
-		$display("=============================================================");
-		$display("[EXE]:Read Register A1:%d\t\t|Read Register A2:%d",readRegisterA1_PR,readRegisterA2_PR);
-		$display("[EXE]:Read Register B1:%d\t\t|Read Register B2:%d",readRegisterB1_PR,readRegisterB2_PR);
-		$display("[EXE]:Write Register 1:%d\t\t|Write Register 2:%d",writeRegister1_PR,writeRegister2_PR);
-		/**/
+      /*
+      $display("[ID]:\tbranch1:%x\n[ID]:\tbranch2:%x",branch1,branch2);
+      */
+      $display("[ID]:\tInstr1:%x", wInstr1);
+      /*
+      $display("[ID]:\tnextInstruction_address:%x",nextInstruction_address);
+      $display("[ID]:syscal1:%x\t\t\t|syscal2:%x",syscal1,syscal2);
+      $display("[ID]:writeRegister1_PR:%x\t|writeRegister2_PR:%x",writeRegister1_PR,writeRegister2_PR);
+      $display("[ID]:com_OpA1:%x\t\t|com_OpA2:%x",com_OpA1,com_OpA2);
+      $display("[ID]:com_OpB1:%x\t\t|com_OpB1:%x",com_OpB1,com_OpB2);
+      $display("[ID]:writeRegister1_WB:%x\t|writeRegister2_WB:%x",writeRegister1_WB,writeRegister2_WB);
+      $display("[ID]:writeRegister1_MEM:%x\t|writeRegister2_MEM:%x",writeRegister1_MEM,writeRegister2_MEM);
+      $display("[ID]:readRegisterA1:%x\t\t|readRegisterA1:%x",readRegisterA1,readRegisterA2);
+      $display("[ID]:readRegisterB1:%x\t\t|readRegisterB1:%x",readRegisterB1,readRegisterB2);
+      $display("[ID]:writeRegister1:%x\t\t|writeRegister2:%x",writeRegister1,writeRegister2);
+      $display("[ID]:do_writeback1_WB:%x\t\t|do_writeback2_WB:%x",do_writeback1_WB,do_writeback2_WB);
+      $display("[ID]:do_writeback1_MEM:%x\t|do_writeback2_MEM:%x",do_writeback1_MEM,do_writeback2_MEM);
+      $display("[ID]:do_writeback1_PR:%x\t\t|do_writeback2_PR:%x",do_writeback1_PR,do_writeback2_PR);
+      $display("[ID]:aluResult1:%x\t|aluResult2:%x",aluResult1,aluResult2);
+      $display("[ID]:aluResult1_WB:%x\t|aluResult2_WB:%x",aluResult1_WB,aluResult2_WB);
+      $display("[ID]:aluResult1:%x\t|aluResult2:%x",aluResult1,aluResult2);
+      $display("[ID]:writeData1_WB:%x\t|writeData2_WB:%x",writeData1_WB,writeData2_WB);
+      $display("[ID]:writeRegister1_WB:%x\t|writeRegister2_WB:%x",writeRegister1_WB,writeRegister2_WB);
+		  $display("[ID]:readRegisterA1_PR:%x\t|readRegisterA2_PR:%x",readRegisterA1_PR,readRegisterA2_PR);
+      $display("[ID]:readRegisterB1_PR:%x\t|readRegisterB2_PR:%x",readRegisterB1_PR,readRegisterB2_PR);
+      $display("[ID]:Operand_A1:%x\t|Operand_A2:%x",(link1)?wPCA:((syscal1)?R2_input:readDataA1), (link2)?wPCA:((syscal2)?R2_input:readDataA2));
+      $display("[ID]:readDataA1:%x\t|readDataA2:%x",readDataA1,readDataA2);
+      $display("[ID]:Operand_B1:%x\t|Operand_B2:%x",(link1)?32'h00000008:((syscal1)?32'h00000000:Operand_B1),(link2)?32'h00000008:((syscal2)?32'h00000000:Operand_B2));
+      $display("[ID]:readDataB1:%x\t|readDataB2:%x",readDataB1,readDataB2);
+      $display("[ID]:wInstr1:%x\t\t|Instr2:%x",wInstr1,Instr2);
+      $display("[ID]:Jump_address1:%x\t|Jump_address2:%x",Jump_address1,Jump_address2);
+      $display("[ID]:Shift_addResult1:%x\t|Shift_addResult2:%x",Shift_addResult1,Shift_addResult2);
+      $display("[ID]:Data1_MEM:%x\t\t|Data1_MEM:%x",Data1_MEM,Data2_MEM);
+      $display("[ID]:Data1_WB:%x\t\t|Data2_WB:%x",Data1_WB,Data2_WB);
+      $display("[ID]:taken_branch1:%x\t\t|taken_branch2:%x",taken_branch1,taken_branch2);
+      $display("[ID]:RegDst1:%x\t\t\t|RegDst2:%x",RegDst1,RegDst2);
+      $display("[ID]:link1:%x\t\t\t|link2:%x",link1,link2);
+      $display("=============================================================");
+      $display("[EXE]:Read Register A1:%d\t\t|Read Register A2:%d",readRegisterA1_PR,readRegisterA2_PR);
+      $display("[EXE]:Read Register B1:%d\t\t|Read Register B2:%d",readRegisterB1_PR,readRegisterB2_PR);
+      $display("[EXE]:Write Register 1:%d\t\t|Write Register 2:%d",writeRegister1_PR,writeRegister2_PR);
+		  */
     end
   end
 
